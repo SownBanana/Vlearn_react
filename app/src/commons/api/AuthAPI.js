@@ -56,8 +56,20 @@ const authAPI = {
 		const response = await api.get(`api/auth/${social}/url`);
 		return response.data;
 	},
-	getSocialCallback: async (social, search) => {
+	getSocialCallback: async ({ social, search }) => {
+		console.log(social, search);
 		const response = await api.get(`/api/auth/${social}/callback${search}`);
+		return response.data;
+	},
+	createSocial: async ({ name, username, email, password, avatar, social }) => {
+		const response = await api.post(`/api/auth/create-social`, {
+			name,
+			username,
+			email,
+			password,
+			avatar,
+			social,
+		});
 		return response.data;
 	},
 };

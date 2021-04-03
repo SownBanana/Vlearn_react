@@ -2,13 +2,14 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import AuthAPI from "../../commons/api/AuthAPI";
 import { enqueueSnackbar } from "../Toast/toastSlices";
 
-export const logout = createAsyncThunk("auth/logout", async () => {
+export const logout = () => (dispatch) => {
 	try {
-		await AuthAPI.logout();
+		AuthAPI.logout();
+		dispatch(authFail());
 	} catch (e) {
 		console.log(e);
 	}
-});
+};
 
 export const register = createAsyncThunk("auth/register", async (params) => {
 	try {
@@ -24,6 +25,16 @@ export const login = createAsyncThunk("auth/login", async (params) => {
 		console.log(e);
 	}
 });
+export const createSocial = createAsyncThunk(
+	"auth/createSocial",
+	async (params) => {
+		try {
+			return await AuthAPI.createSocial(params);
+		} catch (e) {
+			console.log(e);
+		}
+	}
+);
 
 export const accessTokenExpired = (refresh_token = null) =>
 	async function getNewToken(dispatch) {
@@ -161,12 +172,8 @@ const auth = createSlice({
 			}
 			localStorage.setItem("auth", JSON.stringify({ ...state, error: null }));
 		},
-		[logout.rejected]: (state) => {
-			setFail(state);
-			localStorage.setItem("auth", JSON.stringify({ ...state, error: null }));
-		},
-		[logout.fulfilled]: (state) => {
-			setFail(state);
+		[createSocial.fulfilled]: (state, action) => {
+			setSuccess(state, action.payload);
 			localStorage.setItem("auth", JSON.stringify({ ...state, error: null }));
 		},
 	},

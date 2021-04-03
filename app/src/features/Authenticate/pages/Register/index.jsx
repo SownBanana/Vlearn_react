@@ -3,25 +3,20 @@ import {
 	Typography,
 	Grid,
 	makeStyles,
-	CssBaseline,
 	Avatar,
 	TextField,
 	Button,
 	Container,
 	Collapse,
-	Box,
 } from "@material-ui/core/";
 import { Link } from "react-router-dom";
-import {
-	GoogleLoginButton,
-	GithubLoginButton,
-	FacebookLoginButton,
-} from "react-social-login-buttons";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { register as reg } from "../../authSlices";
 import { useForm } from "react-hook-form";
 import globalStyles from "../../../../style/GlobalStyles";
 import { useState } from "react";
+import checkPassword from "../../components/CheckPassword";
+import SocialLoginButtonGroup from "../../components/SocialLoginButtonGroup";
 const useStyles = makeStyles((theme) => ({
 	root: {
 		height: "100vh",
@@ -70,70 +65,17 @@ export default function Register() {
 		num: false,
 		timeOut: 0,
 	});
-	const googleLoginLink = useSelector(
-		(state) => state.externalLink.googleLoginLink
-	);
 	var timer = 0;
 	const checkErrorPassword = (password) => {
 		// console.log(timer);
 		clearTimeout(timer);
 		timer = setTimeout(() => {
-			let check = false;
-			//validate letter
-			if (password.match(/[a-z]/)) {
-				setPasswordErrorCheck((passwordErrorCheck) => {
-					return { ...passwordErrorCheck, nor: false };
-				});
-			} else {
-				check = true;
-				setPasswordErrorCheck((passwordErrorCheck) => {
-					return { ...passwordErrorCheck, nor: true };
-				});
-			}
-
-			//validate capital letter
-			if (password.match(/[A-Z]/)) {
-				setPasswordErrorCheck((passwordErrorCheck) => {
-					return { ...passwordErrorCheck, cap: false };
-				});
-			} else {
-				check = true;
-				setPasswordErrorCheck((passwordErrorCheck) => {
-					return { ...passwordErrorCheck, cap: true };
-				});
-			}
-
-			//validate special character
-			if (password.match(/[!"#$%&'()*+,-.:;<=>?@[\]^_`{|}~]/)) {
-				setPasswordErrorCheck((passwordErrorCheck) => {
-					return { ...passwordErrorCheck, spe: false };
-				});
-			} else {
-				check = true;
-				setPasswordErrorCheck((passwordErrorCheck) => {
-					return { ...passwordErrorCheck, spe: true };
-				});
-			}
-
-			//validate number
-			if (password.match(/\d/)) {
-				setPasswordErrorCheck((passwordErrorCheck) => {
-					return { ...passwordErrorCheck, num: false };
-				});
-			} else {
-				check = true;
-				setPasswordErrorCheck((passwordErrorCheck) => {
-					return { ...passwordErrorCheck, num: true };
-				});
-			}
-			// console.log(passwordErrorCheck);
-			return !check;
+			checkPassword(password, setPasswordErrorCheck);
 		}, 100);
 	};
 
 	return (
 		<Container component="main" maxWidth="sm">
-			<CssBaseline />
 			<Grid container>
 				<div className={classes.paper}>
 					<Avatar className={classes.avatar}>
@@ -310,30 +252,7 @@ export default function Register() {
 						alignItems="center"
 					>
 						<p>Hoặc đăng ký với</p>
-						<Grid
-							container
-							direction="row"
-							justify="center"
-							alignItems="center"
-						>
-							<Box mx={1}>
-								<GoogleLoginButton
-									text=""
-									onClick={() => {
-										window.location.href = googleLoginLink;
-									}}
-								/>
-							</Box>
-							<Box mx={1}>
-								<FacebookLoginButton
-									text=""
-									onClick={() => alert("Facebook")}
-								/>
-							</Box>
-							<Box mx={1}>
-								<GithubLoginButton text="" onClick={() => alert("Github")} />
-							</Box>
-						</Grid>
+						<SocialLoginButtonGroup />
 					</Grid>
 				</div>
 			</Grid>

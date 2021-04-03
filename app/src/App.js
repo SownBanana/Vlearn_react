@@ -9,6 +9,8 @@ import { authSuccess } from "./features/Authenticate/authSlices";
 // import Toast from "./features/Toast";
 import Notifier from "./Notifier";
 import { ProgressBarProvider as ProgressBar } from "react-redux-progress";
+import { CssBaseline } from "@material-ui/core";
+import SideBar from './features/Layout/components/SideBar'
 
 const Authenticate = React.lazy(() => import("./features/Authenticate/"));
 
@@ -25,8 +27,10 @@ function App() {
 	return (
 		<div className="App">
 			{/* <Toast /> */}
+			<CssBaseline />
 			<ProgressBar isActive={isProgressActive} />
 			<Notifier />
+			<SideBar/>
 			<Suspense fallback={<div>Loading ...</div>}>
 				<Switch>
 					<Route path="/auth" component={Authenticate} />

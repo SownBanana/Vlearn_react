@@ -3,12 +3,10 @@ import {
 	Typography,
 	Grid,
 	makeStyles,
-	CssBaseline,
 	Paper,
 	Avatar,
 	TextField,
 	Button,
-	Box,
 } from "@material-ui/core/";
 import { Link } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
@@ -20,14 +18,12 @@ import BackToPrevious from "../../../../commons/components/BackToPrevious";
 import { headShake } from "react-animations";
 import { StyleSheet, css } from "aphrodite";
 import {
-	activeProgress,
+	// activeProgress,
 	deactiveProgress,
+	activeProgressWithTimeOut,
 } from "../../../../commons/SliceCommon";
-import {
-	GoogleLoginButton,
-	GithubLoginButton,
-	FacebookLoginButton,
-} from "react-social-login-buttons";
+
+import SocialLoginButtonGroup from "../../components/SocialLoginButtonGroup.js";
 
 const styles = StyleSheet.create({
 	headShake: {
@@ -91,9 +87,6 @@ function Login() {
 	const wrongPass = useSelector((state) => state.auth.error.wrongPass);
 	const notConfirm = useSelector((state) => state.auth.error.notConfirm);
 	const tryEffort = useSelector((state) => state.auth.tryEffort);
-	const googleLoginLink = useSelector(
-		(state) => state.externalLink.googleLoginLink
-	);
 
 	const [login, setLogin] = useState("");
 	const [password, setPassword] = useState("");
@@ -137,7 +130,6 @@ function Login() {
 	}, [isAuthed, dispatch]);
 
 	useEffect(() => {
-		dispatch(deactiveProgress());
 		if (wrongLogin || notConfirm !== "") {
 			console.log("Shake Login");
 			setShakeLogin(true);
@@ -153,14 +145,14 @@ function Login() {
 			}, 300);
 			passwordRef.current.focus();
 		}
-	}, [wrongLogin, wrongPass, notConfirm, tryEffort, dispatch]);
+		dispatch(deactiveProgress());
+	}, [wrongLogin, wrongPass, notConfirm, tryEffort]);
 
 	return isAuthed ? (
 		// <Redirect to="/" />
 		<BackToPrevious />
 	) : (
 		<Grid container component="main" className={classes.root}>
-			<CssBaseline />
 			<Grid item xs={false} sm={4} md={7} className={classes.image} />
 			<Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
 				<div className={classes.paper}>
@@ -180,7 +172,7 @@ function Login() {
 						className={classes.form}
 						onSubmit={(e) => {
 							e.preventDefault();
-							dispatch(activeProgress());
+							dispatch(activeProgressWithTimeOut(1000));
 							// setTryEffort((tryEffort) => tryEffort + 1);
 							dispatch(postLogin({ login, password }));
 						}}
@@ -267,37 +259,7 @@ function Login() {
 						alignItems="center"
 					>
 						<p>Hoặc đăng nhập với</p>
-						<Grid
-							container
-							direction="row"
-							justify="center"
-							alignItems="center"
-						>
-							<Box mx={1}>
-								<GoogleLoginButton
-									text=""
-									// text={loginGoogleText}
-									// onMouseEnter={() => {
-									// 	setloginGoogleText("Đăng nhập với Google");
-									// }}
-									// onMouseLeave={() => {
-									// 	setloginGoogleText("");
-									// }}
-									onClick={() => {
-										window.location.href = googleLoginLink;
-									}}
-								/>
-							</Box>
-							<Box mx={1}>
-								<FacebookLoginButton
-									text=""
-									onClick={() => alert("Facebook")}
-								/>
-							</Box>
-							<Box mx={1}>
-								<GithubLoginButton text="" onClick={() => alert("Github")} />
-							</Box>
-						</Grid>
+						<SocialLoginButtonGroup />
 					</Grid>
 				</div>
 			</Grid>

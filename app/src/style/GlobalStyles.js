@@ -10,5 +10,11 @@ export default makeStyles({
 		".noHeight": {
 			height: 0,
 		},
+		".noPadding": {
+			padding: 0,
+		},
+		".noPaddingTop": {
+			paddingTop:" 0 !important",
+		},
 	},
 });

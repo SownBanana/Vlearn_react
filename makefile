@@ -1,8 +1,8 @@
 sh:
- -docker-compose run app sh
+	- docker-compose run app sh
 up:
- -docker-compose up
+	- docker-compose up
 start:
- -docker-compose up -d
-up:
- -docker-compose down
+	- docker-compose up -d
+down:
+	- docker-compose down
