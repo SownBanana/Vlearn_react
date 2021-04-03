@@ -1,27 +1,21 @@
-import { React, useEffect, useState } from "react";
+import { React, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { Route, Switch, Link } from "react-router-dom";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import { logout } from "./authSlices";
 import Google from "./pages/OAuth/Google";
-import api from "../../commons/api/AuthAPI";
 import { setPreviousURL } from "../../commons/SliceCommon";
+import { fetchGoogleLink } from "../Authenticate/externalLinkSlice";
 
 export default function Authenticate() {
 	const dispatch = useDispatch();
-	const [googleURL, setGoogleURL] = useState(null);
 	dispatch(setPreviousURL("/auth"));
 
 	useEffect(() => {
-		const data = api.getSocialURL("google");
-		data.then(function (result) {
-			if (result) {
-				setGoogleURL(result.url);
-			}
-		});
+		dispatch(fetchGoogleLink());
 		return () => {};
-	}, []);
+	}, [dispatch]);
 
 	return (
 		<Switch>
@@ -29,7 +23,6 @@ export default function Authenticate() {
 				<h3>Authenticate Portal</h3>
 				<Link to={`auth/login`}>Login </Link>
 				<Link to={`auth/register`}>Register </Link>
-				<a href={googleURL}>Google </a>
 				<button
 					onClick={(e) => {
 						e.preventDefault();

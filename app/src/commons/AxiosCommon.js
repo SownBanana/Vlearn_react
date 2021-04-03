@@ -14,13 +14,15 @@ export const headersWithToken = (access_token = null) => {
 	return {};
 };
 
+console.log(`${process.env.REACT_APP_BACKEND_URL}`);
+
 export default axios.create({
 	baseURL: `${process.env.REACT_APP_BACKEND_URL}`,
 	withCredentials: true,
 	headers: {
 		Accept: "application/json",
 		"Content-Type": "application/json",
-		"Access-Control-Allow-Origin": "http://localhost:3000",
+		"Access-Control-Allow-Origin": `${process.env.REACT_APP_URL}`,
 		"Access-Control-Allow-Credentials": "true",
 	},
 });

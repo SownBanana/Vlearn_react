@@ -4,7 +4,7 @@ WORKDIR /app
 COPY . .
 COPY dev.env .env
 RUN npm install
-RUN npm run build
+# RUN npm run build
 
 CMD ["npm", "start"]
 

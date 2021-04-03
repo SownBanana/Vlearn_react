@@ -9,9 +9,15 @@ import {
 	Button,
 	Container,
 	Collapse,
+	Box,
 } from "@material-ui/core/";
 import { Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import {
+	GoogleLoginButton,
+	GithubLoginButton,
+	FacebookLoginButton,
+} from "react-social-login-buttons";
+import { useDispatch, useSelector } from "react-redux";
 import { register as reg } from "../../authSlices";
 import { useForm } from "react-hook-form";
 import globalStyles from "../../../../style/GlobalStyles";
@@ -64,6 +70,9 @@ export default function Register() {
 		num: false,
 		timeOut: 0,
 	});
+	const googleLoginLink = useSelector(
+		(state) => state.externalLink.googleLoginLink
+	);
 	var timer = 0;
 	const checkErrorPassword = (password) => {
 		// console.log(timer);
@@ -203,7 +212,7 @@ export default function Register() {
 									</div>
 								</Collapse>
 							</Grid>
-							<Grid item xs={12}>
+							<Grid item xs={6}>
 								<TextField
 									variant="outlined"
 									fullWidth
@@ -258,7 +267,7 @@ export default function Register() {
 									</div>
 								</Collapse>
 							</Grid>
-							<Grid item xs={12}>
+							<Grid item xs={6}>
 								<TextField
 									variant="outlined"
 									fullWidth
@@ -294,6 +303,38 @@ export default function Register() {
 							</Grid>
 						</Grid>
 					</form>
+					<Grid
+						container
+						direction="column"
+						justify="center"
+						alignItems="center"
+					>
+						<p>Hoặc đăng ký với</p>
+						<Grid
+							container
+							direction="row"
+							justify="center"
+							alignItems="center"
+						>
+							<Box mx={1}>
+								<GoogleLoginButton
+									text=""
+									onClick={() => {
+										window.location.href = googleLoginLink;
+									}}
+								/>
+							</Box>
+							<Box mx={1}>
+								<FacebookLoginButton
+									text=""
+									onClick={() => alert("Facebook")}
+								/>
+							</Box>
+							<Box mx={1}>
+								<GithubLoginButton text="" onClick={() => alert("Github")} />
+							</Box>
+						</Grid>
+					</Grid>
 				</div>
 			</Grid>
 		</Container>

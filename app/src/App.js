@@ -4,10 +4,12 @@ import { Route, Switch } from "react-router-dom";
 import PrivateRoute from "./commons/PrivateRoute";
 import Home from "./features/Home";
 import { Suspense } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { authSuccess } from "./features/Authenticate/authSlices";
-import Toast from "./features/Toast";
-import Notifier from './Notifier';
+// import Toast from "./features/Toast";
+import Notifier from "./Notifier";
+import { ProgressBarProvider as ProgressBar } from "react-redux-progress";
+
 const Authenticate = React.lazy(() => import("./features/Authenticate/"));
 
 function App() {
@@ -17,9 +19,13 @@ function App() {
 		JSON.parse(localStorage.getItem("auth")).isLoggedIn
 	)
 		dispatch(authSuccess(JSON.parse(localStorage.getItem("auth"))));
+	const isProgressActive = useSelector(
+		(state) => state.common.isActiveProgress
+	);
 	return (
 		<div className="App">
-			<Toast />
+			{/* <Toast /> */}
+			<ProgressBar isActive={isProgressActive} />
 			<Notifier />
 			<Suspense fallback={<div>Loading ...</div>}>
 				<Switch>

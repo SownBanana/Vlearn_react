@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
 	previousURL: "/",
 	currentURL: "/",
+	isActiveProgress: false,
 };
 
 const common = createSlice({
@@ -15,9 +16,20 @@ const common = createSlice({
 		setCurrentURL: (state, action) => {
 			state.currentURL = action.payload;
 		},
+		activeProgress: (state) => {
+			state.isActiveProgress = true;
+		},
+		deactiveProgress: (state) => {
+			state.isActiveProgress = false;
+		},
 	},
 });
 
-export const { setPreviousURL, setCurrentURL } = common.actions;
+export const {
+	setPreviousURL,
+	setCurrentURL,
+	activeProgress,
+	deactiveProgress,
+} = common.actions;
 
 export default common.reducer;

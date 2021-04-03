@@ -1,11 +1,8 @@
 import { accessTokenExpired } from "../features/Authenticate/authSlices";
+
+const whiteList = ["getNewToken", "actionCreator", "resendEmail"];
 const RefreshTokenMiddleWare = (store) => (next) => (action) => {
-	if (
-		typeof action === "function" &&
-		action.name !== "getNewToken" &&
-		action.name !== "actionCreator" &&
-		action.name !== "resendEmail"
-	) {
+	if (typeof action === "function" && !whiteList.includes(action.name)) {
 		const { dispatch } = store;
 		const state = store.getState();
 		const { isLoggedIn, expires_on } = state.auth;

@@ -100,6 +100,7 @@ function setFail(state) {
 	state.access_token = null;
 	state.refresh_token = null;
 	state.expires_on = 0;
+	state.tryEffort = state.tryEffort + 1;
 	clearError(state);
 }
 function setSuccess(state, { access_token, expires_on, expires_in }) {
@@ -110,6 +111,7 @@ function setSuccess(state, { access_token, expires_on, expires_in }) {
 		: Math.floor(Date.now() / 1000) + 10;
 	// : Math.floor(Date.now() / 1000) + expires_in - 10;
 	state.isLoggedIn = true;
+	state.tryEffort = 0;
 	clearError(state);
 }
 
@@ -118,6 +120,7 @@ const initialState = {
 	refresh_token: null,
 	expires_on: 0,
 	isLoggedIn: false,
+	tryEffort: 0,
 	error: {
 		wrongLogin: false,
 		wrongPass: false,

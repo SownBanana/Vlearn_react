@@ -8,15 +8,33 @@ import {
 	Avatar,
 	TextField,
 	Button,
+	Box,
 } from "@material-ui/core/";
-
-import { Link, Redirect } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { authFail, login as postLogin, resendVerify } from "../../authSlices";
 import { enqueueSnackbar } from "../../../Toast/toastSlices";
 import SnackButton from "../../../Toast/SnackButton";
 import BackToPrevious from "../../../../commons/components/BackToPrevious";
+import { headShake } from "react-animations";
+import { StyleSheet, css } from "aphrodite";
+import {
+	activeProgress,
+	deactiveProgress,
+} from "../../../../commons/SliceCommon";
+import {
+	GoogleLoginButton,
+	GithubLoginButton,
+	FacebookLoginButton,
+} from "react-social-login-buttons";
+
+const styles = StyleSheet.create({
+	headShake: {
+		animationName: headShake,
+		animationDuration: "1s",
+	},
+});
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -61,6 +79,10 @@ const useStyles = makeStyles((theme) => ({
 	whiteButton: {
 		color: "white",
 	},
+	shake: {
+		animationName: headShake,
+		animationDuration: "1s",
+	},
 }));
 
 function Login() {
@@ -68,13 +90,24 @@ function Login() {
 	const wrongLogin = useSelector((state) => state.auth.error.wrongLogin);
 	const wrongPass = useSelector((state) => state.auth.error.wrongPass);
 	const notConfirm = useSelector((state) => state.auth.error.notConfirm);
+	const tryEffort = useSelector((state) => state.auth.tryEffort);
+	const googleLoginLink = useSelector(
+		(state) => state.externalLink.googleLoginLink
+	);
 
 	const [login, setLogin] = useState("");
 	const [password, setPassword] = useState("");
+	const [shakeLogin, setShakeLogin] = useState(false);
+	const [shakePassword, setShakePassword] = useState(false);
 	// const { register, handleSubmit, watch, errors } = useForm();
+	// const [loginGoogleText, setloginGoogleText] = useState("");
+	// const [loginGithubText, setloginGithubText] = useState("");
 
 	const classes = useStyles();
 	const dispatch = useDispatch();
+
+	const loginRef = useRef();
+	const passwordRef = useRef();
 
 	const handleChange = (e, func) => {
 		func(e.target.value);
@@ -103,6 +136,25 @@ function Login() {
 		}
 	}, [isAuthed, dispatch]);
 
+	useEffect(() => {
+		dispatch(deactiveProgress());
+		if (wrongLogin || notConfirm !== "") {
+			console.log("Shake Login");
+			setShakeLogin(true);
+			setTimeout(() => {
+				setShakeLogin(false);
+			}, 300);
+			loginRef.current.focus();
+		} else if (wrongPass) {
+			console.log("Shake Password");
+			setShakePassword(true);
+			setTimeout(() => {
+				setShakePassword(false);
+			}, 300);
+			passwordRef.current.focus();
+		}
+	}, [wrongLogin, wrongPass, notConfirm, tryEffort, dispatch]);
+
 	return isAuthed ? (
 		// <Redirect to="/" />
 		<BackToPrevious />
@@ -112,20 +164,30 @@ function Login() {
 			<Grid item xs={false} sm={4} md={7} className={classes.image} />
 			<Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
 				<div className={classes.paper}>
-					<Avatar className={classes.avatar}>
-						<LockOutlinedIcon />
-					</Avatar>
-					<Typography component="h1" variant="h5">
-						Đăng nhập
-					</Typography>
+					{/* <Avatar className={classes.avatar}> */}
+					<div
+						className={shakeLogin || shakePassword ? css(styles.headShake) : ""}
+						style={{ alignItems: "center" }}
+					>
+						<Avatar className={classes.avatar} style={{ margin: "auto" }}>
+							<LockOutlinedIcon />
+						</Avatar>
+						<Typography component="h1" variant="h5">
+							Đăng nhập
+						</Typography>
+					</div>
 					<form
 						className={classes.form}
 						onSubmit={(e) => {
 							e.preventDefault();
+							dispatch(activeProgress());
+							// setTryEffort((tryEffort) => tryEffort + 1);
 							dispatch(postLogin({ login, password }));
 						}}
 					>
 						<TextField
+							inputRef={loginRef}
+							className={shakeLogin ? css(styles.headShake) : ""}
 							error={wrongLogin || notConfirm !== ""}
 							variant="outlined"
 							margin="normal"
@@ -159,6 +221,8 @@ function Login() {
 						/>
 						{/* <a href="#">here</a> */}
 						<TextField
+							inputRef={passwordRef}
+							className={shakePassword ? css(styles.headShake) : ""}
 							error={wrongPass}
 							variant="outlined"
 							margin="normal"
@@ -196,6 +260,45 @@ function Login() {
 							</Grid>
 						</Grid>
 					</form>
+					<Grid
+						container
+						direction="column"
+						justify="center"
+						alignItems="center"
+					>
+						<p>Hoặc đăng nhập với</p>
+						<Grid
+							container
+							direction="row"
+							justify="center"
+							alignItems="center"
+						>
+							<Box mx={1}>
+								<GoogleLoginButton
+									text=""
+									// text={loginGoogleText}
+									// onMouseEnter={() => {
+									// 	setloginGoogleText("Đăng nhập với Google");
+									// }}
+									// onMouseLeave={() => {
+									// 	setloginGoogleText("");
+									// }}
+									onClick={() => {
+										window.location.href = googleLoginLink;
+									}}
+								/>
+							</Box>
+							<Box mx={1}>
+								<FacebookLoginButton
+									text=""
+									onClick={() => alert("Facebook")}
+								/>
+							</Box>
+							<Box mx={1}>
+								<GithubLoginButton text="" onClick={() => alert("Github")} />
+							</Box>
+						</Grid>
+					</Grid>
 				</div>
 			</Grid>
 		</Grid>
