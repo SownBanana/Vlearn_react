@@ -7,34 +7,18 @@ import HomeIcon from "@material-ui/icons/Home";
 import ImportContactsIcon from "@material-ui/icons/ImportContacts";
 import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
 import ListItemLink from "../../../commons/components/ListItemLink";
+import globalStyle from "../../../style/GlobalStyles";
+import { IconButton, List, makeStyles, useTheme } from "@material-ui/core";
+import ChatIcon from "@material-ui/icons/Chat";
+import NotificationsIcon from "@material-ui/icons/Notifications";
 
-import {
-	IconButton,
-	List,
-	makeStyles,
-	useTheme,
-	// ListItem,
-	// ListItemIcon,
-	// ListItemText,
-	// Divider,
-} from "@material-ui/core";
-import MyAppBar from "./MyAppBar";
-
-export default function SideBar() {
+export default function MyDrawer({ handle, open }) {
 	const classes = useStyles();
 	const theme = useTheme();
-	const [open, setOpen] = React.useState(false);
+	globalStyle();
 
-	const handleDrawerOpen = () => {
-		setOpen(true);
-	};
-
-	const handleDrawerClose = () => {
-		setOpen(false);
-	};
 	return (
 		<div>
-			<MyAppBar handle={handleDrawerOpen} open={open} />
 			<Drawer
 				variant="permanent"
 				className={clsx(classes.drawer, {
@@ -49,7 +33,7 @@ export default function SideBar() {
 				}}
 			>
 				<div className={classes.toolbar}>
-					<IconButton onClick={handleDrawerClose}>
+					<IconButton onClick={handle}>
 						{theme.direction === "rtl" ? (
 							<ChevronRightIcon />
 						) : (
@@ -80,6 +64,24 @@ export default function SideBar() {
 					].map(({ name, key, icon, link }) => (
 						<ListItemLink to={link} icon={icon} primary={name} key={key} />
 					))}
+					<div className={classes.sectionMobile}>
+						{[
+							{
+								name: "Tin nhắn",
+								key: "message",
+								icon: <ChatIcon />,
+								link: "/message",
+							},
+							{
+								name: "Thông báo",
+								key: "notification",
+								icon: <NotificationsIcon />,
+								link: "/notification",
+							},
+						].map(({ name, key, icon, link }) => (
+							<ListItemLink to={link} icon={icon} primary={name} key={key} />
+						))}
+					</div>
 				</List>
 			</Drawer>
 		</div>
@@ -122,5 +124,17 @@ const useStyles = makeStyles((theme) => ({
 		padding: theme.spacing(0, 1),
 		// necessary for content to be below app bar
 		...theme.mixins.toolbar,
+	},
+	sectionDesktop: {
+		display: "none",
+		[theme.breakpoints.up("sm")]: {
+			display: "block",
+		},
+	},
+	sectionMobile: {
+		display: "block",
+		[theme.breakpoints.up("sm")]: {
+			display: "none",
+		},
 	},
 }));

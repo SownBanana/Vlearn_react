@@ -25,11 +25,23 @@ export default function NewSocialAccount() {
 	globalStyles();
 
 	const onSubmit = ({ username, email, password }) => {
-		console.log("Submit");
+		console.log("object");
 		const social = pendingSocial.social_provider;
 		const name = pendingSocial.social_name;
 		const avatar = pendingSocial.social_avatar;
-		dispatch(createSocial({ name, username, email, password, avatar, social }));
+		const social_id = pendingSocial.social_id;
+		dispatch(
+			createSocial({
+				name,
+				username,
+				email,
+				password,
+				avatar,
+				social,
+				isUsePassword,
+				social_id,
+			})
+		);
 	};
 
 	const [passwordErrorCheck, setPasswordErrorCheck] = useState({

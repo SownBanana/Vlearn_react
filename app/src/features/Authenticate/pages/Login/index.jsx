@@ -146,7 +146,7 @@ function Login() {
 			passwordRef.current.focus();
 		}
 		dispatch(deactiveProgress());
-	}, [wrongLogin, wrongPass, notConfirm, tryEffort]);
+	}, [wrongLogin, wrongPass, notConfirm, tryEffort]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	return isAuthed ? (
 		// <Redirect to="/" />

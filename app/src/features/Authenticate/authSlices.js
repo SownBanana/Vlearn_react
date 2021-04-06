@@ -104,6 +104,7 @@ function clearError(state) {
 	state.error.notConfirm = "";
 	state.error.usedUsername = false;
 	state.error.usedEmail = false;
+	state.error.serverError = false;
 }
 
 function setFail(state) {
@@ -112,17 +113,27 @@ function setFail(state) {
 	state.refresh_token = null;
 	state.expires_on = 0;
 	state.tryEffort = state.tryEffort + 1;
+	state.user.name = null;
+	state.user.username = null;
+	state.user.email = null;
+	state.user.avatar_url = null;
+	state.user.role = null;
 	clearError(state);
 }
-function setSuccess(state, { access_token, expires_on, expires_in }) {
+function setSuccess(state, { access_token, expires_on, expires_in, user }) {
 	state.access_token = access_token;
 	// state.refresh_token = refresh_token;
 	state.expires_on = expires_on
 		? expires_on
-		: Math.floor(Date.now() / 1000) + 10;
-	// : Math.floor(Date.now() / 1000) + expires_in - 10;
+		: Math.floor(Date.now() / 1000) + expires_in - 10;
+	// : Math.floor(Date.now() / 1000) + 10;
 	state.isLoggedIn = true;
 	state.tryEffort = 0;
+	state.user.name = user.name;
+	state.user.username = user.username;
+	state.user.email = user.email;
+	state.user.avatar_url = user.avatar_url;
+	state.user.role = user.role;
 	clearError(state);
 }
 
@@ -138,6 +149,14 @@ const initialState = {
 		notConfirm: "",
 		usedUsername: false,
 		usedEmail: false,
+		serverError: false,
+	},
+	user: {
+		name: null,
+		username: null,
+		email: null,
+		avatar_url: null,
+		role: null,
 	},
 };
 
@@ -153,10 +172,17 @@ const auth = createSlice({
 			setFail(state);
 			localStorage.setItem("auth", JSON.stringify({ ...state, error: null }));
 		},
+		setServerError: (state, status) => {
+			state.error.serverError = status;
+		},
 	},
 	extraReducers: {
 		[login.fulfilled]: (state, action) => {
-			console.log(action.payload);
+			// console.log("==========>", action);
+			if (action.payload === undefined || action.payload === null) {
+				state.error.serverError = true;
+				return;
+			}
 			if (action.payload.status === "success") {
 				setSuccess(state, action.payload);
 			} else if (action.payload.status === "notConfirm") {

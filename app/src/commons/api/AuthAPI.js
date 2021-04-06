@@ -61,7 +61,16 @@ const authAPI = {
 		const response = await api.get(`/api/auth/${social}/callback${search}`);
 		return response.data;
 	},
-	createSocial: async ({ name, username, email, password, avatar, social }) => {
+	createSocial: async ({
+		name,
+		username,
+		email,
+		password,
+		avatar,
+		social,
+		isUsePassword,
+		social_id
+	}) => {
 		const response = await api.post(`/api/auth/create-social`, {
 			name,
 			username,
@@ -69,6 +78,8 @@ const authAPI = {
 			password,
 			avatar,
 			social,
+			isUsePassword,
+			social_id
 		});
 		return response.data;
 	},

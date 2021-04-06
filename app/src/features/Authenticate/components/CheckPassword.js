@@ -49,6 +49,7 @@ const checkPassword = (password, setPasswordErrorCheck) => {
 		});
 	}
 	// console.log(passwordErrorCheck);
+	console.log(!check);
 	return !check;
 };
 

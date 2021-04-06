@@ -6,16 +6,10 @@ import Register from "./pages/Register";
 import { logout } from "./authSlices";
 import Google from "./pages/OAuth/Google";
 import { setPreviousURL } from "../../commons/SliceCommon";
-import { fetchGoogleLink } from "./externalLinkSlices";
 
 export default function Authenticate() {
 	const dispatch = useDispatch();
 	dispatch(setPreviousURL("/auth"));
-
-	useEffect(() => {
-		dispatch(fetchGoogleLink());
-		return () => {};
-	}, [dispatch]);
 
 	return (
 		<Switch>

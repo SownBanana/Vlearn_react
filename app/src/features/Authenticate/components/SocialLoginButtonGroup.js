@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Grid, Box } from "@material-ui/core/";
 import {
@@ -7,11 +7,19 @@ import {
 	FacebookLoginButton,
 } from "react-social-login-buttons";
 import { logout } from "../authSlices";
+import { fetchGoogleLink } from "../externalLinkSlices";
+
 export default function SocialLoginButtonGroup() {
 	const dispatch = useDispatch();
 	const googleLoginLink = useSelector(
 		(state) => state.externalLink.googleLoginLink
 	);
+
+	useEffect(() => {
+		dispatch(fetchGoogleLink());
+		return () => {};
+	}, []);
+
 	return (
 		<div>
 			<Grid container direction="row" justify="center" alignItems="center">
