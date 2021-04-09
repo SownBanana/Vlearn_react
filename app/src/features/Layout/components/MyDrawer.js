@@ -47,7 +47,7 @@ export default function MyDrawer({ handle, open }) {
 							name: "Dashboard",
 							key: "dashboard",
 							icon: <HomeIcon />,
-							link: "/home",
+							link: "/",
 						},
 						{
 							name: "Khám phá",

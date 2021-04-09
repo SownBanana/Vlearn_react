@@ -120,7 +120,10 @@ function setFail(state) {
 	state.user.role = null;
 	clearError(state);
 }
-function setSuccess(state, { access_token, expires_on, expires_in, user }) {
+function setSuccess(
+	state,
+	{ access_token, expires_on, expires_in, user = false }
+) {
 	state.access_token = access_token;
 	// state.refresh_token = refresh_token;
 	state.expires_on = expires_on
@@ -129,11 +132,13 @@ function setSuccess(state, { access_token, expires_on, expires_in, user }) {
 	// : Math.floor(Date.now() / 1000) + 10;
 	state.isLoggedIn = true;
 	state.tryEffort = 0;
-	state.user.name = user.name;
-	state.user.username = user.username;
-	state.user.email = user.email;
-	state.user.avatar_url = user.avatar_url;
-	state.user.role = user.role;
+	if (user) {
+		state.user.name = user.name;
+		state.user.username = user.username;
+		state.user.email = user.email;
+		state.user.avatar_url = user.avatar_url;
+		state.user.role = user.role;
+	}
 	clearError(state);
 }
 
