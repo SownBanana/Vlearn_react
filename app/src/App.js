@@ -1,7 +1,8 @@
 import "./assets/styles/App.scss";
 import React, { useEffect } from "react";
-import { Route, Switch, useHistory, useLocation } from "react-router-dom";
-import PrivateRoute from "./commons/PrivateRoute";
+import { Route, Switch } from "react-router-dom";
+// useHistory, useLocation
+import { PrivateRoute } from "./commons/routes/CustomRoute";
 import Home from "./features/Home";
 import { Suspense } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,11 +10,13 @@ import { authSuccess } from "./features/Authenticate/authSlices";
 // import Toast from "./features/Toast";
 import Notifier from "./Notifier";
 import { ProgressBarProvider as ProgressBar } from "react-redux-progress";
-import { CssBaseline } from "@material-ui/core";
+import { CssBaseline, ThemeProvider } from "@material-ui/core";
 import AppFrame from "./features/Layout/components/AppFrame";
 import { enqueueSnackbar } from "./features/Toast/toastSlices";
-
+import ChatComponent from "./commons/components/ChatComponent";
+import theme from "./theme/theme";
 const Authenticate = React.lazy(() => import("./features/Authenticate/"));
+const Course = React.lazy(() => import("./features/Course/"));
 
 function App() {
 	const dispatch = useDispatch();
@@ -22,13 +25,11 @@ function App() {
 	const isProgressActive = useSelector(
 		(state) => state.common.isActiveProgress
 	);
-	useEffect(() => {
-		if (
-			localStorage.getItem("auth") &&
-			JSON.parse(localStorage.getItem("auth")).isLoggedIn
-		)
-			dispatch(authSuccess(JSON.parse(localStorage.getItem("auth"))));
-	}, []);
+	if (
+		localStorage.getItem("auth") &&
+		JSON.parse(localStorage.getItem("auth")).isLoggedIn
+	)
+		dispatch(authSuccess(JSON.parse(localStorage.getItem("auth"))));
 
 	useEffect(() => {
 		if (serverError) {
@@ -54,17 +55,21 @@ function App() {
 
 	return (
 		<div className="App">
-			{/* <Toast /> */}
-			<CssBaseline />
-			<ProgressBar isActive={isProgressActive} />
-			<Notifier />
-			<AppFrame />
-			<Suspense fallback={<div>Loading ...</div>}>
-				<Switch>
-					<Route path="/auth" component={Authenticate} />
-					<PrivateRoute exact path="/" component={Home} />
-				</Switch>
-			</Suspense>
+			<ThemeProvider theme={theme}>
+				{/* <Toast /> */}
+				<CssBaseline />
+				<ProgressBar isActive={isProgressActive} />
+				<Notifier />
+				<AppFrame />
+				<Suspense fallback={<div>Loading ...</div>}>
+					<Switch>
+						<Route path="/courses" component={Course} />
+						<Route path="/auth" component={Authenticate} />
+						<PrivateRoute exact path="/" component={Home} />
+					</Switch>
+				</Suspense>
+				<ChatComponent />
+			</ThemeProvider>
 		</div>
 	);
 }

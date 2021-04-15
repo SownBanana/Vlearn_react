@@ -8,6 +8,8 @@ import {
 	Button,
 	Container,
 	Collapse,
+	FormControlLabel,
+	Checkbox,
 } from "@material-ui/core/";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -54,9 +56,10 @@ export default function Register() {
 	const dispatch = useDispatch();
 	globalStyles();
 	const classes = useStyles();
+	const [role, setRole] = useState(3);
 	const { register, handleSubmit, errors, getValues } = useForm();
 	const onSubmit = ({ name, username, email, password }) => {
-		dispatch(reg({ name, username, email, password }));
+		dispatch(reg({ name, username, email, password, role }));
 	};
 	const [passwordErrorCheck, setPasswordErrorCheck] = useState({
 		spe: false,
@@ -226,6 +229,22 @@ export default function Register() {
 								<Collapse in={"repassword" in errors}>
 									<div className="errorHelperText">Mật khẩu không khớp</div>
 								</Collapse>
+							</Grid>
+							<Grid item md={8}>
+								<FormControlLabel
+									control={
+										<Checkbox
+											checked={role === 2}
+											onChange={(e) => {
+												if (e.target.checked) setRole(2);
+												else setRole(3);
+											}}
+											name="role"
+											color="primary"
+										/>
+									}
+									label={"Tạo tài khoản cho giảng viên"}
+								/>
 							</Grid>
 						</Grid>
 						<Button

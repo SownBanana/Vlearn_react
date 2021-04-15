@@ -18,7 +18,7 @@ export default function SocialLoginButtonGroup() {
 	useEffect(() => {
 		dispatch(fetchGoogleLink());
 		return () => {};
-	}, []);
+	}, [dispatch]);
 
 	return (
 		<div>

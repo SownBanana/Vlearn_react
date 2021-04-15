@@ -25,62 +25,6 @@ import {
 
 import SocialLoginButtonGroup from "../../components/SocialLoginButtonGroup.js";
 
-const styles = StyleSheet.create({
-	headShake: {
-		animationName: headShake,
-		animationDuration: "1s",
-	},
-});
-
-const useStyles = makeStyles((theme) => ({
-	root: {
-		height: "100vh",
-	},
-	image: {
-		backgroundImage: "url(https://source.unsplash.com/random)",
-		backgroundRepeat: "no-repeat",
-		backgroundColor:
-			theme.palette.type === "light"
-				? theme.palette.grey[50]
-				: theme.palette.grey[900],
-		backgroundSize: "cover",
-		backgroundPosition: "center",
-	},
-	paper: {
-		margin: theme.spacing(8, 4),
-		display: "flex",
-		flexDirection: "column",
-		alignItems: "center",
-	},
-	avatar: {
-		margin: theme.spacing(1),
-		backgroundColor: theme.palette.secondary.main,
-	},
-	form: {
-		width: "100%", // Fix IE 11 issue.
-		marginTop: theme.spacing(1),
-	},
-	submit: {
-		margin: theme.spacing(3, 0, 2),
-	},
-	textLeft: {
-		textAlign: "left",
-	},
-	textRight: {
-		textAlign: "right",
-	},
-	noMargin: {
-		margin: 0,
-	},
-	whiteButton: {
-		color: "white",
-	},
-	shake: {
-		animationName: headShake,
-		animationDuration: "1s",
-	},
-}));
-
 function Login() {
 	const isAuthed = useSelector((state) => state.auth.isLoggedIn);
 	const wrongLogin = useSelector((state) => state.auth.error.wrongLogin);
@@ -266,5 +210,61 @@ function Login() {
 		</Grid>
 	);
 }
+
+const styles = StyleSheet.create({
+	headShake: {
+		animationName: headShake,
+		animationDuration: "1s",
+	},
+});
+
+const useStyles = makeStyles((theme) => ({
+	root: {
+		height: "100vh",
+	},
+	image: {
+		backgroundImage: "url(https://source.unsplash.com/random)",
+		backgroundRepeat: "no-repeat",
+		backgroundColor:
+			theme.palette.type === "light"
+				? theme.palette.grey[50]
+				: theme.palette.grey[900],
+		backgroundSize: "cover",
+		backgroundPosition: "center",
+	},
+	paper: {
+		margin: theme.spacing(8, 4),
+		display: "flex",
+		flexDirection: "column",
+		alignItems: "center",
+	},
+	avatar: {
+		margin: theme.spacing(1),
+		backgroundColor: theme.palette.secondary.main,
+	},
+	form: {
+		width: "100%", // Fix IE 11 issue.
+		marginTop: theme.spacing(1),
+	},
+	submit: {
+		margin: theme.spacing(3, 0, 2),
+	},
+	textLeft: {
+		textAlign: "left",
+	},
+	textRight: {
+		textAlign: "right",
+	},
+	noMargin: {
+		margin: 0,
+	},
+	whiteButton: {
+		color: "white",
+	},
+	shake: {
+		animationName: headShake,
+		animationDuration: "1s",
+	},
+}));
 
 export default Login;

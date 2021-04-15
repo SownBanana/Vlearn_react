@@ -23,11 +23,12 @@ export default function NewSocialAccount() {
 	const { register, handleSubmit, errors, getValues } = useForm();
 	const classes = useStyles();
 	globalStyles();
+	const [role, setRole] = useState(3);
 
-	const onSubmit = ({ username, email, password }) => {
-		console.log("object");
+	const onSubmit = ({ username, password }) => {
 		const social = pendingSocial.social_provider;
 		const name = pendingSocial.social_name;
+		const email = pendingSocial.social_email;
 		const avatar = pendingSocial.social_avatar;
 		const social_id = pendingSocial.social_id;
 		dispatch(
@@ -40,6 +41,7 @@ export default function NewSocialAccount() {
 				social,
 				isUsePassword,
 				social_id,
+				role,
 			})
 		);
 	};
@@ -123,21 +125,41 @@ export default function NewSocialAccount() {
 							</Grid>
 							<Grid item xs={12} className="noPaddingTop">
 								<Grid container>
-									<FormControlLabel
-										control={
-											<Checkbox
-												checked={isUsePassword}
-												onChange={(e) => {
-													setIsUsePassword(e.target.checked);
-												}}
-												name="usePassword"
-												color="primary"
-											/>
-										}
-										label={
-											isUsePassword ? "Sử dụng mật khẩu" : "Không dùng mật khẩu"
-										}
-									/>
+									<Grid item md={6}>
+										<FormControlLabel
+											control={
+												<Checkbox
+													checked={isUsePassword}
+													onChange={(e) => {
+														setIsUsePassword(e.target.checked);
+													}}
+													name="usePassword"
+													color="primary"
+												/>
+											}
+											label={
+												isUsePassword
+													? "Sử dụng mật khẩu"
+													: "Không dùng mật khẩu"
+											}
+										/>
+									</Grid>
+									<Grid item md={6}>
+										<FormControlLabel
+											control={
+												<Checkbox
+													checked={role === 2}
+													onChange={(e) => {
+														if (e.target.checked) setRole(2);
+														else setRole(3);
+													}}
+													name="role"
+													color="primary"
+												/>
+											}
+											label={"Tạo tài khoản cho giảng viên"}
+										/>
+									</Grid>
 								</Grid>
 								<Collapse in={isUsePassword}>
 									<Grid container spacing={2}>

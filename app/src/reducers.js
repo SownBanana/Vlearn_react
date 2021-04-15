@@ -4,7 +4,7 @@ import social from "./features/Authenticate/socialAuthSlices";
 import toast from "./features/Toast/toastSlices";
 import common from "./commons/SliceCommon";
 import externalLink from "./features/Authenticate/externalLinkSlices";
-console.log(externalLink);
+// console.log(externalLink);
 export default combineReducers({
 	auth,
 	social,

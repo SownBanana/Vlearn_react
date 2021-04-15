@@ -56,9 +56,9 @@ export default function MyAppBar({ handle, open }) {
 		dispatch(logout());
 	};
 
-	const handleMobileMenuOpen = (event) => {
-		setMobileMoreAnchorEl(event.currentTarget);
-	};
+	// const handleMobileMenuOpen = (event) => {
+	// 	setMobileMoreAnchorEl(event.currentTarget);
+	// };
 
 	const menuId = "primary-search-account-menu";
 	const renderMenu = (

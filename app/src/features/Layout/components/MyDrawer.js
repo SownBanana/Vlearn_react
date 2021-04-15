@@ -53,7 +53,7 @@ export default function MyDrawer({ handle, open }) {
 							name: "Khám phá",
 							key: "browser",
 							icon: <ImportContactsIcon />,
-							link: "/auth",
+							link: "/courses",
 						},
 						{
 							name: "Kết nối",

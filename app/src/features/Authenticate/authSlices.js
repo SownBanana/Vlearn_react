@@ -28,6 +28,7 @@ export const login = createAsyncThunk("auth/login", async (params) => {
 export const createSocial = createAsyncThunk(
 	"auth/createSocial",
 	async (params) => {
+		console.log("params", params);
 		try {
 			return await AuthAPI.createSocial(params);
 		} catch (e) {
@@ -36,7 +37,11 @@ export const createSocial = createAsyncThunk(
 	}
 );
 
-export const accessTokenExpired = (refresh_token = null) =>
+export const accessTokenExpired = (
+	next = null,
+	action = null,
+	refresh_token = null
+) =>
 	async function getNewToken(dispatch) {
 		console.log("getting new token");
 		console.log(refresh_token);
@@ -47,6 +52,7 @@ export const accessTokenExpired = (refresh_token = null) =>
 		} catch (e) {
 			console.log(e);
 		}
+		if (action != null) next(action);
 	};
 
 export const resendVerify = (email) =>
@@ -113,6 +119,7 @@ function setFail(state) {
 	state.refresh_token = null;
 	state.expires_on = 0;
 	state.tryEffort = state.tryEffort + 1;
+	state.user.id = null;
 	state.user.name = null;
 	state.user.username = null;
 	state.user.email = null;
@@ -133,6 +140,7 @@ function setSuccess(
 	state.isLoggedIn = true;
 	state.tryEffort = 0;
 	if (user) {
+		state.user.id = user.id;
 		state.user.name = user.name;
 		state.user.username = user.username;
 		state.user.email = user.email;
@@ -157,6 +165,7 @@ const initialState = {
 		serverError: false,
 	},
 	user: {
+		id: null,
 		name: null,
 		username: null,
 		email: null,

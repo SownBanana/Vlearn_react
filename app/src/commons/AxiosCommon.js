@@ -13,6 +13,14 @@ export const headersWithToken = (access_token = null) => {
 	}
 	return {};
 };
+export const headersWithSocketId = () => {
+	if (localStorage) {
+		const access_token = JSON.parse(localStorage.getItem("auth")).access_token;
+		return {
+			Authorization: `Bearer ${access_token}`,
+		};
+	} else return {};
+};
 
 console.log(`${process.env.REACT_APP_BACKEND_URL}`);
 

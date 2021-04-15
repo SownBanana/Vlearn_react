@@ -2,12 +2,13 @@ import { addAuthHeader, addBody } from "../FetchCommon";
 import api, { headersWithToken } from "../AxiosCommon";
 
 const authAPI = {
-	register: async ({ name, username, email, password }) => {
+	register: async ({ name, username, email, password, role }) => {
 		const response = await api.post(`/api/register`, {
 			name,
 			username,
 			email,
 			password,
+			role,
 		});
 		return response.data;
 	},
@@ -69,8 +70,20 @@ const authAPI = {
 		avatar,
 		social,
 		isUsePassword,
-		social_id
+		social_id,
+		role,
 	}) => {
+		console.log(
+			name,
+			username,
+			email,
+			password,
+			avatar,
+			social,
+			isUsePassword,
+			social_id,
+			role
+		);
 		const response = await api.post(`/api/auth/create-social`, {
 			name,
 			username,
@@ -79,7 +92,8 @@ const authAPI = {
 			avatar,
 			social,
 			isUsePassword,
-			social_id
+			social_id,
+			role,
 		});
 		return response.data;
 	},

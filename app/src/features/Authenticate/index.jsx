@@ -1,4 +1,4 @@
-import { React, useEffect } from "react";
+import { React } from "react";
 import { useDispatch } from "react-redux";
 import { Route, Switch, Link } from "react-router-dom";
 import Login from "./pages/Login";
