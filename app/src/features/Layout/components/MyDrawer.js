@@ -20,6 +20,7 @@ export default function MyDrawer({ handle, open }) {
 	return (
 		<div>
 			<Drawer
+				anchor="left"
 				variant="permanent"
 				className={clsx(classes.drawer, {
 					[classes.drawerOpen]: open,

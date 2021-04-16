@@ -6,14 +6,27 @@ import Grid from "@material-ui/core/Grid";
 export default function index() {
 	return (
 		<div>
-			<Grid container direction="column" alignItems="flex-start" spacing={1}>
-				<Grid item>
-					<Typography variant="h5" color="initial">
-						This is Add Course
-					</Typography>
+			<Grid
+				container
+				spacing={1}
+				direction="column"
+				justify="center"
+				alignItems="center"
+				alignContent="center"
+				wrap="nowrap"
+			>
+				<Grid container direction="column" spacing={1}>
+					<Grid item md={8}>
+						<Typography variant="h5" color="initial">
+							This is Add Course
+						</Typography>
+					</Grid>
 				</Grid>
-				<Grid item>
-					<InputCourse />
+				<br />
+				<Grid container justify="center">
+					<Grid item md={12}>
+						<InputCourse />
+					</Grid>
 				</Grid>
 			</Grid>
 		</div>

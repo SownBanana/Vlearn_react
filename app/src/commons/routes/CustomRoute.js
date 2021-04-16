@@ -4,13 +4,13 @@ import { Redirect, Route as DefaultRoute } from "react-router-dom";
 import Container from "@material-ui/core/Container";
 import { Box } from "@material-ui/core";
 
-const Route = function ({ component: Component, ...rest }) {
+const Route = function ({ component: Component, maxWidth = "md", ...rest }) {
 	return (
 		<DefaultRoute
 			{...rest}
 			exact
 			render={(props) => (
-				<Container maxWidth="md">
+				<Container maxWidth={maxWidth}>
 					<Box mt={8}>
 						<div>{React.createElement(Component, props)}</div>
 					</Box>
@@ -20,7 +20,11 @@ const Route = function ({ component: Component, ...rest }) {
 	);
 };
 
-const PrivateRoute = function ({ component: Component, ...rest }) {
+const PrivateRoute = function ({
+	component: Component,
+	maxWidth = "md",
+	...rest
+}) {
 	const isAuthed = useSelector((state) => state.auth.access_token);
 	return (
 		<DefaultRoute
@@ -28,8 +32,8 @@ const PrivateRoute = function ({ component: Component, ...rest }) {
 			exact
 			render={(props) =>
 				isAuthed ? (
-					<Container maxWidth="md">
-						<Box mt={8}>
+					<Container maxWidth={maxWidth}>
+						<Box mt={8} ml={8}>
 							<div>{React.createElement(Component, props)}</div>
 						</Box>
 					</Container>
@@ -46,7 +50,11 @@ const PrivateRoute = function ({ component: Component, ...rest }) {
 	);
 };
 
-const StudentRoute = function ({ component: Component, ...rest }) {
+const StudentRoute = function ({
+	component: Component,
+	maxWidth = "md",
+	...rest
+}) {
 	const isAuthed = useSelector((state) => state.auth.access_token);
 	const role = useSelector((state) => state.auth.user.role);
 	return (
@@ -55,8 +63,8 @@ const StudentRoute = function ({ component: Component, ...rest }) {
 			exact
 			render={(props) =>
 				isAuthed && role === 3 ? (
-					<Container maxWidth="md">
-						<Box mt={8}>
+					<Container maxWidth={maxWidth}>
+						<Box mt={8} ml={8}>
 							<div>{React.createElement(Component, props)}</div>
 						</Box>
 					</Container>
@@ -73,7 +81,11 @@ const StudentRoute = function ({ component: Component, ...rest }) {
 	);
 };
 
-const InstructorRoute = function ({ component: Component, ...rest }) {
+const InstructorRoute = function ({
+	component: Component,
+	maxWidth = "md",
+	...rest
+}) {
 	const isAuthed = useSelector((state) => state.auth.access_token);
 	const role = useSelector((state) => state.auth.user.role);
 	return (
@@ -82,8 +94,8 @@ const InstructorRoute = function ({ component: Component, ...rest }) {
 			exact
 			render={(props) =>
 				isAuthed && role === 2 ? (
-					<Container maxWidth="md">
-						<Box mt={8}>
+					<Container maxWidth={maxWidth}>
+						<Box mt={8} ml={8}>
 							<div>{React.createElement(Component, props)}</div>
 						</Box>
 					</Container>
