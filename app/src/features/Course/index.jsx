@@ -1,6 +1,6 @@
 import { React } from "react";
 import { Switch } from "react-router-dom";
-import AddCourse from "features/Course/pages/AddCourse";
+import AddCourse from "features/Course/pages/AddCourse/AddCourse";
 import EditCourse from "features/Course/pages/EditCourse";
 import CourseList from "features/Course/pages/CourseList";
 import { PrivateRoute, Route } from "commons/routes/CustomRoute";

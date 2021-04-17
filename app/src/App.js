@@ -15,6 +15,8 @@ import AppFrame from "./features/Layout/components/AppFrame";
 import { enqueueSnackbar } from "./features/Toast/toastSlices";
 import ChatComponent from "./commons/components/ChatComponent";
 import theme from "./theme/theme";
+import "prismjs/themes/prism.css";
+
 const Authenticate = React.lazy(() => import("./features/Authenticate/"));
 const Course = React.lazy(() => import("./features/Course/"));
 
