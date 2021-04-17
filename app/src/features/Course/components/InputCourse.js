@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
 	TextField,
 	Grid,
@@ -15,12 +15,24 @@ import {
 } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import clsx from "clsx";
+
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import Editor from "ckeditor5/build/ckeditor";
 
+import Prism from "prismjs";
+import "prismjs/themes/prism-okaidia.css";
+// import "prismjs/themes/prism.css";
+
 export default function InputCourse({ course }) {
 	const classes = useStyles();
-
+	const [intro, setIntro] = useState("");
+	const introDis = useRef(null);
+	useEffect(() => {
+		for (let el of introDis.current.children) {
+			if (el.nodeName == "PRE" && el.children[0].nodeName == "CODE")
+				Prism.highlightElement(el.children[0]);
+		}
+	}, [intro]);
 	return (
 		<Container maxWidth="md">
 			<form>
@@ -34,7 +46,7 @@ export default function InputCourse({ course }) {
 						justify="center"
 						alignItems="center"
 					>
-						<Grid container item md={12}>
+						<Grid container item md={12} xs={10}>
 							<Typography variant="subtitle1" color="initial">
 								Tên khóa học
 							</Typography>
@@ -48,36 +60,43 @@ export default function InputCourse({ course }) {
 						</Grid>
 						<Grid
 							container
-							direction="column"
-							alignItems="flex-start"
+							// direction="column"
+							// alignItems="flex-start"
 							item
 							md={12}
+							xs={10}
 						>
-							<Grid item>
-								<Typography variant="subtitle1" color="initial">
-									Giới thiệu khóa học
-								</Typography>
-							</Grid>
-							<Grid item sm={8} md={12}>
-								<CKEditor
-									editor={Editor}
-									config={editorConfiguration}
-									data="<p>Hello from CKEditor 5!</p>"
-									onReady={(editor) => {
-										// You can store the "editor" and use when it is needed.
-										console.log("Editor is ready to use!", editor);
-									}}
-									onChange={(event, editor) => {
-										const data = editor.getData();
-										console.log({ event, editor, data });
-									}}
-									onBlur={(event, editor) => {
-										console.log("Blur.", editor);
-									}}
-									onFocus={(event, editor) => {
-										console.log("Focus.", editor);
-									}}
-								/>
+							<Typography variant="subtitle1" color="initial">
+								Giới thiệu khóa học
+							</Typography>
+
+							<CKEditor
+								className={classes.quill}
+								editor={Editor}
+								config={editorConfiguration}
+								data=""
+								onReady={(editor) => {
+									// You can store the "editor" and use when it is needed.
+									console.log("Editor is ready to use!", editor);
+								}}
+								onChange={(event, editor) => {
+									const data = editor.getData();
+									setIntro((intro) => (intro = data));
+									console.log({ event, editor, data });
+								}}
+								onBlur={(event, editor) => {
+									console.log("Blur.", editor);
+								}}
+								onFocus={(event, editor) => {
+									console.log("Focus.", editor);
+								}}
+							/>
+							{/* <ReactQuill theme="snow" className={classes.quill} /> */}
+							<Grid item xs={12}>
+								<div
+									ref={introDis}
+									dangerouslySetInnerHTML={{ __html: intro }}
+								></div>
 							</Grid>
 						</Grid>
 						<Grid item md={12}>
@@ -171,33 +190,53 @@ const useStyles = makeStyles((theme) => ({
 			textDecoration: "underline",
 		},
 	},
+	quill: {
+		width: "100%",
+	},
 }));
 const editorConfiguration = {
 	toolbar: [
 		"heading",
-		"fontFamily",
-		"fontSize",
-		"fontColor",
-		"bold",
-		"italic",
-		"|",
-		"alignment",
-		"bulletedList",
-		"numberedList",
-		"|",
-		"outdent",
-		"indent",
-		"|",
-		"link",
-		"imageUpload",
-		"insertTable",
-		"mediaEmbed",
-		"|",
-		"blockQuote",
-		"codeBlock",
-		"code",
 		"|",
 		"undo",
 		"redo",
+		"fontFamily",
+		"fontColor",
+		"fontSize",
+		"|",
+		"bulletedList",
+		"numberedList",
+		"outdent",
+		"indent",
+		"italic",
+		"bold",
+		"|",
+		"insertTable",
+		"link",
+		"imageUpload",
+		"blockQuote",
+		"mediaEmbed",
+		"alignment",
+		"CKFinder",
+		"code",
+		"codeBlock",
+		"htmlEmbed",
+		"MathType",
+		"ChemType",
+		"superscript",
+		"subscript",
 	],
+	language: "vi",
+	image: {
+		toolbar: ["imageTextAlternative", "imageStyle:full", "imageStyle:side"],
+	},
+	table: {
+		contentToolbar: [
+			"tableColumn",
+			"tableRow",
+			"mergeTableCells",
+			"tableCellProperties",
+			"tableProperties",
+		],
+	},
 };
