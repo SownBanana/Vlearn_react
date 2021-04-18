@@ -69,8 +69,8 @@ function SectionList({ sections, setSections }) {
 								isDragged || isSelected
 									? isOutOfBounds
 										? "6px solid #F08080"
-										: "6px solid #0d47a1"
-									: "6px solid #0d47a169",
+										: "6px solid #0d47a169"
+									: "6px solid #0d47a1",
 						}}
 					>
 						<InputSection

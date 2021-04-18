@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { CKEditor as BaseEditor } from "@ckeditor/ckeditor5-react";
 import Editor from "ckeditor5/build/ckeditor";
+import MyUploadAdapter from "./FileUploadAdapter";
 
 export default function CKEditor({ content, handler }) {
 	const getRawData = (editor) => editor.editing.view.domRoots.get("main");
@@ -16,11 +17,14 @@ export default function CKEditor({ content, handler }) {
 				// You can store the "editor" and use when it is needed.
 				console.log("Editor is ready to use!", editor);
 				editor.setData(content);
+				editor.plugins.get("FileRepository").createUploadAdapter = (loader) => {
+					return new MyUploadAdapter(loader);
+				};
 			}}
 			onChange={(event, editor) => {
 				clearTimeout(timeOut);
 				timeOut = setTimeout(() => {
-					console.log(getRawData(editor).innerHTML);
+					// console.log(getRawData(editor).innerHTML);
 					handler(getRawData(editor).innerHTML);
 				}, 500);
 			}}
@@ -35,6 +39,58 @@ export default function CKEditor({ content, handler }) {
 }
 
 const editorConfiguration = {
+	toolbar: {
+		items: [
+			"bold",
+			"italic",
+			"fontColor",
+			"fontSize",
+			"fontFamily",
+			"-",
+			"insertTable",
+			"numberedList",
+			"bulletedList",
+			"alignment",
+			"outdent",
+			"indent",
+			"-",
+			"link",
+			"blockQuote",
+			"imageUpload",
+			"mediaEmbed",
+			"htmlEmbed",
+			"code",
+			"-",
+			"subscript",
+			"superscript",
+			"ChemType",
+			"imageInsert",
+			"horizontalLine",
+		],
+		// shouldNotGroupWhenFull: true,
+	},
+	language: "vi",
+	blockToolbar: ["heading", "codeBlock", "MathType", "undo", "redo"],
+	image: {
+		toolbar: [
+			"imageTextAlternative",
+			"imageStyle:full",
+			"imageStyle:side",
+			"linkImage",
+		],
+	},
+	table: {
+		contentToolbar: [
+			"tableColumn",
+			"tableRow",
+			"mergeTableCells",
+			"tableCellProperties",
+			"tableProperties",
+		],
+	},
+};
+
+const editorClassicConfiguration = {
 	toolbar: [
 		"heading",
 		"|",
@@ -65,6 +121,8 @@ const editorConfiguration = {
 		"ChemType",
 		"superscript",
 		"subscript",
+		"imageInsert",
+		"horizontalLine",
 	],
 	language: "vi",
 	image: {

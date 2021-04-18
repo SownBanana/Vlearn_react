@@ -26,6 +26,22 @@
     border: none !important;
     background: #272822 !important;
 }
+.ck-content.ck-editor__editable_inline {
+    border: 1px solid #c4c4c4 !important;
+    border-bottom: 2px solid #0d47a1 !important;
+    background: white;
+    min-height: 56px;
+    border-radius: 4px !important;
+}
+.ck-content.ck-editor__editable_inline:hover {
+    border: 1px solid #001e4b !important;
+    border-bottom: 2px solid #0d47a1 !important;
+    // background: white;
+}
+.ck-content.ck-editor__editable_inline:focus {
+    border: 2px solid #0d47a1 !important;
+    // background: white;
+}
 /* ckeditor5-code-block/theme/codeblock.css */
 .ck-content pre code {
     //Wrap code

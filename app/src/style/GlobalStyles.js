@@ -16,17 +16,17 @@ export default makeStyles({
 		".noPaddingTop": {
 			paddingTop: " 0 !important",
 		},
-		".ck.ck-editor": {
-			position: "relative",
-			width: "100% !important",
-		},
-		// ".ck-content pre code": {
-		// 	color: "#353535",
-		// 	textShadow: "none",
+		// ".ck.ck-editor": {
+		// 	position: "relative",
+		// 	width: "100% !important",
 		// },
-		".ck .ck-read-only": {
-			border: "none",
-		},
+		// // ".ck-content pre code": {
+		// // 	color: "#353535",
+		// // 	textShadow: "none",
+		// // },
+		// ".ck .ck-read-only": {
+		// 	border: "none",
+		// },
 		blockquote: {
 			overflow: "hidden",
 			paddingRight: "1.5em",
