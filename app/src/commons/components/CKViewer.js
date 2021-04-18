@@ -1,7 +1,6 @@
 import { Grid } from "@material-ui/core";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 import Prism from "prismjs";
-import Editor from "ckeditor5/build/ckeditor";
 
 export default function CKViewer({ content }) {
 	// const createMarkup = () => {

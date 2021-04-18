@@ -15,7 +15,9 @@ import AppFrame from "./features/Layout/components/AppFrame";
 import { enqueueSnackbar } from "./features/Toast/toastSlices";
 import ChatComponent from "./commons/components/ChatComponent";
 import theme from "./theme/theme";
-import "prismjs/themes/prism.css";
+import Prism from "prismjs";
+// import "prismjs/themes/prism.css";
+import "prismjs/themes/prism-okaidia.css";
 
 const Authenticate = React.lazy(() => import("./features/Authenticate/"));
 const Course = React.lazy(() => import("./features/Course/"));
@@ -33,6 +35,12 @@ function App() {
 	)
 		dispatch(authSuccess(JSON.parse(localStorage.getItem("auth"))));
 
+	// Prism treat <br/> as new line
+	useEffect(() => {
+		Prism.hooks.add("before-highlight", function (env) {
+			env.code = env.element.innerText;
+		});
+	});
 	useEffect(() => {
 		if (serverError) {
 			const key = new Date().getTime() + Math.random();

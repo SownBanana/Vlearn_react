@@ -1,0 +1,33 @@
+/*
+ * CKEditor 5 (v27.0.0) content styles.
+ * Generated on Wed, 24 Mar 2021 08:00:59 GMT.
+ * For more information, check out https://ckeditor.com/docs/ckeditor5/latest/builds/guides/integration/content-styles.html
+ */
+
+// :root {
+//     --ck-color-mention-background: hsla(341, 100%, 30%, 0.1);
+//     --ck-color-mention-text: hsl(341, 100%, 30%);
+//     --ck-highlight-marker-blue: hsl(201, 97%, 72%);
+//     --ck-highlight-marker-green: hsl(120, 93%, 68%);
+//     --ck-highlight-marker-pink: hsl(345, 96%, 73%);
+//     --ck-highlight-marker-yellow: hsl(60, 97%, 73%);
+//     --ck-highlight-pen-green: hsl(112, 100%, 27%);
+//     --ck-highlight-pen-red: hsl(0, 85%, 49%);
+//     --ck-image-style-spacing: 1.5em;
+//     --ck-todo-list-checkmark-size: 16px;
+// }
+
+/* ckeditor5 clear App text-align */
+.ck-content {
+    text-align: initial;
+}
+/* ckeditor5-code-block/theme/codeblock.css */
+.ck-content pre {
+    border: none !important;
+    background: #272822 !important;
+}
+/* ckeditor5-code-block/theme/codeblock.css */
+.ck-content pre code {
+    //Wrap code
+    white-space: pre-wrap;
+}
