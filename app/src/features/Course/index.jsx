@@ -9,7 +9,7 @@ export default function Authenticate() {
 	return (
 		<Switch>
 			<Route exact path="/courses" component={CourseList} />
-			<PrivateRoute maxWidth="xl" path="/courses/add" component={AddCourse} />
+			<PrivateRoute path="/courses/add" component={AddCourse} />
 			<PrivateRoute path="/courses/edit" component={EditCourse} />
 		</Switch>
 	);

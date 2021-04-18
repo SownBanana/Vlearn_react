@@ -1,8 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import {
 	TextField,
-	Grid,
-	Container,
 	Typography,
 	Accordion,
 	AccordionSummary,
@@ -12,52 +10,47 @@ import {
 	Divider,
 	Button,
 	makeStyles,
+	Box,
+	Hidden,
 } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import DragIndicatorIcon from "@material-ui/icons/DragIndicator";
 import clsx from "clsx";
 
-export default function InputSection({ section, handleChange, handleDelete }) {
+export default function InputSection({
+	section,
+	handleChange,
+	expanded,
+	handleExpanded,
+}) {
 	const classes = useStyles();
-	const sectionName = useRef();
-	const sectionClone = { ...section };
 
-	const changeValue = (e) => {
-		console.log("======>", e);
-	};
-	var count = 0;
-
-	const valueChange = (e) => {
-		section.name = e.target.textContent;
-		console.log("==>", count);
-		handleChange(section);
-	};
-	useEffect(() => {
-		console.log("Init section: ", section.name);
-		sectionName.current.setAttribute("contentEditable", true);
-		sectionName.current.addEventListener("input", valueChange);
-		count += 1;
-		return () => {
-			sectionName.current.removeEventListener("input", valueChange, false);
-		};
-	});
 	return (
-		<div>
-			<Accordion defaultExpanded className={classes.card}>
+		<Box mb={1}>
+			<Accordion
+				expanded={expanded === section.uuid}
+				onChange={handleExpanded(section.uuid)}
+				className={classes.card}
+			>
 				<AccordionSummary
+					classes={{ content: classes.root }}
 					expandIcon={<ExpandMoreIcon />}
-					aria-controls="panel1c-content"
-					id="panel1c-header"
 				>
+					<Hidden smUp>
+						<DragIndicatorIcon color="action" data-movable-handle />
+					</Hidden>
 					<div className={classes.column2}>
-						<Typography
-							ref={sectionName}
-							component="div"
-							className={clsx(classes.heading)}
-						>
-							{sectionClone.name}
-						</Typography>
 						<TextField
+							className={classes.heading}
+							fullWidth
 							required={true}
+							// InputProps={{ disableUnderline: true }}
+							InputProps={{
+								classes: {
+									underline: classes.underline,
+									input: classes.labelInput,
+								},
+							}}
 							value={section.name}
 							onChange={(e) => {
 								section.name = e.target.value;
@@ -65,10 +58,11 @@ export default function InputSection({ section, handleChange, handleDelete }) {
 							}}
 						/>
 					</div>
-					<div className={classes.column}>
+					{/* <div className={classes.column}>
 						<Typography className={classes.secondaryHeading}>Select</Typography>
-					</div>
+					</div> */}
 				</AccordionSummary>
+				<Divider />
 				<AccordionDetails className={classes.details}>
 					<div className={classes.column} />
 					<div className={classes.column}>
@@ -92,7 +86,7 @@ export default function InputSection({ section, handleChange, handleDelete }) {
 					</Button>
 				</AccordionActions>
 			</Accordion>
-		</div>
+		</Box>
 	);
 }
 
@@ -101,11 +95,23 @@ const useStyles = makeStyles((theme) => ({
 		border: "1px solid #80808036",
 	},
 	root: {
-		width: "100%",
+		alignItems: "center",
 	},
 	heading: {
 		fontSize: theme.typography.pxToRem(15),
-		textAlign: "left",
+	},
+	underline: {
+		"&::before": {
+			border: "none",
+			transition: "3s",
+		},
+		"&::after": {
+			// border: "2px solid red",
+		},
+	},
+	labelInput: {
+		// padding: 0,
+		height: "auto",
 	},
 	secondaryHeading: {
 		fontSize: theme.typography.pxToRem(15),

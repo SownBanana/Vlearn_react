@@ -20,9 +20,12 @@ export default makeStyles({
 			position: "relative",
 			width: "100% !important",
 		},
-		".ck-content pre code": {
-			color: "#353535",
-			textShadow: "none",
+		// ".ck-content pre code": {
+		// 	color: "#353535",
+		// 	textShadow: "none",
+		// },
+		".ck .ck-read-only": {
+			border: "none",
 		},
 		blockquote: {
 			overflow: "hidden",

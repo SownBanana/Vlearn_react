@@ -10,31 +10,38 @@ import {
 
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import Editor from "ckeditor5/build/ckeditor";
+import CKViewer from "commons/components/CKViewer";
 
 import Prism from "prismjs";
-// import "prismjs/themes/prism-okaidia.css";
+// import "prismjs/themes/prism.css";
+import "prismjs/themes/prism-okaidia.css";
 import SectionList from "./SectionList";
 
 export default function InputCourse({ course, setCourse }) {
 	const classes = useStyles();
-	const [intro, setIntro] = useState("");
-	const introDis = useRef(null);
-	useEffect(() => {
-		for (let el of introDis.current.children) {
-			if (el.nodeName == "PRE" && el.children[0].nodeName == "CODE")
-				Prism.highlightElement(el.children[0]);
-		}
-	}, [intro]);
+	const [intro, setIntro] = useState(
+		'<pre><code class="language-javascript">const i = 12;</code></pre><p><code>dasdsad</code></p><figure class="table"><table><tbody><tr><td style="border-bottom:solid hsl(240, 75%, 60%);border-left:solid hsl(240, 75%, 60%);border-right:solid hsl(240, 75%, 60%);border-top:solid hsl(240, 75%, 60%);">&nbsp;</td><td style="border-bottom:solid hsl(240, 75%, 60%);border-left:solid hsl(240, 75%, 60%);border-right:solid hsl(240, 75%, 60%);border-top:solid hsl(240, 75%, 60%);">&nbsp;</td><td>&nbsp;</td></tr><tr><td style="border-bottom:solid hsl(240, 75%, 60%);border-left:solid hsl(240, 75%, 60%);border-right:solid hsl(240, 75%, 60%);border-top:solid hsl(240, 75%, 60%);">&nbsp;</td><td style="border-bottom:solid hsl(240, 75%, 60%);border-left:solid hsl(240, 75%, 60%);border-right:solid hsl(240, 75%, 60%);border-top:solid hsl(240, 75%, 60%);">&nbsp;</td><td>&nbsp;</td></tr></tbody></table></figure>'
+	);
+	// const checkLoaded =
+	// useEffect(() => {
+	// 	console.log("====", intro);
+	// 	for (let el of introDis.current.children) {
+	// 		if (el.nodeName == "PRE" && el.children[0].nodeName == "CODE")
+	// 			Prism.highlightElement(el.children[0]);
+	// 	}
+	// 	// Prism.highlightAll();
+	// }, [intro]);
+
 	const setSections = (sections) => {
 		setCourse({ ...course, sections: sections });
 	};
 	return (
-		<Container maxWidth="md">
+		<Container>
 			<form>
 				<Grid container spacing={1} direction="row" justify="space-around">
 					<Grid
 						item
-						md={8}
+						md={9}
 						sm={12}
 						container
 						spacing={2}
@@ -62,16 +69,16 @@ export default function InputCourse({ course, setCourse }) {
 							<CKEditor
 								editor={Editor}
 								config={editorConfiguration}
-								data=""
+								data={course.intro}
 								onReady={(editor) => {
 									// You can store the "editor" and use when it is needed.
 									console.log("Editor is ready to use!", editor);
 								}}
 								onChange={(event, editor) => {
 									const data = editor.getData();
-									setIntro((intro) => (intro = data));
+									// setIntro((intro) => (intro = data));
 									setCourse({ ...course, intro: data });
-									console.log({ event, editor, data });
+									// console.log({ event, editor, data });
 								}}
 								onBlur={(event, editor) => {
 									console.log("Blur.", editor);
@@ -80,11 +87,20 @@ export default function InputCourse({ course, setCourse }) {
 									console.log("Focus.", editor);
 								}}
 							/>
+
+							{/* <Grid item xs={12} md={12} id="markThis" ref={introPre}>
+								<CKEditor
+									editor={Editor}
+									data={intro}
+									disabled={true}
+
+									//  {
+									// allowedCommands: [ 'bold' ]
+									// }
+								/>
+							</Grid> */}
 							<Grid item xs={12}>
-								<div
-									ref={introDis}
-									dangerouslySetInnerHTML={{ __html: intro }}
-								></div>
+								<CKViewer content={intro} />
 							</Grid>
 						</Grid>
 						<Grid
@@ -106,7 +122,14 @@ export default function InputCourse({ course, setCourse }) {
 							</Grid>
 						</Grid>
 					</Grid>
-					<Grid item md={4} sm={12} container spacing={1}>
+					<Grid
+						item
+						md={3}
+						sm={12}
+						container
+						spacing={1}
+						className={classes.panel}
+					>
 						Right Bar
 					</Grid>
 				</Grid>
@@ -118,6 +141,9 @@ export default function InputCourse({ course, setCourse }) {
 const useStyles = makeStyles((theme) => ({
 	textField: {
 		backgroundColor: "white",
+	},
+	panel: {
+		backgroundColor: "#cfe8fc",
 	},
 }));
 const editorConfiguration = {
