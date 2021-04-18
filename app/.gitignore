@@ -2,6 +2,8 @@
 
 # dependencies
 /node_modules
+/ckeditor5-builder/classic/node_modules
+/ckeditor5-builder/balloon/node_modules
 /.pnp
 .pnp.js
 

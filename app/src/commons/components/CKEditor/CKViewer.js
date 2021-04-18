@@ -13,7 +13,7 @@ export default function CKViewer({ content }) {
 		// <div dangerouslySetInnerHTML={createMarkup()} className="ck-content"></div>
 		<div
 			dangerouslySetInnerHTML={{ __html: content }}
-			className="ck-content"
+			className="ck-content ck-viewer"
 		></div>
 	);
 }

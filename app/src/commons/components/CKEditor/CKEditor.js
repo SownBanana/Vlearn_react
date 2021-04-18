@@ -24,7 +24,7 @@ export default function CKEditor({ content, handler }) {
 			onChange={(event, editor) => {
 				clearTimeout(timeOut);
 				timeOut = setTimeout(() => {
-					// console.log(getRawData(editor).innerHTML);
+					console.log(getRawData(editor).innerHTML);
 					handler(getRawData(editor).innerHTML);
 				}, 500);
 			}}
@@ -41,6 +41,7 @@ export default function CKEditor({ content, handler }) {
 const editorConfiguration = {
 	toolbar: {
 		items: [
+			"heading",
 			"bold",
 			"italic",
 			"fontColor",
@@ -48,13 +49,14 @@ const editorConfiguration = {
 			"fontFamily",
 			"-",
 			"insertTable",
-			"numberedList",
-			"bulletedList",
 			"alignment",
 			"outdent",
 			"indent",
-			"-",
+			"codeBlock",
 			"link",
+			"bulletedList",
+			"numberedList",
+			"-",
 			"blockQuote",
 			"imageUpload",
 			"mediaEmbed",
@@ -64,13 +66,22 @@ const editorConfiguration = {
 			"subscript",
 			"superscript",
 			"ChemType",
+			// "CKFinder",
 			"imageInsert",
 			"horizontalLine",
 		],
 		// shouldNotGroupWhenFull: true,
 	},
 	language: "vi",
-	blockToolbar: ["heading", "codeBlock", "MathType", "undo", "redo"],
+	blockToolbar: [
+		"undo",
+		"redo",
+		"outdent",
+		"indent",
+		"heading",
+		"codeBlock",
+		"MathType",
+	],
 	image: {
 		toolbar: [
 			"imageTextAlternative",
@@ -113,7 +124,7 @@ const editorClassicConfiguration = {
 		"blockQuote",
 		"mediaEmbed",
 		"alignment",
-		"CKFinder",
+		// "CKFinder",
 		"code",
 		"codeBlock",
 		"htmlEmbed",

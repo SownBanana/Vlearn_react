@@ -47,3 +47,7 @@
     //Wrap code
     white-space: pre-wrap;
 }
+
+.ck-content.ck-viewer .ck-widget__type-around__button{
+    display: none !important;
+}

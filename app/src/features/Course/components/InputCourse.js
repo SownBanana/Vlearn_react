@@ -64,9 +64,9 @@ export default function InputCourse({ course, setCourse }) {
 								<CKEditor content={course.intro} handler={introHandler} />
 							</Grid>
 
-							{/* <Grid item xs={12}>
-								<CKViewer content={intro} />
-							</Grid> */}
+							<Grid item xs={12}>
+								<CKViewer content='<p>dasdsaddsadsadsadsad sad asd asda sdas as sa dsasadsasdsd assa s adsasa</p><figure class="image ck-widget ck-widget_with-resizer image_resized" contenteditable="false" style="width:69.21%;"><img src="http://localhost:8088/storage/uploads/d6c4355b-dfb0-4e64-9acc-ae2b6f5038cc.png"><div class="ck ck-reset_all ck-widget__type-around"><div class="ck ck-widget__type-around__button ck-widget__type-around__button_before" title="Insert paragraph before block"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 8"><path d="M9.055.263v3.972h-6.77M1 4.216l2-2.038m-2 2 2 2.038"></path></svg></div><div class="ck ck-widget__type-around__button ck-widget__type-around__button_after" title="Insert paragraph after block"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 8"><path d="M9.055.263v3.972h-6.77M1 4.216l2-2.038m-2 2 2 2.038"></path></svg></div><div class="ck ck-widget__type-around__fake-caret"></div></div><figcaption class="ck-editor__editable ck-editor__nested-editable ck-placeholder ck-hidden" data-placeholder="Nhập mô tả ảnh" contenteditable="true"><br data-cke-filler="true"></figcaption><div class="ck ck-reset_all ck-widget__resizer" style="height: 145px; left: 0px; top: 0px; width: 400px; display: none;"><div class="ck-widget__resizer__handle ck-widget__resizer__handle-top-left"></div><div class="ck-widget__resizer__handle ck-widget__resizer__handle-top-right"></div><div class="ck-widget__resizer__handle ck-widget__resizer__handle-bottom-right"></div><div class="ck-widget__resizer__handle ck-widget__resizer__handle-bottom-left"></div><div class="ck ck-size-view ck-orientation-bottom-right" style="display: none;">69.21%</div></div></figure><p>dasdsadsdsadasdsadsadasdsadsadsadsadsadsadsadsadsa sad sa dsad sa sad&nbsp;</p><pre data-language="JavaScript" spellcheck="false"><code class="language-javascript">const a = 1;</code></pre>' />
+							</Grid>
 						</Grid>
 						<Grid
 							container
