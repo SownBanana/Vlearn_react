@@ -14,7 +14,10 @@ export default function CKEditor({ content = "", handler }) {
 			config={editorConfiguration}
 			// data={content}
 			onReady={(editor) => {
-				if (editor == null) return;
+				if (editor == null) {
+					console.log("=============> init editor fail");
+					// return;
+				}
 				// You can store the "editor" and use when it is needed.
 				console.log("Editor is ready to use!", editor);
 				editor.setData(content);

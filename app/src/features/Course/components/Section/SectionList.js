@@ -2,13 +2,13 @@ import React, { useState } from "react";
 // import PropTypes from "prop-types";
 import SectionInput from "./SectionInput";
 import uuid from "commons/uuidv4";
-import { Box, Hidden } from "@material-ui/core";
+import { Box, Hidden, Grid, makeStyles } from "@material-ui/core";
 import { List, arrayMove, arrayRemove } from "react-movable";
 import _ from "lodash";
 
 function SectionList({ sections, setSections }) {
 	const [expanded, setExpanded] = useState(0);
-
+	const classes = useStyles();
 	const changeSection = (section) => {
 		const newSections = _.cloneDeep(sections).map((s, index) => {
 			section.order = index;
@@ -39,7 +39,10 @@ function SectionList({ sections, setSections }) {
 				);
 			}}
 			renderList={({ children, props, isDragged }) => (
-				<ul
+				<Grid
+					direction="column"
+					container
+					spacing={1}
 					{...props}
 					style={{
 						padding: "0em 0em 1em 0em",
@@ -48,10 +51,15 @@ function SectionList({ sections, setSections }) {
 					}}
 				>
 					{children}
-				</ul>
+				</Grid>
 			)}
 			renderItem={({ value, props, isDragged, isSelected, isOutOfBounds }) => (
-				<li
+				<Grid
+					container
+					direction="row"
+					justify="flex-end"
+					item
+					md={12}
 					{...props}
 					style={{
 						...props.style,
@@ -69,38 +77,47 @@ function SectionList({ sections, setSections }) {
 						// 		: "6px solid #0d47a1",
 					}}
 				>
-					<Hidden smDown>
-						<div
-							data-movable-handle
-							style={{
-								width: "16px",
-								marginBottom: "7.5px",
-								marginTop: "0.5px",
-								zIndex: "-1",
-								marginRight: "-7px",
-								borderRadius: "6px",
-								backgroundColor:
-									isDragged || isSelected
-										? isOutOfBounds
-											? "#F08080"
-											: "#0d47a169"
-										: "#0d47a1",
-							}}
-						></div>
-					</Hidden>
-					<SectionInput
-						{...props}
-						section={value}
-						handleChange={changeSection}
-						expanded={expanded}
-						handleExpanded={handleExpanded}
-						setSection={changeSection}
-					/>
-				</li>
+					{/* <Hidden smDown> */}
+					<div
+						className="thisDivHere"
+						data-movable-handle
+						style={{
+							width: "16px",
+							marginBottom: "7.5px",
+							marginTop: "0.5px",
+							zIndex: "-1",
+							marginRight: "-7px",
+							borderRadius: "6px",
+							backgroundColor:
+								isDragged || isSelected
+									? isOutOfBounds
+										? "#F08080"
+										: "#0d47a169"
+									: "#0d47a1",
+						}}
+					></div>
+					{/* </Hidden> */}
+					<Grid item md={12} xs={12} className={classes.maxwidth}>
+						<SectionInput
+							{...props}
+							section={value}
+							handleChange={changeSection}
+							expanded={expanded}
+							handleExpanded={handleExpanded}
+							setSection={changeSection}
+						/>
+					</Grid>
+				</Grid>
 			)}
 		/>
 	);
 }
+
+const useStyles = makeStyles((theme) => ({
+	maxwidth: {
+		maxWidth: "98%",
+	},
+}));
 
 // SectionList.propTypes = {};
 

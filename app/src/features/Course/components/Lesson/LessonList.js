@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import LessonInput from "./LessonInput";
 import { List, arrayMove, arrayRemove } from "react-movable";
 import _ from "lodash";
+import Grid from "@material-ui/core/Grid";
+
 export default function LessonList({ lessons, setLessons }) {
 	const [expanded, setExpanded] = useState(0);
 	const changeLesson = (lesson) => {
@@ -27,7 +29,11 @@ export default function LessonList({ lessons, setLessons }) {
 				);
 			}}
 			renderList={({ children, props, isDragged }) => (
-				<ul
+				<Grid
+					container
+					item
+					md={12}
+					xs={12}
 					{...props}
 					style={{
 						padding: "0em 0em 1em 0em",
@@ -36,10 +42,14 @@ export default function LessonList({ lessons, setLessons }) {
 					}}
 				>
 					{children}
-				</ul>
+				</Grid>
 			)}
 			renderItem={({ value, props, isDragged, isSelected, isOutOfBounds }) => (
-				<li
+				<Grid
+					container
+					item
+					md={12}
+					xs={12}
 					{...props}
 					style={{
 						...props.style,
@@ -63,7 +73,7 @@ export default function LessonList({ lessons, setLessons }) {
 						expanded={expanded}
 						handleExpanded={handleExpanded}
 					/>
-				</li>
+				</Grid>
 			)}
 		/>
 	);

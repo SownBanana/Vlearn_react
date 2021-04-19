@@ -82,7 +82,7 @@ export default function CourseInput({ course, setCourse }) {
 							<Typography align="left" variant="subtitle1" color="initial">
 								Chương học
 							</Typography>
-							<Grid item>
+							<Grid item container md={12}>
 								<SectionList
 									sections={course.sections}
 									setSections={setSections}
