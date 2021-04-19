@@ -12,18 +12,38 @@ import {
 	makeStyles,
 	Box,
 	Hidden,
+	Tooltip,
+	IconButton,
 } from "@material-ui/core";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import DragIndicatorIcon from "@material-ui/icons/DragIndicator";
 import clsx from "clsx";
 
-export default function InputSection({
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import DragIndicatorIcon from "@material-ui/icons/DragIndicator";
+
+import AddCircleRoundedIcon from "@material-ui/icons/AddCircleRounded";
+import HelpRoundedIcon from "@material-ui/icons/HelpRounded";
+import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
+import LessonList from "../Lesson/LessonList";
+import { setCourse } from "features/Course/editingCourseSlice";
+
+export default function SectionInput({
 	section,
 	handleChange,
 	expanded,
 	handleExpanded,
+	setSection,
 }) {
 	const classes = useStyles();
+
+	const setLessons = (lessons) => {
+		setSection({ ...section, lessons: lessons });
+	};
+
+	const addLesson = (e) => {
+		e.stopPropagation();
+		console.log(e);
+		console.log("Add Lesson");
+	};
 
 	return (
 		<Box mb={1}>
@@ -35,8 +55,54 @@ export default function InputSection({
 				<AccordionSummary
 					classes={{ content: classes.root }}
 					expandIcon={<ExpandMoreIcon />}
+					className="section"
 				>
-					<Hidden smUp>
+					<div className="btn_nav_group">
+						<Tooltip
+							className="nav_btn"
+							title="Thêm câu hỏi"
+							placement="top"
+							enterDelay={200}
+							arrow
+						>
+							<IconButton
+								// color="warning.main"
+								classes={{ root: classes.warningBtn }}
+							>
+								<HelpRoundedIcon />
+							</IconButton>
+						</Tooltip>
+						<Tooltip
+							className="nav_btn"
+							title="Thêm bài học"
+							placement="top"
+							enterDelay={200}
+							arrow
+						>
+							<IconButton
+								onClick={addLesson}
+								classes={{ root: classes.successBtn }}
+								aria-label="add lesson"
+							>
+								<AddCircleRoundedIcon />
+							</IconButton>
+						</Tooltip>
+						<Tooltip
+							className="nav_btn"
+							title="Xóa chương"
+							placement="top"
+							enterDelay={200}
+							arrow
+						>
+							<IconButton
+								color="secondary"
+								// classes={{ root: classes.errorBtn }}
+							>
+								<CancelRoundedIcon />
+							</IconButton>
+						</Tooltip>
+					</div>
+					<Hidden mdUp>
 						<DragIndicatorIcon color="action" data-movable-handle />
 					</Hidden>
 					<div className={classes.column2}>
@@ -52,9 +118,10 @@ export default function InputSection({
 								},
 							}}
 							value={section.name}
+							onClick={(e) => e.stopPropagation()}
 							onChange={(e) => {
-								section.name = e.target.value;
-								handleChange(section);
+								const newSection = { ...section, name: e.target.value };
+								handleChange(newSection);
 							}}
 						/>
 					</div>
@@ -64,19 +131,7 @@ export default function InputSection({
 				</AccordionSummary>
 				<Divider />
 				<AccordionDetails className={classes.details}>
-					<div className={classes.column} />
-					<div className={classes.column}>
-						<Chip label="Barbados" onDelete={() => {}} />
-					</div>
-					<div className={clsx(classes.column, classes.helper)}>
-						<Typography variant="caption">
-							Select your destination of choice
-							<br />
-							<a href="#secondary-heading-and-columns" className={classes.link}>
-								Learn more
-							</a>
-						</Typography>
-					</div>
+					<LessonList lessons={section.lessons} setLessons={setLessons} />
 				</AccordionDetails>
 				<Divider />
 				<AccordionActions>
@@ -124,6 +179,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 	details: {
 		alignItems: "center",
+		padding: 0,
 	},
 	column: {
 		flexBasis: "33.33%",
@@ -141,5 +197,14 @@ const useStyles = makeStyles((theme) => ({
 		"&:hover": {
 			textDecoration: "underline",
 		},
+	},
+	warningBtn: {
+		color: theme.palette.warning.main,
+	},
+	successBtn: {
+		color: theme.palette.success.main,
+	},
+	errorBtn: {
+		color: theme.palette.error.main,
 	},
 }));

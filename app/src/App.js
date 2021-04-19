@@ -6,7 +6,10 @@ import { PrivateRoute } from "./commons/routes/CustomRoute";
 import Home from "./features/Home";
 import { Suspense } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { authSuccess } from "./features/Authenticate/authSlices";
+import {
+	authSuccess,
+	accessTokenExpired,
+} from "./features/Authenticate/authSlices";
 // import Toast from "./features/Toast";
 import Notifier from "./Notifier";
 import { ProgressBarProvider as ProgressBar } from "react-redux-progress";
@@ -32,8 +35,10 @@ function App() {
 	if (
 		localStorage.getItem("auth") &&
 		JSON.parse(localStorage.getItem("auth")).isLoggedIn
-	)
+	) {
 		dispatch(authSuccess(JSON.parse(localStorage.getItem("auth"))));
+		dispatch(accessTokenExpired());
+	}
 
 	// Prism treat <br/> as new line
 	useEffect(() => {

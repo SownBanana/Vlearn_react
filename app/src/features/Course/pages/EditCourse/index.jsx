@@ -1,5 +1,5 @@
 import React from "react";
-import InputCourse from "features/Course/components/InputCourse";
+import InputCourse from "features/Course/components/Course/CourseInput";
 import { Link } from "react-router-dom";
 export default function index() {
 	return (

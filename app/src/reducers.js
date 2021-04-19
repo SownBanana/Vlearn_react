@@ -4,6 +4,7 @@ import social from "./features/Authenticate/socialAuthSlices";
 import toast from "./features/Toast/toastSlices";
 import common from "./commons/SliceCommon";
 import externalLink from "./features/Authenticate/externalLinkSlices";
+import editingCourse from "./features/Course/editingCourseSlice";
 // console.log(externalLink);
 export default combineReducers({
 	auth,
@@ -11,4 +12,5 @@ export default combineReducers({
 	toast,
 	common,
 	externalLink,
+	editingCourse,
 });

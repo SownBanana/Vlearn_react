@@ -3,7 +3,7 @@ import { CKEditor as BaseEditor } from "@ckeditor/ckeditor5-react";
 import Editor from "ckeditor5/build/ckeditor";
 import MyUploadAdapter from "./FileUploadAdapter";
 
-export default function CKEditor({ content, handler }) {
+export default function CKEditor({ content = "", handler }) {
 	const getRawData = (editor) => editor.editing.view.domRoots.get("main");
 
 	var timeOut;
@@ -14,6 +14,7 @@ export default function CKEditor({ content, handler }) {
 			config={editorConfiguration}
 			// data={content}
 			onReady={(editor) => {
+				if (editor == null) return;
 				// You can store the "editor" and use when it is needed.
 				console.log("Editor is ready to use!", editor);
 				editor.setData(content);
@@ -47,7 +48,7 @@ const editorConfiguration = {
 			"fontColor",
 			"fontSize",
 			"fontFamily",
-			"-",
+			// "-",
 			"insertTable",
 			"alignment",
 			"outdent",
@@ -56,13 +57,13 @@ const editorConfiguration = {
 			"link",
 			"bulletedList",
 			"numberedList",
-			"-",
+			// "-",
 			"blockQuote",
 			"imageUpload",
 			"mediaEmbed",
 			"htmlEmbed",
 			"code",
-			"-",
+			// "-",
 			"subscript",
 			"superscript",
 			"ChemType",

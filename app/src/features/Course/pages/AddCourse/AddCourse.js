@@ -1,25 +1,21 @@
-import React, { useState } from "react";
-import InputCourse from "features/Course/components/InputCourse";
+import React, { useEffect, useState } from "react";
+import InputCourse from "features/Course/components/Course/CourseInput";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
+import { useDispatch, useSelector } from "react-redux";
+import { setCourse as setCourseAction } from "features/Course/editingCourseSlice";
 
 export default function AddCourse() {
-	const [course, setCourse] = useState({
-		name: "",
-		intro: "",
-		// '<pre><code class="language-javascript">const i = 12;</code></pre><p><code>dasdsad</code></p><figure class="table"><table><tbody><tr><td style="border-bottom:solid hsl(240, 75%, 60%);border-left:solid hsl(240, 75%, 60%);border-right:solid hsl(240, 75%, 60%);border-top:solid hsl(240, 75%, 60%);">&nbsp;</td><td style="border-bottom:solid hsl(240, 75%, 60%);border-left:solid hsl(240, 75%, 60%);border-right:solid hsl(240, 75%, 60%);border-top:solid hsl(240, 75%, 60%);">&nbsp;</td><td>&nbsp;</td></tr><tr><td style="border-bottom:solid hsl(240, 75%, 60%);border-left:solid hsl(240, 75%, 60%);border-right:solid hsl(240, 75%, 60%);border-top:solid hsl(240, 75%, 60%);">&nbsp;</td><td style="border-bottom:solid hsl(240, 75%, 60%);border-left:solid hsl(240, 75%, 60%);border-right:solid hsl(240, 75%, 60%);border-top:solid hsl(240, 75%, 60%);">&nbsp;</td><td>&nbsp;</td></tr></tbody></table></figure>',
-		sections: [
-			{
-				uuid: 1,
-				name: "section 1",
-			},
-			{
-				uuid: 2,
-				name: "chuong 2",
-			},
-		],
-	});
+	const course = useSelector((state) => state.editingCourse.course);
+	const dispatch = useDispatch();
+	const setCourse = (course) => dispatch(setCourseAction(course));
 
+	useEffect(() => {
+		const savedCourse = localStorage.getItem("editingCourse.course");
+		if (savedCourse) {
+			dispatch(setCourseAction(JSON.parse(savedCourse)));
+		}
+	}, []);
 	return (
 		<div>
 			<Grid
@@ -34,7 +30,7 @@ export default function AddCourse() {
 				<Grid container direction="column" spacing={1}>
 					<Grid item md={8}>
 						<Typography variant="h5" color="initial">
-							This is Add Course {course.sections[0].name}
+							This is Add Course {course.title}
 						</Typography>
 					</Grid>
 				</Grid>
