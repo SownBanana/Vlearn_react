@@ -33,7 +33,7 @@ function usePusher(id) {
 	const [pusher, setPusher] = useState(null);
 	const access_token = useSelector((state) => state.auth.access_token);
 	useEffect(() => {
-		console.log("Init pusher:", id, access_token);
+		// console.log("Init pusher:", id, access_token);
 		if (id) {
 			setPusher(new Echo(options(access_token)));
 		}

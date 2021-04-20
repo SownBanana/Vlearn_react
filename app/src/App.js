@@ -6,7 +6,10 @@ import { PrivateRoute } from "./commons/routes/CustomRoute";
 import Home from "./features/Home";
 import { Suspense } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { authSuccess } from "./features/Authenticate/authSlices";
+import {
+	authSuccess,
+	accessTokenExpired,
+} from "./features/Authenticate/authSlices";
 // import Toast from "./features/Toast";
 import Notifier from "./Notifier";
 import { ProgressBarProvider as ProgressBar } from "react-redux-progress";
@@ -15,6 +18,10 @@ import AppFrame from "./features/Layout/components/AppFrame";
 import { enqueueSnackbar } from "./features/Toast/toastSlices";
 import ChatComponent from "./commons/components/ChatComponent";
 import theme from "./theme/theme";
+import Prism from "prismjs";
+// import "prismjs/themes/prism.css";
+import "prismjs/themes/prism-okaidia.css";
+
 const Authenticate = React.lazy(() => import("./features/Authenticate/"));
 const Course = React.lazy(() => import("./features/Course/"));
 
@@ -28,9 +35,17 @@ function App() {
 	if (
 		localStorage.getItem("auth") &&
 		JSON.parse(localStorage.getItem("auth")).isLoggedIn
-	)
+	) {
 		dispatch(authSuccess(JSON.parse(localStorage.getItem("auth"))));
+		dispatch(accessTokenExpired());
+	}
 
+	// Prism treat <br/> as new line
+	useEffect(() => {
+		Prism.hooks.add("before-highlight", function (env) {
+			env.code = env.element.innerText;
+		});
+	});
 	useEffect(() => {
 		if (serverError) {
 			const key = new Date().getTime() + Math.random();

@@ -37,6 +37,9 @@ export const createSocial = createAsyncThunk(
 	}
 );
 
+var logoutTimeout = 0;
+var refreshEffort = 0;
+var lastSuccess = 0;
 export const accessTokenExpired = (
 	next = null,
 	action = null,
@@ -47,9 +50,27 @@ export const accessTokenExpired = (
 		console.log(refresh_token);
 		try {
 			const data = await AuthAPI.refreshToken(refresh_token);
-			if (data.status === "success") dispatch(authSuccess(data));
-			else dispatch(authFail());
+			if (data.status === "success") {
+				dispatch(authSuccess(data));
+				setTimeout(() => {
+					refreshEffort = 0;
+				}, 2000);
+				clearTimeout(logoutTimeout);
+				lastSuccess = Date.now();
+			} else dispatch(authFail());
 		} catch (e) {
+			// console.log("===========>", Date.now() - lastSuccess);
+			if (Date.now() - lastSuccess > 30000) {
+				if (refreshEffort >= 3) {
+					logoutTimeout = setTimeout(() => {
+						console.log("Logout because refresh fail");
+						dispatch(authFail());
+					}, 700);
+				} else {
+					dispatch(accessTokenExpired(next, action));
+				}
+				refreshEffort++;
+			}
 			console.log(e);
 		}
 		if (action != null) next(action);

@@ -65,7 +65,7 @@ export default function NewSocialAccount() {
 
 	return (
 		<div>
-			<Container maxWidth="sm">
+			<Container maxWidth="md">
 				<form
 					className={classes.form}
 					noValidate

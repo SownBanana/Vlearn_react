@@ -8,7 +8,14 @@ import ImportContactsIcon from "@material-ui/icons/ImportContacts";
 import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
 import ListItemLink from "../../../commons/components/ListItemLink";
 import globalStyle from "../../../style/GlobalStyles";
-import { IconButton, List, makeStyles, useTheme } from "@material-ui/core";
+import {
+	IconButton,
+	List,
+	makeStyles,
+	useTheme,
+	Hidden,
+	Divider,
+} from "@material-ui/core";
 import ChatIcon from "@material-ui/icons/Chat";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 
@@ -16,10 +23,55 @@ export default function MyDrawer({ handle, open }) {
 	const classes = useStyles();
 	const theme = useTheme();
 	globalStyle();
-
+	const drawer = (
+		<List>
+			{[
+				{
+					name: "Dashboard",
+					key: "dashboard",
+					icon: <HomeIcon />,
+					link: "/",
+				},
+				{
+					name: "Khám phá",
+					key: "browser",
+					icon: <ImportContactsIcon />,
+					link: "/courses",
+				},
+				{
+					name: "Kết nối",
+					key: "connect",
+					icon: <SupervisorAccountIcon />,
+					link: "/connect",
+				},
+			].map(({ name, key, icon, link }) => (
+				<ListItemLink to={link} icon={icon} primary={name} key={key} />
+			))}
+			<div className={classes.sectionMobile}>
+				{[
+					{
+						name: "Tin nhắn",
+						key: "message",
+						icon: <ChatIcon />,
+						link: "/message",
+					},
+					{
+						name: "Thông báo",
+						key: "notification",
+						icon: <NotificationsIcon />,
+						link: "/notification",
+					},
+				].map(({ name, key, icon, link }) => (
+					<ListItemLink to={link} icon={icon} primary={name} key={key} />
+				))}
+			</div>
+		</List>
+	);
 	return (
 		<div>
+			{/* <Hidden xsDown> */}
 			<Drawer
+				anchor="left"
 				variant="permanent"
 				className={clsx(classes.drawer, {
 					[classes.drawerOpen]: open,
@@ -41,49 +93,38 @@ export default function MyDrawer({ handle, open }) {
 						)}
 					</IconButton>
 				</div>
-				<List>
-					{[
-						{
-							name: "Dashboard",
-							key: "dashboard",
-							icon: <HomeIcon />,
-							link: "/",
-						},
-						{
-							name: "Khám phá",
-							key: "browser",
-							icon: <ImportContactsIcon />,
-							link: "/courses",
-						},
-						{
-							name: "Kết nối",
-							key: "connect",
-							icon: <SupervisorAccountIcon />,
-							link: "/connect",
-						},
-					].map(({ name, key, icon, link }) => (
-						<ListItemLink to={link} icon={icon} primary={name} key={key} />
-					))}
-					<div className={classes.sectionMobile}>
-						{[
-							{
-								name: "Tin nhắn",
-								key: "message",
-								icon: <ChatIcon />,
-								link: "/message",
-							},
-							{
-								name: "Thông báo",
-								key: "notification",
-								icon: <NotificationsIcon />,
-								link: "/notification",
-							},
-						].map(({ name, key, icon, link }) => (
-							<ListItemLink to={link} icon={icon} primary={name} key={key} />
-						))}
-					</div>
-				</List>
+				<Divider />
+				{drawer}
 			</Drawer>
+			{/* </Hidden> */}
+			{/* <Hidden smUp>
+				<Drawer
+					anchor="left"
+					variant="temporary"
+					className={clsx(classes.drawer, {
+						[classes.drawerOpen]: open,
+						[classes.drawerClose]: !open,
+					})}
+					classes={{
+						paper: clsx({
+							[classes.drawerOpen]: open,
+							[classes.drawerClose]: !open,
+						}),
+					}}
+				>
+					<div className={classes.toolbar}>
+						<IconButton onClick={handle}>
+							{theme.direction === "rtl" ? (
+								<ChevronRightIcon />
+							) : (
+								<ChevronLeftIcon />
+							)}
+						</IconButton>
+					</div>
+					<Divider />
+					{drawer}
+				</Drawer>
+			</Hidden> */}
 		</div>
 	);
 }
@@ -115,7 +156,10 @@ const useStyles = makeStyles((theme) => ({
 			duration: theme.transitions.duration.leavingScreen,
 		}),
 		overflowX: "hidden",
-		width: theme.spacing(7) + 1,
+		width: 0,
+		[theme.breakpoints.up("sm")]: {
+			width: theme.spacing(7) + 1,
+		},
 	},
 	toolbar: {
 		display: "flex",
@@ -123,7 +167,7 @@ const useStyles = makeStyles((theme) => ({
 		justifyContent: "flex-end",
 		padding: theme.spacing(0, 1),
 		// necessary for content to be below app bar
-		...theme.mixins.toolbar,
+		// ...theme.mixins.toolbar,
 	},
 	sectionDesktop: {
 		display: "none",

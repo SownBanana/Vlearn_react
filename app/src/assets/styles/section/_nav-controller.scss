@@ -1,0 +1,30 @@
+
+.section .btn_nav_group {
+    position: absolute;
+    visibility: hidden;
+    z-index: 10;
+    right: 0;
+    top: 0;
+    opacity: 0;
+    transition: 0.3s;
+}
+
+.section:hover .btn_nav_group {
+    opacity: 1;
+    visibility: unset;
+    position: absolute;
+    right: 0;
+    top: -1.5rem;
+}
+
+.btn_nav_group .nav_btn {
+    font-size: 1.3rem;
+    cursor: pointer;
+    transition: 0.3s;
+    padding: 7px;
+    margin-left: -10px;
+    margin-right: -10px;
+}
+.section:hover .btn_nav_group .nav_btn {
+    margin: 0px;
+}
