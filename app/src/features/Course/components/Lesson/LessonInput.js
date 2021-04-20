@@ -1,4 +1,4 @@
-import React from "react";
+import React, { lazy, Suspense, useEffect } from "react";
 import {
 	TextField,
 	Typography,
@@ -24,7 +24,8 @@ import AddCircleRoundedIcon from "@material-ui/icons/AddCircleRounded";
 import HelpRoundedIcon from "@material-ui/icons/HelpRounded";
 import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 
-import Editor from "commons/components/CKEditor/CKEditor";
+import CKEditor from "commons/components/CKEditor/CKEditor";
+// const CKEditor = lazy(() => import("commons/components/CKEditor/CKEditor"));
 
 export default function LessonInput({
 	lesson,
@@ -36,6 +37,7 @@ export default function LessonInput({
 	const changeLessonContent = (content) => {
 		handleChange({ ...lesson, content: content });
 	};
+
 	return (
 		<Accordion
 			expanded={expanded === lesson.uuid}
@@ -47,7 +49,7 @@ export default function LessonInput({
 				aria-controls="panel1a-content"
 				id="panel1a-header"
 			>
-				{/* <DragIndicatorIcon color="action" data-movable-handle /> */}
+				<DragIndicatorIcon color="action" data-movable-handle />
 				<TextField
 					className={classes.heading}
 					fullWidth
@@ -68,8 +70,11 @@ export default function LessonInput({
 			</AccordionSummary>
 			<AccordionDetails>
 				{/* <Typography></Typography> */}
-				<Grid item md={12} xs={12}>
-					<Editor content={lesson.content} handler={changeLessonContent} />
+				<Grid item md={12} xs={12} className="handleCKSpace">
+					{/* <Suspense fallback={<div>Loading...</div>}> */}
+					<CKEditor content={lesson.content} handler={changeLessonContent} />
+					{/* <TextField /> */}
+					{/* </Suspense> */}
 				</Grid>
 			</AccordionDetails>
 		</Accordion>

@@ -26,9 +26,10 @@ export default function CKEditor({ content = "", handler }) {
 				};
 			}}
 			onChange={(event, editor) => {
+				console.log(event);
 				clearTimeout(timeOut);
 				timeOut = setTimeout(() => {
-					console.log(getRawData(editor).innerHTML);
+					// console.log(getRawData(editor).innerHTML);
 					handler(getRawData(editor).innerHTML);
 				}, 500);
 			}}
