@@ -32,7 +32,7 @@ export default function CourseInput({ course, setCourse }) {
 	};
 
 	return (
-		<Container>
+		<Container maxWidth="xl">
 			<form>
 				<Grid container spacing={1} direction="row" justify="space-around">
 					<Grid
@@ -82,7 +82,7 @@ export default function CourseInput({ course, setCourse }) {
 							<Typography align="left" variant="subtitle1" color="initial">
 								Chương học
 							</Typography>
-							<Grid item container md={12}>
+							<Grid item container md={12} direction="column">
 								<SectionList
 									sections={course.sections}
 									setSections={setSections}

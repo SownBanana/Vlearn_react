@@ -10,4 +10,4 @@ services:
     container_name: "VlearnReact"
     volumes:
       - ./app/:/app
-    restart: unless-stopped
+        #    restart: unless-stopped

@@ -69,7 +69,7 @@ export default function LessonInput({
 			<AccordionDetails>
 				{/* <Typography></Typography> */}
 				<Grid item md={12} xs={12}>
-					<Editor content={lesson.content} handler={changeLessonContent} />
+					{/* <Editor content={lesson.content} handler={changeLessonContent} /> */}
 				</Grid>
 			</AccordionDetails>
 		</Accordion>
