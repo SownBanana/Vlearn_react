@@ -1,4 +1,4 @@
-import React from "react";
+import React, { lazy, Suspense } from "react";
 import {
 	TextField,
 	Typography,
@@ -24,7 +24,8 @@ import AddCircleRoundedIcon from "@material-ui/icons/AddCircleRounded";
 import HelpRoundedIcon from "@material-ui/icons/HelpRounded";
 import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 
-import Editor from "commons/components/CKEditor/CKEditor";
+// import CKEditor from "commons/components/CKEditor/CKEditor";
+const CKEditor = lazy(() => import("commons/components/CKEditor/CKEditor"));
 
 export default function LessonInput({
 	lesson,
@@ -34,7 +35,8 @@ export default function LessonInput({
 }) {
 	const classes = useStyles();
 	const changeLessonContent = (content) => {
-		handleChange({ ...lesson, content: content });
+		// handleChange({ ...lesson, content: content });
+		console.log("asdsad sadsadsad");
 	};
 	return (
 		<Accordion
@@ -69,7 +71,9 @@ export default function LessonInput({
 			<AccordionDetails>
 				{/* <Typography></Typography> */}
 				<Grid item md={12} xs={12}>
-					{/* <Editor content={lesson.content} handler={changeLessonContent} /> */}
+					<Suspense fallback={<div>Loading...</div>}>
+						<CKEditor content={lesson.content} handler={changeLessonContent} />
+					</Suspense>
 				</Grid>
 			</AccordionDetails>
 		</Accordion>

@@ -44,37 +44,39 @@ export default function LessonList({ lessons, setLessons }) {
 					{children}
 				</Grid>
 			)}
-			renderItem={({ value, props, isDragged, isSelected, isOutOfBounds }) => (
-				<Grid
-					container
-					item
-					md={12}
-					xs={12}
-					{...props}
-					style={{
-						...props.style,
-						// paddingLeft: "0.5em",
-						listStyleType: "none",
-						cursor: isDragged ? "grabbing" : "grab",
-						borderRadius: "6px",
-						fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif',
-						borderRight:
-							isDragged || isSelected
-								? isOutOfBounds
-									? "6px solid #F08080"
-									: "6px solid #0d47a169"
-								: "6px solid #0d47a1",
-					}}
-				>
-					<LessonInput
+			renderItem={({ value, props, isDragged, isSelected, isOutOfBounds }) =>
+				value && (
+					<Grid
+						container
+						item
+						md={12}
+						xs={12}
 						{...props}
-						lesson={value}
-						handleChange={changeLesson}
-						expanded={expanded}
-						handleExpanded={handleExpanded}
-					/>
-				</Grid>
-			)}
+						style={{
+							...props.style,
+							// paddingLeft: "0.5em",
+							listStyleType: "none",
+							cursor: isDragged ? "grabbing" : "grab",
+							borderRadius: "6px",
+							fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif',
+							borderRight:
+								isDragged || isSelected
+									? isOutOfBounds
+										? "6px solid #F08080"
+										: "6px solid #0d47a169"
+									: "6px solid #0d47a1",
+						}}
+					>
+						<LessonInput
+							{...props}
+							lesson={value}
+							handleChange={changeLesson}
+							expanded={expanded}
+							handleExpanded={handleExpanded}
+						/>
+					</Grid>
+				)
+			}
 		/>
 	);
 }

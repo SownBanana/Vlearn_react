@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { lazy, useEffect, useRef, useState, Suspense } from "react";
 import {
 	TextField,
 	Grid,
@@ -8,13 +8,15 @@ import {
 	withTheme,
 } from "@material-ui/core";
 
+import SectionList from "../Section/SectionList";
+import { useSelector } from "react-redux";
+
 import CKViewer from "commons/components/CKEditor/CKViewer";
-import CKEditor from "commons/components/CKEditor/CKEditor";
+// import CKEditor from "commons/components/CKEditor/CKEditor";
+const CKEditor = lazy(() => import("commons/components/CKEditor/CKEditor"));
 
 // import Prism from "prismjs";
 
-import SectionList from "../Section/SectionList";
-import { useSelector } from "react-redux";
 
 export default function CourseInput({ course, setCourse }) {
 	const classes = useStyles();
@@ -64,7 +66,9 @@ export default function CourseInput({ course, setCourse }) {
 								Giới thiệu khóa học
 							</Typography>
 							<Grid item md={12} xs={12}>
-								<CKEditor content={course.introduce} handler={introHandler} />
+								<Suspense fallback={<div>Loading...</div>}>
+									<CKEditor content={course.introduce} handler={introHandler} />
+								</Suspense>
 							</Grid>
 
 							{/* <Grid item xs={12}>

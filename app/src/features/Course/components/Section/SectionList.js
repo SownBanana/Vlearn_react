@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 // import PropTypes from "prop-types";
 import SectionInput from "./SectionInput";
 import uuid from "commons/uuidv4";
@@ -27,6 +27,9 @@ function SectionList({ sections, setSections }) {
 	const handleExpanded = (panel) => (event, isExpanded) => {
 		setExpanded(isExpanded ? panel : false);
 	};
+	useEffect(() => {
+		console.log("===========> Rerender");
+	}, []);
 	return (
 		<List
 			removableByMove
@@ -53,62 +56,64 @@ function SectionList({ sections, setSections }) {
 					{children}
 				</Grid>
 			)}
-			renderItem={({ value, props, isDragged, isSelected, isOutOfBounds }) => (
-				<Grid
-					container
-					direction="row"
-					justify="flex-end"
-					item
-					md={12}
-					{...props}
-					style={{
-						...props.style,
-						// paddingLeft: "0.5em",
-						display: "flex",
-						listStyleType: "none",
-						cursor: isDragged ? "grabbing" : "grab",
-						borderRadius: "6px",
-						fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif',
-						// borderLeft:
-						// 	isDragged || isSelected
-						// 		? isOutOfBounds
-						// 			? "6px solid #F08080"
-						// 			: "6px solid #0d47a169"
-						// 		: "6px solid #0d47a1",
-					}}
-				>
-					{/* <Hidden smDown> */}
-					<div
-						className="thisDivHere"
-						data-movable-handle
+			renderItem={({ value, props, isDragged, isSelected, isOutOfBounds }) =>
+				value && (
+					<Grid
+						container
+						direction="row"
+						justify="flex-end"
+						item
+						md={12}
+						{...props}
 						style={{
-							width: "16px",
-							marginBottom: "7.5px",
-							marginTop: "0.5px",
-							zIndex: "-1",
-							marginRight: "-7px",
+							...props.style,
+							// paddingLeft: "0.5em",
+							display: "flex",
+							listStyleType: "none",
+							cursor: isDragged ? "grabbing" : "grab",
 							borderRadius: "6px",
-							backgroundColor:
-								isDragged || isSelected
-									? isOutOfBounds
-										? "#F08080"
-										: "#0d47a169"
-									: "#0d47a1",
+							fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif',
+							// borderLeft:
+							// 	isDragged || isSelected
+							// 		? isOutOfBounds
+							// 			? "6px solid #F08080"
+							// 			: "6px solid #0d47a169"
+							// 		: "6px solid #0d47a1",
 						}}
-					></div>
-					{/* </Hidden> */}
-					<Grid item md={12} xs={12} className={classes.maxwidth}>
-						<SectionInput
-							{...props}
-							section={value}
-							handleChange={changeSection}
-							expanded={expanded}
-							handleExpanded={handleExpanded}
-							setSection={changeSection}
-						/>
+					>
+						{/* <Hidden smDown> */}
+						<div
+							className="thisDivHere"
+							data-movable-handle
+							style={{
+								width: "16px",
+								marginBottom: "7.5px",
+								marginTop: "0.5px",
+								zIndex: "-1",
+								marginRight: "-7px",
+								borderRadius: "6px",
+								backgroundColor:
+									isDragged || isSelected
+										? isOutOfBounds
+											? "#F08080"
+											: "#0d47a169"
+										: "#0d47a1",
+							}}
+						></div>
+						{/* </Hidden> */}
+						<Grid item md={12} xs={12} className={classes.maxwidth}>
+							<SectionInput
+								{...props}
+								section={value}
+								handleChange={changeSection}
+								expanded={expanded}
+								handleExpanded={handleExpanded}
+								setSection={changeSection}
+							/>
+						</Grid>
 					</Grid>
-				</Grid>
-			)}
+				)
+			}
 		/>
 	);
 }
