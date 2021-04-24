@@ -25,8 +25,8 @@ import HelpRoundedIcon from "@material-ui/icons/HelpRounded";
 import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import { Movie } from "@material-ui/icons";
 import CKViewer from "commons/components/CKEditor/CKViewer";
-// import VideoPlayer from "commons/components/VideoPlayer/VideoPlayer";
-import VideoPlayer from "react-player";
+import VideoPlayer from "commons/components/VideoPlayer/VideoPlayer";
+// import VideoPlayer from "react-player";
 export default function LessonInput({
 	lesson,
 	handleChange,
