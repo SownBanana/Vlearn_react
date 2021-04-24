@@ -86,7 +86,7 @@ export default function LessonInput({
 						alignItems="center"
 						justify="space-between"
 					>
-						<Grid item md={8} xs={8}>
+						<Grid item md={8} xs={12}>
 							<TextField
 								id=""
 								label=""
@@ -97,7 +97,7 @@ export default function LessonInput({
 								}
 							/>
 						</Grid>
-						<Grid item md={4} xs={4}>
+						<Grid item md={4} xs={12}>
 							<input
 								accept="image/*"
 								className={classes.input}
@@ -109,9 +109,9 @@ export default function LessonInput({
 									variant="contained"
 									color="primary"
 									component="span"
-									startIcon={<Movie />}
+									endIcon={<Movie />}
 								>
-									Tải lên video
+									Upload
 								</Button>
 							</label>
 						</Grid>

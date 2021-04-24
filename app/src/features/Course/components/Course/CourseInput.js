@@ -98,15 +98,16 @@ export default function CourseInput({ course, setCourse }) {
 	return (
 		<Container maxWidth="xl">
 			<form>
-				<Grid container spacing={1} direction="row" justify="space-around">
+				<Grid container spacing={2} direction="row" justify="space-around">
 					<Grid
 						item
-						md={9}
+						md={8}
 						sm={12}
 						container
 						spacing={2}
 						justify="center"
 						alignItems="center"
+						className={classes.panel}
 					>
 						<Grid container item md={12} xs={10}>
 							<Typography variant="subtitle1" color="initial">
@@ -179,6 +180,8 @@ const useStyles = makeStyles((theme) => ({
 		backgroundColor: "white",
 	},
 	panel: {
-		backgroundColor: "#cfe8fc",
+		backgroundColor: "white",
+		borderRadius: "5px",
+		boxShadow: "rgba(0, 0, 0, 0.16) 0px 1px 4px",
 	},
 }));
