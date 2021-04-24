@@ -83,7 +83,7 @@ function App() {
 						<PrivateRoute exact path="/" component={Home} />
 					</Switch>
 				</Suspense>
-				<ChatComponent />
+				{/* <ChatComponent /> */}
 			</ThemeProvider>
 		</div>
 	);

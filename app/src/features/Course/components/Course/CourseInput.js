@@ -13,7 +13,16 @@ import { useSelector } from "react-redux";
 
 import CKViewer from "commons/components/CKEditor/CKViewer";
 // import CKEditor from "commons/components/CKEditor/CKEditor";
-const CKEditor = lazy(() => import("commons/components/CKEditor/CKEditor"));
+// import Lazy from "react-lazyload";
+
+const CKEditor = lazy(() => {
+	const editor = new Promise((resolve) => {
+		setTimeout(() => {
+			return resolve(import("commons/components/CKEditor/CKEditor"));
+		}, 100);
+	});
+	return editor;
+});
 
 // import Prism from "prismjs";
 
@@ -119,9 +128,11 @@ export default function CourseInput({ course, setCourse }) {
 								Giới thiệu khóa học
 							</Typography>
 							<Grid item md={12} xs={12}>
+								{/* <Lazy placeholder={<div>Loading...</div>}> */}
 								<Suspense fallback={<div>Loading...</div>}>
 									<CKEditor content={course.introduce} handler={introHandler} />
 								</Suspense>
+								{/* </Lazy> */}
 							</Grid>
 
 							{/* <Grid item xs={12}>

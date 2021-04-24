@@ -22,9 +22,10 @@ import NotificationsIcon from "@material-ui/icons/Notifications";
 export default function MyDrawer({ handle, open }) {
 	const classes = useStyles();
 	const theme = useTheme();
+	console.log("============> ", theme);
 	globalStyle();
 	const drawer = (
-		<List>
+		<List onClick={handle}>
 			{[
 				{
 					name: "Dashboard",
@@ -69,38 +70,10 @@ export default function MyDrawer({ handle, open }) {
 	);
 	return (
 		<div>
-			{/* <Hidden xsDown> */}
-			<Drawer
-				anchor="left"
-				variant="permanent"
-				className={clsx(classes.drawer, {
-					[classes.drawerOpen]: open,
-					[classes.drawerClose]: !open,
-				})}
-				classes={{
-					paper: clsx({
-						[classes.drawerOpen]: open,
-						[classes.drawerClose]: !open,
-					}),
-				}}
-			>
-				<div className={classes.toolbar}>
-					<IconButton onClick={handle}>
-						{theme.direction === "rtl" ? (
-							<ChevronRightIcon />
-						) : (
-							<ChevronLeftIcon />
-						)}
-					</IconButton>
-				</div>
-				<Divider />
-				{drawer}
-			</Drawer>
-			{/* </Hidden> */}
-			{/* <Hidden smUp>
+			<Hidden xsDown>
 				<Drawer
 					anchor="left"
-					variant="temporary"
+					variant="permanent"
 					className={clsx(classes.drawer, {
 						[classes.drawerOpen]: open,
 						[classes.drawerClose]: !open,
@@ -114,17 +87,28 @@ export default function MyDrawer({ handle, open }) {
 				>
 					<div className={classes.toolbar}>
 						<IconButton onClick={handle}>
-							{theme.direction === "rtl" ? (
-								<ChevronRightIcon />
-							) : (
-								<ChevronLeftIcon />
-							)}
+							<ChevronLeftIcon />
 						</IconButton>
 					</div>
 					<Divider />
 					{drawer}
 				</Drawer>
-			</Hidden> */}
+			</Hidden>
+			<Hidden smUp>
+				<Drawer
+					anchor="left"
+					open={open}
+					ModalProps={{ onBackdropClick: handle }}
+				>
+					<div className={classes.toolbar}>
+						<IconButton onClick={handle}>
+							<ChevronLeftIcon />
+						</IconButton>
+					</div>
+					<Divider />
+					{drawer}
+				</Drawer>
+			</Hidden>
 		</div>
 	);
 }
@@ -144,6 +128,7 @@ const useStyles = makeStyles((theme) => ({
 		whiteSpace: "nowrap",
 	},
 	drawerOpen: {
+		boxShadow: "4px 4px 10px 6px #5c5c5c80",
 		width: drawerWidth,
 		transition: theme.transitions.create("width", {
 			easing: theme.transitions.easing.sharp,
@@ -151,6 +136,7 @@ const useStyles = makeStyles((theme) => ({
 		}),
 	},
 	drawerClose: {
+		boxShadow: "-4px 4px 10px 3px #5c5c5c80",
 		transition: theme.transitions.create("width", {
 			easing: theme.transitions.easing.sharp,
 			duration: theme.transitions.duration.leavingScreen,

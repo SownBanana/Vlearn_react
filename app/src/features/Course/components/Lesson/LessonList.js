@@ -8,7 +8,8 @@ export default function LessonList({ lessons, setLessons }) {
 	const [expanded, setExpanded] = useState(0);
 	const changeLesson = (lesson) => {
 		const newLessons = _.cloneDeep(lessons).map((l, index) => {
-			lesson.order = index;
+			// console.log("index = ");
+			l.order = index;
 			if (l.uuid === lesson.uuid) return lesson;
 			return l;
 		});
@@ -47,6 +48,7 @@ export default function LessonList({ lessons, setLessons }) {
 			renderItem={({ value, props, isDragged, isSelected, isOutOfBounds }) =>
 				value && (
 					<Grid
+						key={value.uuid}
 						container
 						item
 						md={12}

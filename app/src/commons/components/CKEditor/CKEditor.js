@@ -20,18 +20,25 @@ export default function CKEditor({ content = "", handler }) {
 				}
 				// You can store the "editor" and use when it is needed.
 				console.log("Editor is ready to use!", editor);
-				editor.setData(content);
+				if (content) editor.setData(content);
 				editor.plugins.get("FileRepository").createUploadAdapter = (loader) => {
 					return new MyUploadAdapter(loader);
 				};
 			}}
 			onChange={(event, editor) => {
-				console.log(event);
 				clearTimeout(timeOut);
+				const data = getRawData(editor).innerHTML;
+				// console.log("prepare data", data);
 				timeOut = setTimeout(() => {
 					// console.log(getRawData(editor).innerHTML);
-					handler(getRawData(editor).innerHTML);
-				}, 500);
+					// console.log("change data", data);
+					try {
+						handler(data);
+					} catch (e) {
+						console.error("Try to get data of deleted editor");
+					}
+				}, 3500);
+				console.log(event);
 			}}
 			// onBlur={(event, editor) => {
 			// 	// console.log("Blur.", editor);

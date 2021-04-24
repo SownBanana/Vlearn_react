@@ -59,6 +59,7 @@ function SectionList({ sections, setSections }) {
 			renderItem={({ value, props, isDragged, isSelected, isOutOfBounds }) =>
 				value && (
 					<Grid
+						key={value.uuid}
 						container
 						direction="row"
 						justify="flex-end"
@@ -81,26 +82,26 @@ function SectionList({ sections, setSections }) {
 							// 		: "6px solid #0d47a1",
 						}}
 					>
-						{/* <Hidden smDown> */}
-						<div
-							className="thisDivHere"
-							data-movable-handle
-							style={{
-								width: "16px",
-								marginBottom: "7.5px",
-								marginTop: "0.5px",
-								zIndex: "-1",
-								marginRight: "-7px",
-								borderRadius: "6px",
-								backgroundColor:
-									isDragged || isSelected
-										? isOutOfBounds
-											? "#F08080"
-											: "#0d47a169"
-										: "#0d47a1",
-							}}
-						></div>
-						{/* </Hidden> */}
+						<Hidden smDown>
+							<div
+								className="thisDivHere"
+								data-movable-handle
+								style={{
+									width: "16px",
+									marginBottom: "7.5px",
+									marginTop: "0.5px",
+									zIndex: "-1",
+									marginRight: "-7px",
+									borderRadius: "6px",
+									backgroundColor:
+										isDragged || isSelected
+											? isOutOfBounds
+												? "#F08080"
+												: "#0d47a169"
+											: "#0d47a1",
+								}}
+							></div>
+						</Hidden>
 						<Grid item md={12} xs={12} className={classes.maxwidth}>
 							<SectionInput
 								{...props}
@@ -121,6 +122,9 @@ function SectionList({ sections, setSections }) {
 const useStyles = makeStyles((theme) => ({
 	maxwidth: {
 		maxWidth: "98%",
+		[theme.breakpoints.down("sm")]: {
+			maxWidth: "100%",
+		},
 	},
 }));
 
