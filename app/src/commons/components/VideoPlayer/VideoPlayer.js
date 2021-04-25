@@ -165,6 +165,7 @@ export default function VideoPlayer({ handlePrevious, handleNext, ...prop }) {
 					value={video.played}
 					fakeValue={slider.fakePlayed}
 					loaded={video.loaded}
+					duration={video.duration}
 					intent={slider.intent}
 					hover={slider.hover}
 					onChangeStart={(startValue) => {

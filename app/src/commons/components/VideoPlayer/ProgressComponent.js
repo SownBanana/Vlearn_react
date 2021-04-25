@@ -1,4 +1,4 @@
-import { Slider, Direction } from "react-player-controls";
+import { Slider, Direction, FormattedTime } from "react-player-controls";
 
 const BACKGROUND = "#cecece80";
 const PRIMARY = "#4281E0c7";
@@ -27,36 +27,35 @@ const SliderBar = ({ value, style }) => (
 );
 
 // A handle to indicate the current value
-const SliderHandle = ({ value, style }) => (
+const SliderHandle = ({ value, style, children }) => (
 	<div
 		style={Object.assign(
 			{},
 			{
 				position: "absolute",
-				width: 14,
-				height: 14,
+				padding: "2px 5px",
 				background: PRIMARY,
-				borderRadius: "100%",
+				color: "white",
+				fontWeight: "bold",
+				borderRadius: "7px",
 				transform: "scale(1)",
 				transition: "transform 0.2s",
-				"&:hover": {
-					transform: "scale(1.3)",
-					background: INTENT,
-				},
 			},
 			{
-				top: 0,
-				left: `${value * 100}%`,
+				top: -25,
+				left: `${value * 100 - 1.5}%`,
 				marginTop: -4,
 				marginLeft: -8,
 			},
 			style
 		)}
-	/>
+	>
+		{children}
+	</div>
 );
 
 // A composite progress bar component
-const ProgressBar = ({ hover, value, intent, loaded, ...props }) => (
+const ProgressBar = ({ hover, value, intent, loaded, duration, ...props }) => (
 	<Slider
 		direction={Direction.HORIZONTAL}
 		// onChange={/* store value somehow */}
@@ -84,12 +83,15 @@ const ProgressBar = ({ hover, value, intent, loaded, ...props }) => (
 			value={intent}
 			style={{ background: INTENT }}
 		/>
-
-		{/* <SliderHandle
-			direction={Direction.HORIZONTAL}
-			value={value}
-			style={{ background: PRIMARY }}
-		/> */}
+		{intent > 0 && (
+			<SliderHandle
+				direction={Direction.HORIZONTAL}
+				value={intent}
+				style={{ background: "#23232330" }}
+			>
+				<FormattedTime className="timestamp" numSeconds={duration * intent} />
+			</SliderHandle>
+		)}
 	</Slider>
 );
 

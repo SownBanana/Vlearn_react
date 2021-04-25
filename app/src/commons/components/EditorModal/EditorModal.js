@@ -35,13 +35,6 @@ const useStyles = makeStyles((theme) => ({
 		width: "100%",
 		height: "100%",
 	},
-	title: {
-		color: "white",
-		backgroundColor: theme.palette.primary.main,
-		zIndex: "1000",
-		margin: "0",
-		textAlign: "center",
-	},
 }));
 
 export default function EditorModal() {
@@ -54,31 +47,6 @@ export default function EditorModal() {
 	};
 
 	return (
-		// <Modal
-		// 	aria-labelledby="transition-modal-title"
-		// 	aria-describedby="transition-modal-description"
-		// 	className={classes.modal}
-		// 	open={editorModal.open}
-		// 	onClose={handleClose}
-		// 	closeAfterTransition
-		// 	BackdropComponent={Backdrop}
-		// 	BackdropProps={{
-		// 		timeout: 500,
-		// 	}}
-		// >
-		// 	<div className={classes.editor}>
-		// 		{/* <Fade in={editorModal.open}>
-		// 		<div className={classes.paper}> */}
-		// 		<h2 className={classes.title}>{editorModal.title}</h2>
-		// 		<CKEditor
-		// 			isNoSide={true}
-		// 			content={editorModal.content}
-		// 			handler={editorModal.handler}
-		// 		/>
-		// 	</div>
-		// 	{/* </div>
-		// 	</Fade> */}
-		// </Modal>
 		<Dialog
 			open={editorModal.open}
 			onClose={handleClose}
