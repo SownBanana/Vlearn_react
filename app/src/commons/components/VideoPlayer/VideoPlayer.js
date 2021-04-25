@@ -15,15 +15,15 @@ import VolumeMuteRoundedIcon from "@material-ui/icons/VolumeMuteRounded";
 import VolumeOffRoundedIcon from "@material-ui/icons/VolumeOffRounded";
 import AspectRatioRoundedIcon from "@material-ui/icons/AspectRatioRounded";
 import FastRewindRoundedIcon from "@material-ui/icons/FastRewindRounded";
-const videoWrapper = ({ children }) => (
-	<div
-		className={
-			screenfull.isFullscreen ? "video-wrapper fullscreen" : "video-wrapper"
-		}
-	>
-		{children}
-	</div>
-);
+// const videoWrapper = ({ children }) => (
+// 	<div
+// 		className={
+// 			screenfull.isFullscreen ? "video-wrapper fullscreen" : "video-wrapper"
+// 		}
+// 	>
+// 		{children}
+// 	</div>
+// );
 export default function VideoPlayer({ handlePrevious, handleNext, ...prop }) {
 	const isMobile = useMediaQuery("(max-width: 760px)");
 	const [showSpeed, setShowSpeed] = useState(false);
@@ -38,9 +38,11 @@ export default function VideoPlayer({ handlePrevious, handleNext, ...prop }) {
 	});
 
 	const [video, setVideo] = useState({
+		width: "100%",
+		height: "360px",
 		playing: false,
 		controls: false,
-		light: true,
+		light: false,
 		volume: 0.8,
 		lastVolume: 0.8,
 		muted: false,
@@ -55,6 +57,8 @@ export default function VideoPlayer({ handlePrevious, handleNext, ...prop }) {
 	const player = useRef();
 	const wholePlayer = useRef();
 	const {
+		width,
+		height,
 		playing,
 		controls,
 		light,
@@ -134,6 +138,10 @@ export default function VideoPlayer({ handlePrevious, handleNext, ...prop }) {
 	};
 
 	const handleClickFullscreen = () => {
+		if (screenfull.isFullscreen) {
+			console.log("Full");
+			setVideo({ ...video, height: "360px" });
+		} else setVideo({ ...video, height: "100%" });
 		screenfull.toggle(findDOMNode(wholePlayer.current));
 	};
 	var mouseMoveTimeOut = 0;
@@ -182,6 +190,8 @@ export default function VideoPlayer({ handlePrevious, handleNext, ...prop }) {
 				controls={controls}
 				light={light}
 				loop={loop}
+				width={width}
+				height={height}
 				playbackRate={playbackRate}
 				volume={volume}
 				muted={muted}
@@ -195,7 +205,7 @@ export default function VideoPlayer({ handlePrevious, handleNext, ...prop }) {
 				onError={(e) => console.log("onError", e)}
 				onProgress={handleProgress}
 				onDuration={handleDuration}
-				wrapper={videoWrapper}
+				// wrapper={videoWrapper}
 			/>
 			<div className={"progress-wrapper"}>
 				{/* <PlayerIcon.Play /> */}
@@ -329,15 +339,18 @@ export default function VideoPlayer({ handlePrevious, handleNext, ...prop }) {
 									<div className="timestamp small">x{speed}</div>
 								</IconButton>
 							))}
-						<IconButton
-							color="inherit"
-							onClick={toggleShowSpeed}
-							edge="start"
-							className="button"
-						>
-							<div className="timestamp">{video.playbackRate}x</div>
-							<FastRewindRoundedIcon />
-						</IconButton>
+						{!isMobile && (
+							<IconButton
+								color="inherit"
+								onClick={toggleShowSpeed}
+								edge="start"
+								className="button"
+							>
+								<div className="timestamp">{video.playbackRate}x</div>
+								<FastRewindRoundedIcon />
+							</IconButton>
+						)}
+
 						<IconButton
 							color="inherit"
 							onClick={handleClickFullscreen}
