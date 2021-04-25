@@ -7,10 +7,9 @@ import {
 	makeStyles,
 	withTheme,
 } from "@material-ui/core";
-
+import EditorModal from "commons/components/EditorModal/EditorModal";
 import SectionList from "../Section/SectionList";
 import { useSelector } from "react-redux";
-
 import CKViewer from "commons/components/CKEditor/CKViewer";
 // import CKEditor from "commons/components/CKEditor/CKEditor";
 // import Lazy from "react-lazyload";
@@ -171,6 +170,9 @@ export default function CourseInput({ course, setCourse }) {
 					</Grid>
 				</Grid>
 			</form>
+			<Grid item md={12} xs={12}>
+				<EditorModal />
+			</Grid>
 		</Container>
 	);
 }

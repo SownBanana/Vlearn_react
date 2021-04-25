@@ -6,6 +6,7 @@ import Grid from "@material-ui/core/Grid";
 
 export default function LessonList({ lessons, setLessons }) {
 	const [expanded, setExpanded] = useState(0);
+
 	const changeLesson = (lesson) => {
 		const newLessons = _.cloneDeep(lessons).map((l, index) => {
 			// console.log("index = ");
@@ -13,6 +14,13 @@ export default function LessonList({ lessons, setLessons }) {
 			if (l.uuid === lesson.uuid) return lesson;
 			return l;
 		});
+		setLessons(newLessons);
+	};
+	const deleteLesson = (lesson) => {
+		const newLessons = _.cloneDeep(lessons).filter(
+			(l) => l.uuid != lesson.uuid
+		);
+		console.log(newLessons);
 		setLessons(newLessons);
 	};
 	const handleExpanded = (panel) => (event, isExpanded) => {
@@ -73,6 +81,7 @@ export default function LessonList({ lessons, setLessons }) {
 							{...props}
 							lesson={value}
 							handleChange={changeLesson}
+							handleDelete={deleteLesson}
 							expanded={expanded}
 							handleExpanded={handleExpanded}
 						/>

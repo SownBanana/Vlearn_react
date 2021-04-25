@@ -19,6 +19,17 @@
 .video-player-wrapper:hover .progress-wrapper {
     height: 100px;
 }
+
+.video-player-wrapper .progress-wrapper .magic-progress-bar{
+    position: absolute;
+    top: 43px;
+    width: 100%;
+    height: 20px;
+    // background: #ffc0cb54;
+    z-index: 2;
+    cursor: pointer;
+}
+
 .video-player-wrapper .progress-wrapper .progress-bar{
     width: 95%;
 	height:  4px;
@@ -33,6 +44,11 @@
     height:  8px;
     // top:5px;
 }
+.video-player-wrapper .progress-wrapper .magic-progress-bar:hover + .progress-bar{
+    height:  8px;
+    // top:5px;
+}
+
 .video-player-wrapper .progress-wrapper .button-group-wrapper{
     display: flex;
     color: whitesmoke;

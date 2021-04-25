@@ -94,7 +94,7 @@ export default function VideoPlayer({ handlePrevious, handleNext, ...prop }) {
 	};
 	const handleEnded = () => {
 		console.log("onEnded");
-		this.setState({ playing: false });
+		setVideo({ ...video, playing: false });
 	};
 	const handleSeekStart = () => {
 		setVideo({ ...video, seeking: true });
@@ -157,6 +157,7 @@ export default function VideoPlayer({ handlePrevious, handleNext, ...prop }) {
 			<div className={"progress-wrapper"}>
 				{/* <PlayerIcon.Play /> */}
 				{/* <progress max={1} value={video.played} /> */}
+				<div className="magic-progress-bar"></div>
 				<ProgressBar
 					className="progress-bar"
 					isEnabled

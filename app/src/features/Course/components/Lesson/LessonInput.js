@@ -19,23 +19,41 @@ import {
 import clsx from "clsx";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import DragIndicatorIcon from "@material-ui/icons/DragIndicator";
-
-import AddCircleRoundedIcon from "@material-ui/icons/AddCircleRounded";
-import HelpRoundedIcon from "@material-ui/icons/HelpRounded";
-import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
+import DeleteRoundedIcon from "@material-ui/icons/DeleteRounded";
+import EditRoundedIcon from "@material-ui/icons/EditRounded";
 import { Movie } from "@material-ui/icons";
 import CKViewer from "commons/components/CKEditor/CKViewer";
 import VideoPlayer from "commons/components/VideoPlayer/VideoPlayer";
-// import VideoPlayer from "react-player";
+import ConfirmButton from "commons/components/Button/ConfirmIconButton";
+import {
+	setOpen,
+	setTitle,
+	setContent,
+	setHandler,
+} from "commons/components/EditorModal/editorSlice";
+import { useDispatch } from "react-redux";
 export default function LessonInput({
 	lesson,
 	handleChange,
+	handleDelete,
 	expanded,
 	handleExpanded,
 }) {
+	const dispatch = useDispatch();
 	const classes = useStyles();
 	const changeLessonContent = (content) => {
 		handleChange({ ...lesson, content: content });
+	};
+
+	const deleteLesson = () => {
+		handleDelete(lesson);
+	};
+	const openEditor = (e) => {
+		e.stopPropagation();
+		dispatch(setTitle("Bài " + lesson.name));
+		dispatch(setContent(lesson.content));
+		dispatch(setHandler(changeLessonContent));
+		dispatch(setOpen(true));
 	};
 
 	return (
@@ -67,13 +85,41 @@ export default function LessonInput({
 						handleChange({ ...lesson, name: e.target.value });
 					}}
 				/>
+				<IconButton
+					color="primary"
+					onClick={openEditor}
+					edge="start"
+					className="button"
+				>
+					<EditRoundedIcon />
+				</IconButton>
+				<ConfirmButton
+					color="secondary"
+					onClick={deleteLesson}
+					edge="start"
+					className="button"
+					title={"Xóa bài " + lesson.name}
+					content={"Bạn thực sự muốn xóa bài học này?"}
+				>
+					<DeleteRoundedIcon />
+				</ConfirmButton>
+				{/* <IconButton
+					color="secondary"
+					onClick={deleteLesson}
+					edge="start"
+					className="button"
+				>
+					<DeleteRoundedIcon />
+				</IconButton> */}
 			</AccordionSummary>
 			<AccordionDetails className={classes.content}>
 				{/* <Typography></Typography> */}
 				<Grid container spacing={1} direction="column">
 					<Grid item md={12} xs={12}>
 						{/* <iframe src={lesson.video_url} /> */}
-						<VideoPlayer width="inherit" url={lesson.video_url} />
+						{lesson.video_url && (
+							<VideoPlayer width="inherit" url={lesson.video_url} />
+						)}
 					</Grid>
 					<Grid
 						style={{ cursor: "auto" }}
