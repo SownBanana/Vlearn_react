@@ -136,10 +136,45 @@ export default function VideoPlayer({ handlePrevious, handleNext, ...prop }) {
 	const handleClickFullscreen = () => {
 		screenfull.toggle(findDOMNode(wholePlayer.current));
 	};
-
+	var mouseMoveTimeOut = 0;
+	const onMouseMoveInFullScreen = (e) => {
+		if (wholePlayer.current) {
+			clearTimeout(mouseMoveTimeOut);
+			wholePlayer.current.classList.add("hover");
+			mouseMoveTimeOut = setTimeout(() => {
+				wholePlayer.current.classList.remove("hover");
+			}, 3000);
+		}
+	};
+	useEffect(() => {
+		if (screenfull.isFullscreen) {
+			wholePlayer.current.classList.remove("normal");
+			wholePlayer.current.addEventListener(
+				"mousemove",
+				onMouseMoveInFullScreen
+			);
+		} else {
+			wholePlayer.current.classList.add("normal");
+			wholePlayer.current.classList.remove("hover");
+			wholePlayer.current.removeEventListener(
+				"mousemove",
+				onMouseMoveInFullScreen
+			);
+		}
+		return () => {
+			wholePlayer.current.removeEventListener(
+				"mousemove",
+				onMouseMoveInFullScreen
+			);
+		};
+	}, [screenfull.isFullscreen]);
 	var intentTimeOut;
 	return (
-		<div ref={wholePlayer} className="video-player-wrapper">
+		<div
+			ref={wholePlayer}
+			// onMouseMove={onMouseMoveInFullScreen}
+			className="video-player-wrapper normal"
+		>
 			<Player
 				{...prop}
 				ref={player}

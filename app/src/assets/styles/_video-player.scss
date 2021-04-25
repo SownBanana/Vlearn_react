@@ -37,8 +37,12 @@
     // background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(2,2,13,0.3113620448179272) 68%, rgba(2,2,13,0.6026785714285714) 100%);
 }
 
-.video-player-wrapper:hover .progress-wrapper {
+.video-player-wrapper.normal:hover .progress-wrapper {
     height: 100px;
+}
+.video-player-wrapper.hover .progress-wrapper {
+    height: 100px;
+    transition: 0.7s;
 }
 
 .video-player-wrapper .progress-wrapper .magic-progress-bar{
@@ -58,9 +62,13 @@
     transition: 0.3s;
     top:0px;
 }
-.video-player-wrapper:hover .progress-wrapper .progress-bar{
+.video-player-wrapper.normal:hover .progress-wrapper .progress-bar{
     top:50px;
 }
+.video-player-wrapper.hover .progress-wrapper .progress-bar{
+    top:50px;
+}
+
 .video-player-wrapper .progress-wrapper .progress-bar:hover{
     height:  8px;
     // top:5px;
