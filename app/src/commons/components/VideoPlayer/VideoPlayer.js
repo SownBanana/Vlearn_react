@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { findDOMNode } from "react-dom";
 import Player from "react-player";
 import { Direction, FormattedTime } from "react-player-controls";
@@ -15,6 +15,15 @@ import VolumeMuteRoundedIcon from "@material-ui/icons/VolumeMuteRounded";
 import VolumeOffRoundedIcon from "@material-ui/icons/VolumeOffRounded";
 import AspectRatioRoundedIcon from "@material-ui/icons/AspectRatioRounded";
 import FastRewindRoundedIcon from "@material-ui/icons/FastRewindRounded";
+const videoWrapper = ({ children }) => (
+	<div
+		className={
+			screenfull.isFullscreen ? "video-wrapper fullscreen" : "video-wrapper"
+		}
+	>
+		{children}
+	</div>
+);
 export default function VideoPlayer({ handlePrevious, handleNext, ...prop }) {
 	const isMobile = useMediaQuery("(max-width: 760px)");
 	const [showSpeed, setShowSpeed] = useState(false);
@@ -31,7 +40,7 @@ export default function VideoPlayer({ handlePrevious, handleNext, ...prop }) {
 	const [video, setVideo] = useState({
 		playing: false,
 		controls: false,
-		light: false,
+		light: true,
 		volume: 0.8,
 		lastVolume: 0.8,
 		muted: false,
@@ -44,6 +53,7 @@ export default function VideoPlayer({ handlePrevious, handleNext, ...prop }) {
 		seeking: false,
 	});
 	const player = useRef();
+	const wholePlayer = useRef();
 	const {
 		playing,
 		controls,
@@ -60,10 +70,6 @@ export default function VideoPlayer({ handlePrevious, handleNext, ...prop }) {
 	// const load = (url) => {
 	// 	setVideo({ ...video, url: url, played: 0, loaded: 0, pip: false });
 	// };
-
-	const handlePlayPause = () => {
-		setVideo({ ...video, playing: !video.playing });
-	};
 
 	const handleVolumeChange = (e) => {
 		setVideo({ ...video, volume: parseFloat(e.target.value) });
@@ -110,8 +116,8 @@ export default function VideoPlayer({ handlePrevious, handleNext, ...prop }) {
 	};
 
 	const handleProgress = (state) => {
-		console.log("onProgress", state);
-		console.log(player.current);
+		// console.log("onProgress", state);
+		// console.log(player.current);
 		if (!video.seeking) {
 			setVideo({
 				...video,
@@ -128,11 +134,12 @@ export default function VideoPlayer({ handlePrevious, handleNext, ...prop }) {
 	};
 
 	const handleClickFullscreen = () => {
-		screenfull.request(findDOMNode(player.current));
+		screenfull.toggle(findDOMNode(wholePlayer.current));
 	};
+
 	var intentTimeOut;
 	return (
-		<div className="video-player-wrapper">
+		<div ref={wholePlayer} className="video-player-wrapper">
 			<Player
 				{...prop}
 				ref={player}
@@ -153,6 +160,7 @@ export default function VideoPlayer({ handlePrevious, handleNext, ...prop }) {
 				onError={(e) => console.log("onError", e)}
 				onProgress={handleProgress}
 				onDuration={handleDuration}
+				wrapper={videoWrapper}
 			/>
 			<div className={"progress-wrapper"}>
 				{/* <PlayerIcon.Play /> */}
