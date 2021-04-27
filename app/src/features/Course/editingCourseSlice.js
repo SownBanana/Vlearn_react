@@ -19,14 +19,14 @@ function clearCourse(state) {
 		sections: [
 			{
 				id: "",
-				uuid: "12",
+				// uuid: "12",
 				order: "",
 				course_id: "",
 				name: "",
 				lessons: [
 					{
 						id: "",
-						uuid: "23",
+						// uuid: "23",
 						order: "",
 						section_id: "",
 						name: "",
@@ -36,7 +36,7 @@ function clearCourse(state) {
 					},
 					{
 						id: "",
-						uuid: "233",
+						// uuid: "233",
 						order: "",
 						section_id: "",
 						name: "",
@@ -48,7 +48,7 @@ function clearCourse(state) {
 				live_lessons: [
 					{
 						id: "",
-						uuid: "34",
+						// uuid: "34",
 						order: "",
 						section_id: "",
 						name: "",
@@ -58,7 +58,7 @@ function clearCourse(state) {
 				questions: [
 					{
 						id: "",
-						uuid: "45",
+						// uuid: "45",
 						order: "",
 						section_id: "",
 						question: "",
@@ -68,14 +68,14 @@ function clearCourse(state) {
 			},
 			{
 				id: "",
-				uuid: "128",
+				// uuid: "128",
 				order: "",
 				course_id: "",
 				name: "",
 				lessons: [
 					{
 						id: "",
-						uuid: "23",
+						// uuid: "23",
 						order: "",
 						section_id: "",
 						name: "",
@@ -85,7 +85,7 @@ function clearCourse(state) {
 					},
 					{
 						id: "",
-						uuid: "233",
+						// uuid: "233",
 						order: "",
 						section_id: "",
 						name: "",
@@ -97,7 +97,7 @@ function clearCourse(state) {
 				live_lessons: [
 					{
 						id: "",
-						uuid: "34",
+						// uuid: "34",
 						order: "",
 						section_id: "",
 						name: "",
@@ -107,7 +107,7 @@ function clearCourse(state) {
 				questions: [
 					{
 						id: "",
-						uuid: "45",
+						// uuid: "45",
 						order: "",
 						section_id: "",
 						question: "",

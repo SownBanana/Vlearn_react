@@ -3,7 +3,12 @@ import { CKEditor as BaseEditor } from "@ckeditor/ckeditor5-react";
 import Editor from "ckeditor5/build/ckeditor";
 import MyUploadAdapter from "./FileUploadAdapter";
 
-export default function CKEditor({ content = "", handler }) {
+export default function CKEditor({
+	content = "",
+	isNoSide = false,
+	handler,
+	...props
+}) {
 	const getRawData = (editor) => editor.editing.view.domRoots.get("main");
 
 	var timeOut;
@@ -11,7 +16,7 @@ export default function CKEditor({ content = "", handler }) {
 	return (
 		<BaseEditor
 			editor={Editor}
-			config={editorConfiguration}
+			config={isNoSide ? editorNoSideConfiguration : editorConfiguration}
 			// data={content}
 			onReady={(editor) => {
 				if (editor == null) {
@@ -20,17 +25,34 @@ export default function CKEditor({ content = "", handler }) {
 				}
 				// You can store the "editor" and use when it is needed.
 				console.log("Editor is ready to use!", editor);
-				editor.setData(content);
+				if (content) {
+					editor.setData(content);
+					timeOut = setTimeout(() => {
+						try {
+							handler(content);
+						} catch (e) {
+							console.error(e);
+						}
+					}, 500);
+				}
 				editor.plugins.get("FileRepository").createUploadAdapter = (loader) => {
 					return new MyUploadAdapter(loader);
 				};
 			}}
 			onChange={(event, editor) => {
 				clearTimeout(timeOut);
+				const data = getRawData(editor).innerHTML;
+				// console.log("prepare data", data);
 				timeOut = setTimeout(() => {
-					console.log(getRawData(editor).innerHTML);
-					handler(getRawData(editor).innerHTML);
+					// console.log(getRawData(editor).innerHTML);
+					// console.log("change data", data);
+					try {
+						handler(data);
+					} catch (e) {
+						console.error(e);
+					}
 				}, 500);
+				// console.log(event);
 			}}
 			// onBlur={(event, editor) => {
 			// 	// console.log("Blur.", editor);
@@ -38,6 +60,7 @@ export default function CKEditor({ content = "", handler }) {
 			// onFocus={(event, editor) => {
 			// 	// console.log("Focus.", editor);
 			// }}
+			{...props}
 		/>
 	);
 }
@@ -86,6 +109,65 @@ const editorConfiguration = {
 		"codeBlock",
 		"MathType",
 	],
+	image: {
+		toolbar: [
+			"imageTextAlternative",
+			"imageStyle:full",
+			"imageStyle:side",
+			"linkImage",
+		],
+	},
+	table: {
+		contentToolbar: [
+			"tableColumn",
+			"tableRow",
+			"mergeTableCells",
+			"tableCellProperties",
+			"tableProperties",
+		],
+	},
+};
+
+const editorNoSideConfiguration = {
+	toolbar: {
+		items: [
+			"heading",
+			"outdent",
+			"indent",
+			"bold",
+			"italic",
+			"fontColor",
+			"fontSize",
+			"fontFamily",
+			// "-",
+			"insertTable",
+			"alignment",
+			"outdent",
+			"indent",
+			"codeBlock",
+			"link",
+			"bulletedList",
+			"numberedList",
+			// "-",
+			"blockQuote",
+			"imageUpload",
+			"mediaEmbed",
+			"htmlEmbed",
+			"code",
+			// "-",
+			"subscript",
+			"superscript",
+			"ChemType",
+			"MathType",
+			// "CKFinder",
+			"imageInsert",
+			"horizontalLine",
+			"undo",
+			"redo",
+		],
+		// shouldNotGroupWhenFull: true,
+	},
+	language: "vi",
 	image: {
 		toolbar: [
 			"imageTextAlternative",

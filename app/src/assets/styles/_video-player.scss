@@ -1,0 +1,171 @@
+.video-player-wrapper {
+    position: relative;
+    overflow: hidden;
+}
+
+.video-player-wrapper .video-wrapper {
+    width: inherit;
+    height: 360px;
+}
+// .video-player-wrapper .video-wrapper.fullscreen {
+//     object-fit: contain;
+//     position: fixed !important;
+//     top: 0px !important;
+//     right: 0px !important;
+//     bottom: 0px !important;
+//     left: 0px !important;
+//     box-sizing: border-box !important;
+//     min-width: 0px !important;
+//     max-width: none !important;
+//     min-height: 0px !important;
+//     max-height: none !important;
+//     width: 100% !important;
+//     height: 100% !important;
+//     transform: none !important;
+//     margin: 0px !important;
+// }
+.video-player-wrapper .progress-wrapper {
+    height: 2px;
+    width: 100%;
+    // margin-left: 2.5%;
+    cursor: auto;
+    position: absolute;
+    z-index: 10;
+    bottom: 0px;
+    transition: 0.2s;
+    background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(2,2,13,0.0844712885154062) 25%, rgba(2,2,13,0.3225665266106442) 75%, rgba(2,2,13,0.6026785714285714) 100%);
+    // background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(2,2,13,0.3113620448179272) 68%, rgba(2,2,13,0.6026785714285714) 100%);
+}
+
+.video-player-wrapper.normal:hover .progress-wrapper {
+    height: 100px;
+}
+.video-player-wrapper.hover .progress-wrapper {
+    height: 100px;
+    transition: 0.7s;
+}
+
+.video-player-wrapper .progress-wrapper .magic-progress-bar{
+    position: absolute;
+    top: 43px;
+    width: 100%;
+    height: 20px;
+    // background: #ffc0cb54;
+    z-index: 2;
+    cursor: pointer;
+}
+
+.video-player-wrapper .progress-wrapper .progress-bar{
+    width: 95%;
+	height:  4px;
+    margin-left: 2.5%;
+    transition: 0.3s;
+    top:0px;
+}
+.video-player-wrapper.normal:hover .progress-wrapper .progress-bar{
+    top:50px;
+}
+.video-player-wrapper.hover .progress-wrapper .progress-bar{
+    top:50px;
+}
+
+.video-player-wrapper .progress-wrapper .progress-bar:hover{
+    height:  8px;
+    // top:5px;
+}
+.video-player-wrapper .progress-wrapper .magic-progress-bar:hover + .progress-bar{
+    height:  8px;
+    // top:5px;
+}
+
+.video-player-wrapper .progress-wrapper .button-group-wrapper{
+    display: flex;
+    color: whitesmoke;
+    transition: 0.3s;
+    top: 55px;
+    left: 2.5%;
+    position: absolute;
+    justify-content: space-between;
+    width: 95%;
+}
+.video-player-wrapper .progress-wrapper .button-group{
+    display: flex;
+    // color: whitesmoke;
+    transition: 0.3s;
+}
+// .video-player-wrapper .progress-wrapper .button-group.left{
+
+//     left: 2.5%;
+// }
+// .video-player-wrapper .progress-wrapper .button-group.right{
+
+//     right: 2.5%;
+// }
+// .video-player-wrapper:hover .progress-wrapper .button-group{
+//     color: whitesmoke;
+//     top: 55px;
+//     left: 2.5%;
+//     position: absolute;
+// }
+
+.video-player-wrapper .progress-wrapper .button-group .volume {
+    display: flex;
+    align-items: center;
+}
+// .video-player-wrapper .progress-wrapper .button-group .volume .volume-slide{
+//     height: 5px;
+//     width: 0;
+//     transition: 0.3s;
+//     opacity: 0;
+//     cursor: pointer;
+// }
+
+input[type=range][orient=vertical]
+{
+    writing-mode: bt-lr; /* IE */
+    -webkit-appearance: slider-vertical; /* WebKit */
+    width: 8px;
+    height: 100px !important;
+    padding: 0 5px;
+    position: absolute;
+    bottom: 30px;
+    visibility: hidden;
+}
+input[type=range][orient=horizontal]
+{
+    writing-mode: horizontal-tb; /* IE */
+    -webkit-appearance: slider-horizontal; /* WebKit */
+    height: 5px;
+    width: 0;
+    transition: 0.3s;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.video-player-wrapper .progress-wrapper .button-group .volume:hover .volume-slide[orient=vertical]{
+    opacity: 1;
+    visibility: unset;
+}
+.video-player-wrapper .progress-wrapper .button-group .volume:hover .volume-slide[orient=horizontal]{
+    width: 60%;
+    opacity: 1;
+}
+
+.video-player-wrapper .progress-wrapper .button-group .button{
+    cursor: pointer;
+    padding: 8px;
+    transition: 0.2s;
+}
+.video-player-wrapper .progress-wrapper .button-group .button:hover{
+    color: #b3fffb;
+    transform: scale(1.1);
+}
+
+
+.video-player-wrapper .progress-wrapper .timestamp{
+    font-size: 0.86rem;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.video-player-wrapper .progress-wrapper .timestamp.small{
+    font-size: 0.7rem;
+}

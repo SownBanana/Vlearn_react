@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { lazy, useEffect, useRef, useState, Suspense } from "react";
 import {
 	TextField,
 	Grid,
@@ -7,14 +7,23 @@ import {
 	makeStyles,
 	withTheme,
 } from "@material-ui/core";
-
-import CKViewer from "commons/components/CKEditor/CKViewer";
-import CKEditor from "commons/components/CKEditor/CKEditor";
-
-// import Prism from "prismjs";
-
+import EditorModal from "commons/components/EditorModal/EditorModal";
 import SectionList from "../Section/SectionList";
 import { useSelector } from "react-redux";
+import CKViewer from "commons/components/CKEditor/CKViewer";
+// import CKEditor from "commons/components/CKEditor/CKEditor";
+// import Lazy from "react-lazyload";
+
+const CKEditor = lazy(() => {
+	const editor = new Promise((resolve) => {
+		setTimeout(() => {
+			return resolve(import("commons/components/CKEditor/CKEditor"));
+		}, 100);
+	});
+	return editor;
+});
+
+// import Prism from "prismjs";
 
 export default function CourseInput({ course, setCourse }) {
 	const classes = useStyles();
@@ -31,18 +40,73 @@ export default function CourseInput({ course, setCourse }) {
 		setCourse({ ...course, introduce: data });
 	};
 
+	const handleKeySpace = (e) => {
+		setTimeout(function () {
+			// console.log(
+			// evt.target
+			// window.getSelection().getRangeAt(0).startOffset,
+			// window.getSelection().baseNode.parentElement,
+			// evt.keyCode,
+			// evt.srcElement
+			// );
+			// console.log("===", window.getSelection().getRangeAt(0).startOffset);
+			var parent = e.target.closest(".handleCKSpace");
+			if (e.keyCode === 32 && parent != null) {
+				console.log("parent", parent);
+				var target = window.getSelection().focusNode;
+				var element = target.parentElement;
+				console.log(element);
+				var index = window.getSelection().getRangeAt(0).startOffset;
+				// var re = new RegExp(String.fromCharCode(160), "g");
+				var content = element.innerHTML.replace("&nbsp;", " ");
+				console.log(index, content);
+				console.log("after replace|", content);
+				if (index === 0) content = "&nbsp;" + content;
+				else if (index === content.length && content[content.length - 1] != " ")
+					content = content + "&nbsp;";
+				else
+					content =
+						content.slice(0, index) +
+						" " +
+						content.slice(index, content.length);
+				console.log("after change|", content);
+				element.innerHTML = content;
+				console.log(element);
+				element.focus();
+				var range = document.createRange();
+				var sel = window.getSelection();
+
+				range.setStart(target, index);
+				// range.collapse(true);
+
+				sel.removeAllRanges();
+				sel.addRange(range);
+				// element.selectionStart = index;
+				// element.selectionEnd = index;
+			}
+		}, 0);
+	};
+	useEffect(() => {
+		document.removeEventListener("keydown", handleKeySpace, false);
+		document.addEventListener("keydown", handleKeySpace);
+		return () => {
+			document.removeEventListener("keydown", handleKeySpace, false);
+		};
+	}, []);
+
 	return (
-		<Container>
+		<Container maxWidth="xl">
 			<form>
-				<Grid container spacing={1} direction="row" justify="space-around">
+				<Grid container spacing={2} direction="row" justify="space-around">
 					<Grid
 						item
-						md={9}
+						md={8}
 						sm={12}
 						container
 						spacing={2}
 						justify="center"
 						alignItems="center"
+						className={classes.panel}
 					>
 						<Grid container item md={12} xs={10}>
 							<Typography variant="subtitle1" color="initial">
@@ -64,7 +128,11 @@ export default function CourseInput({ course, setCourse }) {
 								Giới thiệu khóa học
 							</Typography>
 							<Grid item md={12} xs={12}>
-								<CKEditor content={course.introduce} handler={introHandler} />
+								{/* <Lazy placeholder={<div>Loading...</div>}> */}
+								<Suspense fallback={<div>Loading...</div>}>
+									<CKEditor content={course.introduce} handler={introHandler} />
+								</Suspense>
+								{/* </Lazy> */}
 							</Grid>
 
 							{/* <Grid item xs={12}>
@@ -82,7 +150,7 @@ export default function CourseInput({ course, setCourse }) {
 							<Typography align="left" variant="subtitle1" color="initial">
 								Chương học
 							</Typography>
-							<Grid item container md={12}>
+							<Grid item container md={12} direction="column">
 								<SectionList
 									sections={course.sections}
 									setSections={setSections}
@@ -102,6 +170,9 @@ export default function CourseInput({ course, setCourse }) {
 					</Grid>
 				</Grid>
 			</form>
+			<Grid item md={12} xs={12}>
+				<EditorModal />
+			</Grid>
 		</Container>
 	);
 }
@@ -111,6 +182,8 @@ const useStyles = makeStyles((theme) => ({
 		backgroundColor: "white",
 	},
 	panel: {
-		backgroundColor: "#cfe8fc",
+		backgroundColor: "white",
+		borderRadius: "5px",
+		boxShadow: "rgba(0, 0, 0, 0.16) 0px 1px 4px",
 	},
 }));
