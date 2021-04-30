@@ -169,12 +169,12 @@ export default function VideoPlayer({ handlePrevious, handleNext, ...prop }) {
 				onMouseMoveInFullScreen
 			);
 		}
-		return () => {
-			wholePlayer.current.removeEventListener(
-				"mousemove",
-				onMouseMoveInFullScreen
-			);
-		};
+		// return () => {
+		// 	wholePlayer.current.removeEventListener(
+		// 		"mousemove",
+		// 		onMouseMoveInFullScreen
+		// 	);
+		// };
 	}, [screenfull.isFullscreen]);
 	var intentTimeOut;
 	return (

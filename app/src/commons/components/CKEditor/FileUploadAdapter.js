@@ -1,3 +1,4 @@
+import axios, { headersWithToken } from "commons/AxiosCommon";
 export default class MyUploadAdapter {
 	constructor(loader) {
 		console.log("Init adapter");
@@ -9,7 +10,38 @@ export default class MyUploadAdapter {
 	}
 
 	// Starts the upload process.
+
 	upload() {
+		console.log("Uploading");
+		return new Promise((resolve, reject) => {
+			this.loader.file
+				.then((file) => {
+					const data = new FormData();
+					data.append("upload", file);
+					console.log("data ======> ", data);
+					console.log("File:", file);
+					axios
+						.post(`/api/upload`, data, {
+							headers: Object.assign(headersWithToken(), {
+								"Content-Type": "multipart/form-data",
+							}),
+						})
+						.then((response) => {
+							if (response.data.uploaded != true) {
+								reject(response);
+							} else {
+								resolve({
+									default: response.data.url,
+								});
+							}
+						})
+						.catch(reject);
+				})
+				.catch(reject);
+		});
+	}
+
+	uploadXHR() {
 		console.log("Uploading");
 		return new Promise((resolve, reject) => {
 			this._initRequest();
