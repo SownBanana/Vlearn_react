@@ -24,7 +24,7 @@ export const headersWithSocketId = () => {
 
 console.log(`${process.env.REACT_APP_BACKEND_URL}`);
 
-export default axios.create({
+const instance = axios.create({
 	baseURL: `${process.env.REACT_APP_BACKEND_URL}`,
 	withCredentials: true,
 	headers: {
@@ -34,3 +34,27 @@ export default axios.create({
 		"Access-Control-Allow-Credentials": "true",
 	},
 });
+
+instance.interceptors.response.use(
+	(response) => {
+		return response;
+	},
+	(error) => {
+		const originalRequest = error.config;
+		if (error.response.status === 401 && !originalRequest._retry) {
+			return instance
+				.post("/api/auth/refresh")
+				.then((response) => {
+					error.response.config.headers["Authorization"] =
+						"Bearer " + response.data.access_token;
+					return instance(error.config);
+				})
+				.catch((error) => {
+					return Promise.reject(error);
+				});
+		}
+		return Promise.reject(error);
+	}
+);
+
+export default instance;
