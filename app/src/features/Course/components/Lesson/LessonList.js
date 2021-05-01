@@ -10,8 +10,11 @@ export default function LessonList({ lessons, setLessons }) {
 	const changeLesson = (lesson) => {
 		const newLessons = _.cloneDeep(lessons).map((l, index) => {
 			// console.log("index = ");
+			if (l.uuid === lesson.uuid) {
+				lesson.order = index;
+				return lesson;
+			}
 			l.order = index;
-			if (l.uuid === lesson.uuid) return lesson;
 			return l;
 		});
 		setLessons(newLessons);

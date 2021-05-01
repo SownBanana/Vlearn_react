@@ -2,6 +2,7 @@ import api, { headersWithToken } from "commons/AxiosCommon";
 
 const courseResource = {
 	store: async ({ course }) => {
+		console.log(course);
 		const response = await api.post(
 			`/api/courses`,
 			{

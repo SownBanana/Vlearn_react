@@ -12,31 +12,6 @@ import { useDispatch, useSelector } from "react-redux";
 import CKEditor from "../CKEditor/CKEditor";
 import { setOpen } from "commons/components/EditorModal/editorSlice";
 
-const useStyles = makeStyles((theme) => ({
-	modal: {
-		display: "flex",
-		alignItems: "center",
-		justifyContent: "center",
-		width: "80%",
-		maxHeight: "80%",
-		// backgroundColor: "white",
-		margin: "auto",
-		overflow: "auto",
-		zIndex: "999 !important",
-		borderRadius: "5px",
-	},
-	paper: {
-		backgroundColor: theme.palette.background.paper,
-		border: "2px solid #000",
-		boxShadow: theme.shadows[5],
-		padding: theme.spacing(2, 4, 3),
-	},
-	editor: {
-		width: "100%",
-		height: "100%",
-	},
-}));
-
 export default function EditorModal() {
 	const classes = useStyles();
 	const dispatch = useDispatch();
@@ -54,7 +29,11 @@ export default function EditorModal() {
 			className={classes.modal}
 			aria-labelledby="scroll-dialog-title"
 			aria-describedby="scroll-dialog-description"
-			maxWidth={false}
+			maxWidth="lg"
+			fullWidth={true}
+			classes={{
+				container: classes.container,
+			}}
 		>
 			<DialogTitle id="scroll-dialog-title">{editorModal.title}</DialogTitle>
 			<DialogContent dividers={true}>
@@ -69,3 +48,25 @@ export default function EditorModal() {
 		</Dialog>
 	);
 }
+
+const useStyles = makeStyles((theme) => ({
+	modal: {
+		display: "flex",
+		alignItems: "center",
+		justifyContent: "center",
+		width: "80%",
+		maxHeight: "80%",
+		// backgroundColor: "white",
+		margin: "auto",
+		overflow: "auto",
+		zIndex: "999 !important",
+		borderRadius: "5px",
+	},
+	container: {
+		width: "100%",
+	},
+	editor: {
+		width: "100%",
+		height: "100%",
+	},
+}));

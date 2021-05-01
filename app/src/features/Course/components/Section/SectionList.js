@@ -1,27 +1,47 @@
 import React, { useEffect, useState } from "react";
 // import PropTypes from "prop-types";
 import SectionInput from "./SectionInput";
-import uuid from "commons/uuidv4";
-import { Box, Hidden, Grid, makeStyles } from "@material-ui/core";
+import { Box, Hidden, Grid, makeStyles, Button } from "@material-ui/core";
 import { List, arrayMove, arrayRemove } from "react-movable";
 import _ from "lodash";
+import uuidv4 from "commons/uuidv4";
 
 function SectionList({ sections, setSections }) {
 	const [expanded, setExpanded] = useState(0);
 	const classes = useStyles();
 	const changeSection = (section) => {
 		const newSections = _.cloneDeep(sections).map((s, index) => {
-			section.order = index;
-			if (s.uuid === section.uuid) return section;
+			if (s.uuid === section.uuid) {
+				section.order = index;
+				return section;
+			}
+			s.order = index;
 			return s;
 		});
 		setSections(newSections);
 	};
 	const deleteSection = (section) => {
 		const newSections = sections.filter((s) => {
-			return s.uuid === section.uuid;
+			return s.uuid !== section.uuid;
 		});
 		setSections(newSections);
+	};
+	const addSection = () => {
+		var newSection = _.cloneDeep(sections);
+		console.log("==============>", newSection);
+		newSection.push({
+			id: "",
+			uuid: uuidv4(),
+			order: "",
+			course_id: "",
+			name: "",
+			lessons: [],
+			live_lessons: [],
+			questions: [],
+		});
+		console.log("==============>", newSection);
+		setSections(newSection);
+		// setSection({ section, lessons: [...section.lessons, { uuid: uuidv4() }] });
 	};
 
 	const handleExpanded = (panel) => (event, isExpanded) => {
@@ -54,6 +74,16 @@ function SectionList({ sections, setSections }) {
 					}}
 				>
 					{children}
+					<Box mt={2}>
+						<Button
+							variant="outlined"
+							size="small"
+							color="primary"
+							onClick={addSection}
+						>
+							Thêm chương học
+						</Button>
+					</Box>
 				</Grid>
 			)}
 			renderItem={({ value, props, isDragged, isSelected, isOutOfBounds }) =>
@@ -109,6 +139,7 @@ function SectionList({ sections, setSections }) {
 								handleChange={changeSection}
 								expanded={expanded}
 								handleExpanded={handleExpanded}
+								handleDelete={deleteSection}
 								setSection={changeSection}
 							/>
 						</Grid>

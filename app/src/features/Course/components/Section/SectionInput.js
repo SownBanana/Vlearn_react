@@ -27,11 +27,13 @@ import LessonList from "../Lesson/LessonList";
 import { setCourse } from "features/Course/editingCourseSlice";
 import uuidv4 from "commons/uuidv4";
 import _ from "lodash";
+import ConfirmIconButton from "commons/components/Button/ConfirmIconButton";
 export default function SectionInput({
 	section,
 	handleChange,
 	expanded,
 	handleExpanded,
+	handleDelete,
 	setSection,
 }) {
 	const classes = useStyles();
@@ -39,7 +41,9 @@ export default function SectionInput({
 	const setLessons = (lessons) => {
 		setSection({ ...section, lessons: lessons });
 	};
-
+	const deleteSection = () => {
+		handleDelete(section);
+	};
 	const addLesson = (e) => {
 		e.stopPropagation();
 		console.log(e);
@@ -99,12 +103,16 @@ export default function SectionInput({
 							enterDelay={200}
 							arrow
 						>
-							<IconButton
+							<ConfirmIconButton
 								color="secondary"
-								// classes={{ root: classes.errorBtn }}
+								onClick={deleteSection}
+								edge="start"
+								className="button"
+								// title={"Xóa chương " + section.name}
+								message={"Bạn thực sự muốn xóa chương học này?"}
 							>
 								<CancelRoundedIcon />
-							</IconButton>
+							</ConfirmIconButton>
 						</Tooltip>
 					</div>
 					<Hidden mdUp>
@@ -138,13 +146,6 @@ export default function SectionInput({
 				<AccordionDetails className={classes.details}>
 					<LessonList lessons={section.lessons} setLessons={setLessons} />
 				</AccordionDetails>
-				<Divider />
-				<AccordionActions>
-					<Button size="small">Cancel</Button>
-					<Button size="small" color="primary">
-						Save
-					</Button>
-				</AccordionActions>
 			</Accordion>
 		</Box>
 	);

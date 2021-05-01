@@ -99,24 +99,14 @@ export default function LessonInput({
 					edge="start"
 					className="button"
 					title={"Xóa bài " + lesson.name}
-					content={"Bạn thực sự muốn xóa bài học này?"}
+					message={"Bạn thực sự muốn xóa bài học này?"}
 				>
 					<DeleteRoundedIcon />
 				</ConfirmButton>
-				{/* <IconButton
-					color="secondary"
-					onClick={deleteLesson}
-					edge="start"
-					className="button"
-				>
-					<DeleteRoundedIcon />
-				</IconButton> */}
 			</AccordionSummary>
 			<AccordionDetails className={classes.content}>
-				{/* <Typography></Typography> */}
 				<Grid container spacing={1} direction="column">
 					<Grid item md={12} xs={12}>
-						{/* <iframe src={lesson.video_url} /> */}
 						{lesson.video_url && (
 							<VideoPlayer width="inherit" url={lesson.video_url} />
 						)}

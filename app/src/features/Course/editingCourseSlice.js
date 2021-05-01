@@ -12,20 +12,20 @@ export const storeCourse = (params) => (dispatch) => {
 
 function clearCourse(state) {
 	state.course = {
-		id: "",
+		id: null,
 		title: "",
 		introduce: "",
 		price: "",
 		sections: [
 			{
-				id: "",
+				id: null,
 				// uuid: "12",
 				order: "",
 				course_id: "",
 				name: "",
 				lessons: [
 					{
-						id: "",
+						id: null,
 						// uuid: "23",
 						order: "",
 						section_id: "",
@@ -35,7 +35,7 @@ function clearCourse(state) {
 						content: "",
 					},
 					{
-						id: "",
+						id: null,
 						// uuid: "233",
 						order: "",
 						section_id: "",
@@ -47,7 +47,7 @@ function clearCourse(state) {
 				],
 				live_lessons: [
 					{
-						id: "",
+						id: null,
 						// uuid: "34",
 						order: "",
 						section_id: "",
@@ -57,7 +57,7 @@ function clearCourse(state) {
 				],
 				questions: [
 					{
-						id: "",
+						id: null,
 						// uuid: "45",
 						order: "",
 						section_id: "",
@@ -67,14 +67,14 @@ function clearCourse(state) {
 				],
 			},
 			{
-				id: "",
+				id: null,
 				// uuid: "128",
 				order: "",
 				course_id: "",
 				name: "",
 				lessons: [
 					{
-						id: "",
+						id: null,
 						// uuid: "23",
 						order: "",
 						section_id: "",
@@ -84,7 +84,7 @@ function clearCourse(state) {
 						content: "",
 					},
 					{
-						id: "",
+						id: null,
 						// uuid: "233",
 						order: "",
 						section_id: "",
@@ -96,7 +96,7 @@ function clearCourse(state) {
 				],
 				live_lessons: [
 					{
-						id: "",
+						id: null,
 						// uuid: "34",
 						order: "",
 						section_id: "",
@@ -106,7 +106,7 @@ function clearCourse(state) {
 				],
 				questions: [
 					{
-						id: "",
+						id: null,
 						// uuid: "45",
 						order: "",
 						section_id: "",
@@ -120,9 +120,10 @@ function clearCourse(state) {
 }
 const initialState = {
 	course: {
-		id: "",
+		id: null,
 		title: "",
 		introduce: "",
+		thumbnail_url: "",
 		price: "",
 		sections: [
 			{

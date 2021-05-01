@@ -16,6 +16,7 @@
     "ckeditor5": "file:./ckeditor5",
     "clsx": "^1.1.1",
     "laravel-echo": "^1.10.0",
+    "material-ui-dropzone": "^3.5.0",
     "node-sass": "^5.0.0",
     "notistack": "^1.0.5",
     "prismjs": "^1.23.0",

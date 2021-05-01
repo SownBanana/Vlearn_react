@@ -9,7 +9,6 @@ import {
 } from "@material-ui/core";
 import React, { useState } from "react";
 
-
 export default function ConfirmIconButton({
 	children,
 	onClick,
@@ -17,7 +16,6 @@ export default function ConfirmIconButton({
 	message,
 	...props
 }) {
-
 	const [open, setOpen] = useState(false);
 
 	const handleClickOpen = (e) => {
@@ -34,7 +32,7 @@ export default function ConfirmIconButton({
 		setOpen(false);
 	};
 	return (
-		<div>
+		<div style={{ display: "unset" }}>
 			<IconButton onClick={handleClickOpen} {...props}>
 				{children}
 			</IconButton>

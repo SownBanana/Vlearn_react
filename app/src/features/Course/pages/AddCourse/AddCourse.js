@@ -4,6 +4,7 @@ import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import { useDispatch, useSelector } from "react-redux";
 import { setCourse as setCourseAction } from "features/Course/editingCourseSlice";
+import { Box } from "@material-ui/core";
 
 export default function AddCourse() {
 	const course = useSelector((state) => state.editingCourse.course);
@@ -17,7 +18,7 @@ export default function AddCourse() {
 		}
 	}, []);
 	return (
-		<div>
+		<Box mt={8}>
 			<Grid
 				container
 				spacing={1}
@@ -27,20 +28,12 @@ export default function AddCourse() {
 				alignContent="center"
 				wrap="nowrap"
 			>
-				<Grid container direction="column" spacing={1}>
-					<Grid item md={8}>
-						<Typography variant="h5" color="initial">
-							This is Add Course {course.title}
-						</Typography>
-					</Grid>
-				</Grid>
-				<br />
 				<Grid container justify="center">
 					<Grid item md={12}>
 						<InputCourse course={course} setCourse={setCourse} />
 					</Grid>
 				</Grid>
 			</Grid>
-		</div>
+		</Box>
 	);
 }
