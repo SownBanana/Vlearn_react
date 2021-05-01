@@ -26,7 +26,7 @@ import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import LessonList from "../Lesson/LessonList";
 import { setCourse } from "features/Course/editingCourseSlice";
 import uuidv4 from "commons/uuidv4";
-import _ from "lodash";
+import { cloneDeep } from "lodash";
 import ConfirmIconButton from "commons/components/Button/ConfirmIconButton";
 export default function SectionInput({
 	section,
@@ -48,7 +48,7 @@ export default function SectionInput({
 		e.stopPropagation();
 		console.log(e);
 		console.log("Add Lesson");
-		var newLessons = _.cloneDeep(section.lessons);
+		var newLessons = cloneDeep(section.lessons);
 		newLessons.push({ uuid: uuidv4() });
 		setLessons(newLessons);
 		// setSection({ section, lessons: [...section.lessons, { uuid: uuidv4() }] });

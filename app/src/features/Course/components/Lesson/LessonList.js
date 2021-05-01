@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import LessonInput from "./LessonInput";
 import { List, arrayMove, arrayRemove } from "react-movable";
-import _ from "lodash";
+import { cloneDeep } from "lodash";
 import Grid from "@material-ui/core/Grid";
 
 export default function LessonList({ lessons, setLessons }) {
 	const [expanded, setExpanded] = useState(0);
 
 	const changeLesson = (lesson) => {
-		const newLessons = _.cloneDeep(lessons).map((l, index) => {
+		const newLessons = cloneDeep(lessons).map((l, index) => {
 			// console.log("index = ");
 			if (l.uuid === lesson.uuid) {
 				lesson.order = index;
@@ -20,9 +20,7 @@ export default function LessonList({ lessons, setLessons }) {
 		setLessons(newLessons);
 	};
 	const deleteLesson = (lesson) => {
-		const newLessons = _.cloneDeep(lessons).filter(
-			(l) => l.uuid != lesson.uuid
-		);
+		const newLessons = cloneDeep(lessons).filter((l) => l.uuid != lesson.uuid);
 		console.log(newLessons);
 		setLessons(newLessons);
 	};

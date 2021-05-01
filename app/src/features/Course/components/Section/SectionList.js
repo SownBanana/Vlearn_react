@@ -3,14 +3,14 @@ import React, { useEffect, useState } from "react";
 import SectionInput from "./SectionInput";
 import { Box, Hidden, Grid, makeStyles, Button } from "@material-ui/core";
 import { List, arrayMove, arrayRemove } from "react-movable";
-import _ from "lodash";
+import { cloneDeep } from "lodash";
 import uuidv4 from "commons/uuidv4";
 
 function SectionList({ sections, setSections }) {
 	const [expanded, setExpanded] = useState(0);
 	const classes = useStyles();
 	const changeSection = (section) => {
-		const newSections = _.cloneDeep(sections).map((s, index) => {
+		const newSections = cloneDeep(sections).map((s, index) => {
 			if (s.uuid === section.uuid) {
 				section.order = index;
 				return section;
@@ -27,7 +27,7 @@ function SectionList({ sections, setSections }) {
 		setSections(newSections);
 	};
 	const addSection = () => {
-		var newSection = _.cloneDeep(sections);
+		var newSection = cloneDeep(sections);
 		console.log("==============>", newSection);
 		newSection.push({
 			id: "",

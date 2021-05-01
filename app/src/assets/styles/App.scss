@@ -43,6 +43,22 @@
   }
 }
 
+.card_layout {
+  background-color: white;
+  border-radius: 5px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+  padding: 15px 25px;
+}
+
+.breadcrumb li a{
+  text-decoration: none;
+  color: blue;
+  transition: 0.3s;
+}
+.breadcrumb li a:hover{
+  text-decoration: none;
+  color: red;
+}
 // Blockquote CSS
 // blockquote {
 //   border-left: 3px solid rgb(92, 92, 92);
