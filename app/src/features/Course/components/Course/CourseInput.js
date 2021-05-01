@@ -43,60 +43,6 @@ export default function CourseInput({ course, setCourse }) {
 		setCourse({ ...course, introduce: data });
 	};
 
-	const handleKeySpace = (e) => {
-		setTimeout(function () {
-			// console.log(
-			// evt.target
-			// window.getSelection().getRangeAt(0).startOffset,
-			// window.getSelection().baseNode.parentElement,
-			// evt.keyCode,
-			// evt.srcElement
-			// );
-			// console.log("===", window.getSelection().getRangeAt(0).startOffset);
-			var parent = e.target.closest(".handleCKSpace");
-			if (e.keyCode === 32 && parent != null) {
-				console.log("parent", parent);
-				var target = window.getSelection().focusNode;
-				var element = target.parentElement;
-				console.log(element);
-				var index = window.getSelection().getRangeAt(0).startOffset;
-				// var re = new RegExp(String.fromCharCode(160), "g");
-				var content = element.innerHTML.replace("&nbsp;", " ");
-				console.log(index, content);
-				console.log("after replace|", content);
-				if (index === 0) content = "&nbsp;" + content;
-				else if (index === content.length && content[content.length - 1] != " ")
-					content = content + "&nbsp;";
-				else
-					content =
-						content.slice(0, index) +
-						" " +
-						content.slice(index, content.length);
-				console.log("after change|", content);
-				element.innerHTML = content;
-				console.log(element);
-				element.focus();
-				var range = document.createRange();
-				var sel = window.getSelection();
-
-				range.setStart(target, index);
-				// range.collapse(true);
-
-				sel.removeAllRanges();
-				sel.addRange(range);
-				// element.selectionStart = index;
-				// element.selectionEnd = index;
-			}
-		}, 0);
-	};
-	useEffect(() => {
-		document.removeEventListener("keydown", handleKeySpace, false);
-		document.addEventListener("keydown", handleKeySpace);
-		return () => {
-			document.removeEventListener("keydown", handleKeySpace, false);
-		};
-	}, []);
-
 	return (
 		<Container maxWidth="xl">
 			<form>
