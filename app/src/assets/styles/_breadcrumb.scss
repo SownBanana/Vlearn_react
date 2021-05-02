@@ -1,0 +1,27 @@
+.card_layout {
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card_layout .beside_breadcrumb{
+    display: flex;
+    align-items: center;
+}
+.card_layout .beside_breadcrumb button{
+    font-size: 10px;
+}
+
+.card_layout.breadcrumb li a{
+    text-decoration: none;
+    color: blue;
+    transition: 0.3s;
+}
+.card_layout.breadcrumb li a:hover{
+    text-decoration: none;
+    color: red;
+}

@@ -5,10 +5,12 @@ import { Box, Hidden, Grid, makeStyles, Button } from "@material-ui/core";
 import { List, arrayMove, arrayRemove } from "react-movable";
 import { cloneDeep } from "lodash";
 import uuidv4 from "commons/uuidv4";
-
+import { useDispatch } from "react-redux";
+import { deleteSection as deleteAction } from "features/Course/editingCourseSlice";
 function SectionList({ sections, setSections }) {
 	const [expanded, setExpanded] = useState(0);
 	const classes = useStyles();
+	const dispatch = useDispatch();
 	const changeSection = (section) => {
 		const newSections = cloneDeep(sections).map((s, index) => {
 			if (s.uuid === section.uuid) {
@@ -21,6 +23,7 @@ function SectionList({ sections, setSections }) {
 		setSections(newSections);
 	};
 	const deleteSection = (section) => {
+		dispatch(deleteAction(section.id));
 		const newSections = sections.filter((s) => {
 			return s.uuid !== section.uuid;
 		});
@@ -55,6 +58,9 @@ function SectionList({ sections, setSections }) {
 			removableByMove
 			values={sections}
 			onChange={({ oldIndex, newIndex }) => {
+				if (newIndex === -1) {
+					dispatch(deleteAction(sections[oldIndex].id));
+				}
 				setSections(
 					newIndex === -1
 						? arrayRemove(sections, oldIndex)

@@ -1,44 +1,77 @@
 import React, { useEffect, useState } from "react";
-import CourseInput from "features/Course/components/Course/CourseInput";
-import Typography from "@material-ui/core/Typography";
-import Grid from "@material-ui/core/Grid";
 import { useDispatch, useSelector } from "react-redux";
-import { setCourse as setCourseAction } from "features/Course/editingCourseSlice";
+import {
+	setCourse as setCourseAction,
+	clearEditingCourse,
+} from "features/Course/editingCourseSlice";
 import {
 	Box,
 	FormControl,
 	MenuItem,
 	Select,
+	Typography,
 	withStyles,
 } from "@material-ui/core";
 import BreadCrumbs from "commons/components/BreadCrumbs";
 import InputBase from "@material-ui/core/InputBase";
 import { CourseStatus } from "features/Course/constance";
+import CourseEditPane from "features/Course/components/Course/CourseEditPane";
 
 export default function AddCourse() {
 	const course = useSelector((state) => state.editingCourse.course);
+	const status = useSelector((state) => state.editingCourse.status);
 	const dispatch = useDispatch();
 	const setCourse = (course) => dispatch(setCourseAction({ course: course }));
+	const handleStatusChange = (e) => {
+		console.log("on change", e);
+		setCourse({ ...course, status: e.target.value });
+	};
+	useEffect(() => {
+		dispatch(clearEditingCourse());
+		return () => {
+			dispatch(clearEditingCourse());
+		};
+	}, [dispatch]);
 
-	// useEffect(() => {
-	// 	const savedCourse = localStorage.getItem("editingCourse.course");
-	// 	if (savedCourse) {
-	// 		dispatch(setCourseAction(JSON.parse(savedCourse)));
-	// 	}
-	// }, []);
 	return (
 		<Box mt={2}>
 			<BreadCrumbs
 				links={[{ link: "/courses", description: "Khóa học của tôi" }]}
 				current="Thêm khóa học"
 			>
+				{status === "saved" ? (
+					<Typography
+						style={{ marginRight: "10px", color: "green" }}
+						variant="subtitle2"
+					>
+						Đã lưu
+					</Typography>
+				) : status === "saving" ? (
+					<Typography
+						style={{ marginRight: "10px" }}
+						variant="subtitle2"
+						color="primary"
+					>
+						Đang lưu ...
+					</Typography>
+				) : status === "failed" ? (
+					<Typography
+						style={{ marginRight: "10px" }}
+						variant="subtitle2"
+						color="secondary"
+					>
+						Có lỗi xảy ra !!!
+					</Typography>
+				) : (
+					status
+				)}
 				<FormControl>
 					<Select
 						labelId="demo-customized-select-label"
 						id="demo-customized-select"
 						defaultValue={course.status ? course.status : CourseStatus.DRAFT}
-						// value={age}
-						// onChange={handleChange}
+						value={course.status ? course.status : CourseStatus.DRAFT}
+						onChange={handleStatusChange}
 						input={<BootstrapInput />}
 					>
 						<MenuItem value={CourseStatus.DRAFT}>Bản nháp</MenuItem>
@@ -48,19 +81,7 @@ export default function AddCourse() {
 			</BreadCrumbs>
 
 			<Box mt={6}>
-				<Grid
-					container
-					spacing={1}
-					direction="column"
-					justify="center"
-					alignItems="center"
-					alignContent="center"
-					wrap="nowrap"
-					item
-					md={12}
-				>
-					<CourseInput course={course} setCourse={setCourse} />
-				</Grid>
+				<CourseEditPane course={course} setCourse={setCourse} />
 			</Box>
 		</Box>
 	);

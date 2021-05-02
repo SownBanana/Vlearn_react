@@ -5,20 +5,17 @@ import {
 	Container,
 	Typography,
 	makeStyles,
-	withTheme,
 	MuiThemeProvider,
 	Button,
 } from "@material-ui/core";
 import EditorModal from "commons/components/EditorModal/EditorModal";
 import SectionList from "../Section/SectionList";
-import { useDispatch, useSelector } from "react-redux";
-import CKViewer from "commons/components/CKEditor/CKViewer";
 // import CKEditor from "commons/components/CKEditor/CKEditor";
 // import Lazy from "react-lazyload";
 import { DropzoneArea } from "material-ui-dropzone";
 import uploadApi from "commons/api/upload/upload";
 import dropZoneTheme from "theme/fullImageDropzone";
-import { get } from "react-hook-form";
+import { useSelector } from "react-redux";
 // import { storeCourse } from "features/Course/editingCourseSlice";
 
 const CKEditor = lazy(() => {
@@ -34,7 +31,7 @@ const CKEditor = lazy(() => {
 
 export default function CourseInput({ course, setCourse }) {
 	const classes = useStyles();
-	const dispatch = useDispatch();
+	const status = useSelector((state) => state.editingCourse.status);
 	const setSections = (sections) => {
 		setCourse({ ...course, sections: sections });
 	};
@@ -77,9 +74,16 @@ export default function CourseInput({ course, setCourse }) {
 								Giới thiệu khóa học
 							</Typography>
 							<Grid item md={12} xs={12}>
-								<Suspense fallback={<TextField disabled variant="outlined" />}>
+								<Suspense
+									fallback={<TextField disabled fullWidth variant="outlined" />}
+								>
 									{/* <Suspense fallback={<div>Loading...</div>}> */}
-									<CKEditor content={course.introduce} handler={introHandler} />
+									{status != "fetching" && status != "fetchFailed" && (
+										<CKEditor
+											content={course.introduce}
+											handler={introHandler}
+										/>
+									)}
 								</Suspense>
 							</Grid>
 						</Grid>
@@ -147,16 +151,6 @@ export default function CourseInput({ course, setCourse }) {
 								setCourse({ ...course, price: parseFloat(e.target.value) })
 							}
 						/>
-						<Button
-							variant="contained"
-							color="primary"
-							onClick={() => {
-								console.log(course);
-								// dispatch(storeCourse({ course: course }));
-							}}
-						>
-							Lưu Khóa học
-						</Button>
 					</Grid>
 				</Grid>
 			</form>

@@ -43,7 +43,17 @@ export default function BreadCrumbs({ links, current, children }) {
 									</Link>
 								);
 							})}
-						<Typography color="textPrimary">{current}</Typography>
+						<Typography
+							style={{
+								maxWidth: "300px",
+								overflow: "hidden",
+								whiteSpace: "nowrap",
+								textOverflow: "ellipsis",
+							}}
+							color="textPrimary"
+						>
+							{current}
+						</Typography>
 					</Brc>
 				</div>
 				<div style={{ marginRight: "25px" }} className="beside_breadcrumb">

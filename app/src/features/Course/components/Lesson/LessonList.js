@@ -3,10 +3,12 @@ import LessonInput from "./LessonInput";
 import { List, arrayMove, arrayRemove } from "react-movable";
 import { cloneDeep } from "lodash";
 import Grid from "@material-ui/core/Grid";
+import { useDispatch } from "react-redux";
+import { deleteLesson as deleteAction } from "features/Course/editingCourseSlice";
 
 export default function LessonList({ lessons, setLessons }) {
 	const [expanded, setExpanded] = useState(0);
-
+	const dispatch = useDispatch();
 	const changeLesson = (lesson) => {
 		const newLessons = cloneDeep(lessons).map((l, index) => {
 			// console.log("index = ");
@@ -20,8 +22,8 @@ export default function LessonList({ lessons, setLessons }) {
 		setLessons(newLessons);
 	};
 	const deleteLesson = (lesson) => {
+		dispatch(deleteAction(lesson.id));
 		const newLessons = cloneDeep(lessons).filter((l) => l.uuid != lesson.uuid);
-		console.log(newLessons);
 		setLessons(newLessons);
 	};
 	const handleExpanded = (panel) => (event, isExpanded) => {
@@ -32,6 +34,9 @@ export default function LessonList({ lessons, setLessons }) {
 			removableByMove
 			values={lessons}
 			onChange={({ oldIndex, newIndex }) => {
+				if (newIndex === -1) {
+					dispatch(deleteAction(lessons[oldIndex].id));
+				}
 				setLessons(
 					newIndex === -1
 						? arrayRemove(lessons, oldIndex)

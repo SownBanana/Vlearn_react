@@ -2,36 +2,46 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import api from "commons/api/course/resource";
 
 var waitTypeTimeout = 0;
-export const setCourse = (params) => async (dispatch) => {
+export const setCourse = (params) => async (dispatch, getState) => {
 	dispatch(setStateCourse(params.course));
+	dispatch(setStatus("saving"));
+	const { deleteSections, deleteLessons } = getState().editingCourse;
 	try {
 		clearTimeout(waitTypeTimeout);
 		waitTypeTimeout = setTimeout(async () => {
-			const response = await api.store(params);
+			const response = await api.store({
+				...params,
+				deleteSections,
+				deleteLessons,
+			});
 			console.log("+=======> ", response);
 			if (response.status === "success") {
-				console.log("Success");
+				dispatch(setStatus("saved"));
 				dispatch(setStateCourseId(response.course));
 			} else {
-				console.log("Fail");
+				console.log(response);
+				dispatch(setStatus("failed"));
 			}
 		}, 1500);
 	} catch (e) {
-		console.log(e);
+		console.log("Faillllllllllllllllllll", e);
+		dispatch(setStatus("failed"));
 	}
 };
 export const fetchCourse = (id) => async (dispatch) => {
 	try {
+		dispatch(setStatus("fetching"));
 		const response = await api.fetch(id);
 		console.log("+=======> ", response);
 		if (response.status === "success") {
-			console.log("Success");
+			dispatch(setStatus("fetched"));
 			dispatch(setStateCourse(response.data));
 		} else {
-			console.log("Fail");
+			dispatch(setStatus("fetchFailed"));
 		}
 	} catch (e) {
-		console.log(e);
+		console.log("Faillllllllllllllllllll", e);
+		dispatch(setStatus("fetchFailed"));
 	}
 };
 
@@ -43,8 +53,14 @@ function clearCourse(state) {
 		price: "",
 		sections: [],
 	};
+	state.status = "";
+	state.deleteSections = [];
+	state.deleteLessons = [];
+	state.deleteQuestions = [];
+	state.deleteLiveLessons = [];
 }
 const initialState = {
+	status: "",
 	course: {
 		id: null,
 		title: "",
@@ -152,6 +168,10 @@ const initialState = {
 			// },
 		],
 	},
+	deleteSections: [],
+	deleteLessons: [],
+	deleteQuestions: [],
+	deleteLiveLessons: [],
 };
 
 const editingCourse = createSlice({
@@ -161,12 +181,33 @@ const editingCourse = createSlice({
 		clearEditingCourse: (state) => {
 			clearCourse(state);
 		},
+		setStatus: (state, action) => {
+			state.status = action.payload;
+		},
 		setStateCourse: (state, action) => {
 			state.course = action.payload;
 			// localStorage.setItem(
 			// 	"editingCourse.course",
 			// 	JSON.stringify(state.course)
 			// );
+		},
+		deleteSection: (state, action) => {
+			state.deleteSections.push(action.payload);
+		},
+		deleteLesson: (state, action) => {
+			state.deleteLessons.push(action.payload);
+		},
+		deleteQuestion: (state, action) => {
+			state.deleteQuestions.push(action.payload);
+		},
+		deleteLiveLesson: (state, action) => {
+			state.deleteLiveLessons.push(action.payload);
+		},
+		clearDelete: (state) => {
+			state.deleteSections = [];
+			state.deleteLessons = [];
+			state.deleteQuestions = [];
+			state.deleteLiveLessons = [];
 		},
 		setStateCourseId: (state, action) => {
 			state.course.id = action.payload.id;
@@ -207,5 +248,10 @@ export const {
 	clearEditingCourse,
 	setStateCourse,
 	setStateCourseId,
+	setStatus,
+	deleteSection,
+	deleteLesson,
+	deleteQuestion,
+	deleteLiveLesson,
 } = editingCourse.actions;
 export default editingCourse.reducer;

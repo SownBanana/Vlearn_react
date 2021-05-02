@@ -24,20 +24,27 @@ export default function CKEditor({
 					// return;
 				}
 				// You can store the "editor" and use when it is needed.
-				console.log("Editor is ready to use!", editor);
-				if (content) {
-					editor.setData(content);
-					timeOut = setTimeout(() => {
-						try {
-							handler(content);
-						} catch (e) {
-							console.error(e);
-						}
-					}, 500);
+				try {
+					console.log("Editor is ready to use!");
+					console.log("set editor content ", content);
+					if (content) {
+						editor.setData(content);
+						timeOut = setTimeout(() => {
+							try {
+								handler(content);
+							} catch (e) {
+								console.error(e);
+							}
+						}, 500);
+					}
+					editor.plugins.get("FileRepository").createUploadAdapter = (
+						loader
+					) => {
+						return new MyUploadAdapter(loader);
+					};
+				} catch (e) {
+					console.log("CkEditor is closed", e);
 				}
-				editor.plugins.get("FileRepository").createUploadAdapter = (loader) => {
-					return new MyUploadAdapter(loader);
-				};
 			}}
 			onChange={(event, editor) => {
 				clearTimeout(timeOut);
@@ -45,7 +52,7 @@ export default function CKEditor({
 				// console.log("prepare data", data);
 				timeOut = setTimeout(() => {
 					// console.log(getRawData(editor).innerHTML);
-					// console.log("change data", data);
+					console.log("change data", data);
 					try {
 						handler(data);
 					} catch (e) {

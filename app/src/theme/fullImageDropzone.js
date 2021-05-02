@@ -4,7 +4,7 @@ export default createMuiTheme({
 	overrides: {
 		MuiDropzoneArea: {
 			root: {
-				overflow: "unset",
+				// overflow: "unset",
 			},
 			textContainer: {
 				position: "absolute",
