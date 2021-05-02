@@ -47,30 +47,23 @@
   background-color: white;
   border-radius: 5px;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
-  padding: 15px 25px;
+  
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.breadcrumb li a{
+.card_layout .beside_breadcrumb button{
+  font-size: 10px;
+}
+
+
+.card_layout.breadcrumb li a{
   text-decoration: none;
   color: blue;
   transition: 0.3s;
 }
-.breadcrumb li a:hover{
+.card_layout.breadcrumb li a:hover{
   text-decoration: none;
   color: red;
 }
-// Blockquote CSS
-// blockquote {
-//   border-left: 3px solid rgb(92, 92, 92);
-//   color: #1a1a1a;
-//   font-family: Georgia, Times, "Times New Roman", serif;
-//   font-size: 1.25em;
-//   font-style: italic;
-//   line-height: 1.8em;
-//   margin: 1.1em -4em;
-//   padding: 1em 2em;
-//   position: relative;
-//   transition: .2s border ease-in-out;
-//   z-index: 0;
-  
-// }

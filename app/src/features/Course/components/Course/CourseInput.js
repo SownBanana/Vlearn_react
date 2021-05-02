@@ -19,7 +19,7 @@ import { DropzoneArea } from "material-ui-dropzone";
 import uploadApi from "commons/api/upload/upload";
 import dropZoneTheme from "theme/fullImageDropzone";
 import { get } from "react-hook-form";
-import { storeCourse } from "features/Course/editingCourseSlice";
+// import { storeCourse } from "features/Course/editingCourseSlice";
 
 const CKEditor = lazy(() => {
 	const editor = new Promise((resolve) => {
@@ -151,7 +151,8 @@ export default function CourseInput({ course, setCourse }) {
 							variant="contained"
 							color="primary"
 							onClick={() => {
-								dispatch(storeCourse({ course: course }));
+								console.log(course);
+								// dispatch(storeCourse({ course: course }));
 							}}
 						>
 							Lưu Khóa học
