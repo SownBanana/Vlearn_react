@@ -15,6 +15,8 @@ import {
 	Select,
 	withStyles,
 	Typography,
+	FormControlLabel,
+	Switch,
 } from "@material-ui/core";
 import BreadCrumbs from "commons/components/BreadCrumbs";
 import InputBase from "@material-ui/core/InputBase";
@@ -29,9 +31,16 @@ export default function EditCourse() {
 		dispatch(setCourseAction());
 	};
 	let { id } = useParams();
-	const handleStatusChange = (e) => {
-		console.log("on change", e);
-		setCourse({ ...course, status: e.target.value });
+	// const handleStatusChange = (e) => {
+	// 	console.log("on change", e);
+	// 	setCourse({ ...course, status: e.target.value });
+	// };
+	const handleStatusSwitch = () => {
+		if (course.status === CourseStatus.PUBLISH) {
+			setCourse({ ...course, status: CourseStatus.DRAFT });
+		} else {
+			setCourse({ ...course, status: CourseStatus.PUBLISH });
+		}
 	};
 	useEffect(() => {
 		// console.log("fetch ", id);
@@ -96,19 +105,47 @@ export default function EditCourse() {
 					status
 				)}
 
-				<FormControl>
-					<Select
-						labelId="demo-customized-select-label"
-						id="demo-customized-select"
-						defaultValue={course.status ? course.status : CourseStatus.DRAFT}
-						value={course.status ? course.status : CourseStatus.DRAFT}
-						onChange={handleStatusChange}
-						input={<BootstrapInput />}
-					>
-						<MenuItem value={CourseStatus.DRAFT}>Bản nháp</MenuItem>
-						<MenuItem value={CourseStatus.PUBLISH}>Công khai</MenuItem>
-					</Select>
-				</FormControl>
+				{/* <Select
+					defaultValue={course.status ? course.status : CourseStatus.DRAFT}
+					value={course.status ? course.status : CourseStatus.DRAFT}
+					onChange={handleStatusChange}
+					input={<BootstrapInput />}
+				>
+					<MenuItem value={CourseStatus.DRAFT}>Bản nháp</MenuItem>
+					<MenuItem value={CourseStatus.PUBLISH}>Công khai</MenuItem>
+				</Select> */}
+				{/* <FormControlLabel
+					control={ */}
+				<Switch
+					checked={
+						course.status ? course.status === CourseStatus.PUBLISH : false
+					}
+					onChange={handleStatusSwitch}
+					name="checkedB"
+					color="primary"
+				/>
+				{!course.status ? (
+					<Typography variant="subtitle2" color="secondary">
+						Bản nháp
+					</Typography>
+				) : course.status === CourseStatus.PUBLISH ? (
+					<Typography variant="subtitle2" color="primary">
+						Công khai
+					</Typography>
+				) : (
+					<Typography variant="subtitle2" color="secondary">
+						Bản nháp
+					</Typography>
+				)}
+				{/* }
+					label={
+						!course.status
+							? "Bản nháp"
+							: course.status === CourseStatus.PUBLISH
+							? "Công khai"
+							: "Bản nháp"
+					}
+				/> */}
 			</BreadCrumbs>
 
 			<Box mt={6}>

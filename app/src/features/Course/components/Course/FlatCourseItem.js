@@ -35,7 +35,7 @@ export default function FlatCourseItem({ course }) {
 					title={course.title}
 				/>
 				<CardContent className={classes.content}>
-					{isDraft && <PostAddOutlinedIcon />}
+					{isDraft && <PostAddOutlinedIcon className={classes.draftColor} />}
 
 					{isMobile ? (
 						<Typography className={classes.title} variant="subtitle2">
@@ -67,6 +67,7 @@ const useStyle = makeStyles((theme) => ({
 	root: {
 		border: `2px solid`,
 		borderColor: theme.palette.secondary.dark,
+		minHeight: 64,
 	},
 	media: {
 		minHeight: 60,
@@ -95,7 +96,8 @@ const useStyle = makeStyles((theme) => ({
 		color: "white",
 		width: "inherit",
 		textAlign: "initial",
-		backgroundColor: "#00000050",
+		background:
+			"linear-gradient(90deg, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.5) 27%, rgba(0,0,0,0.2) 40%, rgba(0,0,0,0.2) 77%, rgba(0,0,0,0.5) 90%, rgba(0,0,0,0.75) 100%)",
 		display: "flex",
 		alignItems: "center",
 		minHeight: 60,
@@ -105,5 +107,8 @@ const useStyle = makeStyles((theme) => ({
 		overflow: "hidden",
 		width: "75%",
 		whiteSpace: "nowrap",
+	},
+	draftColor: {
+		color: theme.palette.secondary.dark,
 	},
 }));

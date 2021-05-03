@@ -7,9 +7,8 @@ import {
 } from "features/Course/editingCourseSlice";
 import {
 	Box,
-	FormControl,
-	MenuItem,
-	Select,
+	FormControlLabel,
+	Switch,
 	Typography,
 	withStyles,
 } from "@material-ui/core";
@@ -26,9 +25,12 @@ export default function AddCourse() {
 		dispatch(setStateCourse(course));
 		dispatch(setCourseAction());
 	};
-	const handleStatusChange = (e) => {
-		console.log("on change", e);
-		setCourse({ ...course, status: e.target.value });
+	const handleStatusSwitch = () => {
+		if (course.status === CourseStatus.PUBLISH) {
+			setCourse({ ...course, status: CourseStatus.DRAFT });
+		} else {
+			setCourse({ ...course, status: CourseStatus.PUBLISH });
+		}
 	};
 	useEffect(() => {
 		dispatch(clearEditingCourse());
@@ -69,19 +71,40 @@ export default function AddCourse() {
 				) : (
 					status
 				)}
-				<FormControl>
-					<Select
-						labelId="demo-customized-select-label"
-						id="demo-customized-select"
-						defaultValue={course.status ? course.status : CourseStatus.DRAFT}
-						value={course.status ? course.status : CourseStatus.DRAFT}
-						onChange={handleStatusChange}
-						input={<BootstrapInput />}
+
+				<Switch
+					checked={
+						course.status ? course.status === CourseStatus.PUBLISH : false
+					}
+					onChange={handleStatusSwitch}
+					name="checkedB"
+					color="primary"
+				/>
+				{!course.status ? (
+					<Typography
+						style={{ marginRight: "10px" }}
+						variant="subtitle2"
+						color="secondary"
 					>
-						<MenuItem value={CourseStatus.DRAFT}>Bản nháp</MenuItem>
-						<MenuItem value={CourseStatus.PUBLISH}>Công khai</MenuItem>
-					</Select>
-				</FormControl>
+						Bản nháp
+					</Typography>
+				) : course.status === CourseStatus.PUBLISH ? (
+					<Typography
+						style={{ marginRight: "10px" }}
+						variant="subtitle2"
+						color="secondary"
+					>
+						Công khai
+					</Typography>
+				) : (
+					<Typography
+						style={{ marginRight: "10px" }}
+						variant="subtitle2"
+						color="secondary"
+					>
+						Bản nháp
+					</Typography>
+				)}
 			</BreadCrumbs>
 
 			<Box mt={6}>
@@ -97,6 +120,7 @@ const BootstrapInput = withStyles((theme) => ({
 			marginTop: theme.spacing(3),
 		},
 	},
+
 	input: {
 		borderRadius: 4,
 		position: "relative",
