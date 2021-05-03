@@ -2,72 +2,16 @@ import React from "react";
 import Drawer from "@material-ui/core/Drawer";
 import clsx from "clsx";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-import HomeIcon from "@material-ui/icons/Home";
-import ImportContactsIcon from "@material-ui/icons/ImportContacts";
-import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
-import ListItemLink from "../../../commons/components/ListItemLink";
 import globalStyle from "../../../style/GlobalStyles";
-import {
-	IconButton,
-	List,
-	makeStyles,
-	useTheme,
-	Hidden,
-	Divider,
-} from "@material-ui/core";
-import ChatIcon from "@material-ui/icons/Chat";
-import NotificationsIcon from "@material-ui/icons/Notifications";
-
+import { IconButton, makeStyles, Hidden, Divider } from "@material-ui/core";
+import { UserRole } from "features/Authenticate/constance";
+import InstructorDrawer from "./InstructorDrawer";
+import StudentDrawer from "./StudentDrawer";
+import { useSelector } from "react-redux";
 export default function MyDrawer({ handle, open }) {
 	const classes = useStyles();
-	const theme = useTheme();
-	console.log("============> ", theme);
 	globalStyle();
-	const drawer = (
-		<List onClick={handle}>
-			{[
-				{
-					name: "Dashboard",
-					key: "dashboard",
-					icon: <HomeIcon />,
-					link: "/",
-				},
-				{
-					name: "Khám phá",
-					key: "browser",
-					icon: <ImportContactsIcon />,
-					link: "/courses",
-				},
-				{
-					name: "Kết nối",
-					key: "connect",
-					icon: <SupervisorAccountIcon />,
-					link: "/connect",
-				},
-			].map(({ name, key, icon, link }) => (
-				<ListItemLink to={link} icon={icon} primary={name} key={key} />
-			))}
-			<div className={classes.sectionMobile}>
-				{[
-					{
-						name: "Tin nhắn",
-						key: "message",
-						icon: <ChatIcon />,
-						link: "/message",
-					},
-					{
-						name: "Thông báo",
-						key: "notification",
-						icon: <NotificationsIcon />,
-						link: "/notification",
-					},
-				].map(({ name, key, icon, link }) => (
-					<ListItemLink to={link} icon={icon} primary={name} key={key} />
-				))}
-			</div>
-		</List>
-	);
+	const role = useSelector((state) => state.auth.user.role);
 	return (
 		<div>
 			<Hidden xsDown>
@@ -91,7 +35,11 @@ export default function MyDrawer({ handle, open }) {
 						</IconButton>
 					</div>
 					<Divider />
-					{drawer}
+					{role === UserRole.INSTRUCTOR ? (
+						<InstructorDrawer handle={handle} />
+					) : (
+						<StudentDrawer handle={handle} />
+					)}
 				</Drawer>
 			</Hidden>
 			<Hidden smUp>
@@ -106,7 +54,11 @@ export default function MyDrawer({ handle, open }) {
 						</IconButton>
 					</div>
 					<Divider />
-					{drawer}
+					{role === UserRole.INSTRUCTOR ? (
+						<InstructorDrawer handle={handle} />
+					) : (
+						<StudentDrawer handle={handle} />
+					)}
 				</Drawer>
 			</Hidden>
 		</div>

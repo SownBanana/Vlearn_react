@@ -3,11 +3,12 @@ import { useSelector } from "react-redux";
 import { Redirect, Route as DefaultRoute } from "react-router-dom";
 import Container from "@material-ui/core/Container";
 import { makeStyles } from "@material-ui/core";
-
+import { UserRole } from "features/Authenticate/constance";
 const useStyles = makeStyles((theme) => ({
 	boundary: {
 		paddingTop: theme.spacing(7),
 		paddingLeft: theme.spacing(0),
+		paddingRight: theme.spacing(0),
 		[theme.breakpoints.up("sm")]: {
 			paddingLeft: theme.spacing(7),
 		},
@@ -71,7 +72,7 @@ const StudentRoute = function ({
 			{...rest}
 			exact
 			render={(props) =>
-				isAuthed && role === 3 ? (
+				isAuthed && role === UserRole.STUDENT ? (
 					<Container maxWidth={maxWidth} className={classes.boundary}>
 						{React.createElement(Component, props)}
 					</Container>
@@ -102,7 +103,7 @@ const InstructorRoute = function ({
 			{...rest}
 			exact
 			render={(props) =>
-				isAuthed && role === 2 ? (
+				isAuthed && role === UserRole.INSTRUCTOR ? (
 					<Container maxWidth={maxWidth} className={classes.boundary}>
 						{React.createElement(Component, props)}
 					</Container>

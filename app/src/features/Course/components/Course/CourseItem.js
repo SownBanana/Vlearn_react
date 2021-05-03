@@ -31,6 +31,7 @@ export default function CourseItem({ course }) {
 						{course.title}
 					</Typography>
 					<div
+						// className={classes.introduce}
 						dangerouslySetInnerHTML={{ __html: course.introduce }}
 						className="ck-content ck-viewer"
 					></div>
@@ -56,5 +57,8 @@ const useStyle = makeStyles((theme) => ({
 	},
 	media: {
 		height: 140,
+	},
+	introduce: {
+		visibility: "hidden",
 	},
 }));

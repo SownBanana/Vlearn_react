@@ -13,53 +13,71 @@ import ArrowBackIosRoundedIcon from "@material-ui/icons/ArrowBackIosRounded";
 export default function BreadCrumbs({ links, current, children }) {
 	const isMobile = useMediaQuery("(max-width: 760px)");
 	const history = useHistory();
-	return (
-		!isMobile && (
-			<Box className="card_layout breadcrumb" mx={2} mb={3}>
-				<div style={{ display: "flex", alignItems: "center" }}>
-					<IconButton
-						style={{ margin: "0px 10px 0px 5px" }}
-						// size="small"
-						aria-label=""
-						onClick={() => history.goBack()}
+	return !isMobile ? (
+		<Box className="card_layout breadcrumb" mx={2} mb={3}>
+			<div style={{ display: "flex", alignItems: "center" }}>
+				<IconButton
+					style={{ margin: "0px 10px 0px 5px" }}
+					// size="small"
+					aria-label=""
+					onClick={() => history.goBack()}
+				>
+					<ArrowBackIosRoundedIcon fontSize="small" />
+				</IconButton>
+				<Divider
+					style={{ marginRight: "15px" }}
+					orientation="vertical"
+					flexItem
+				/>
+				<Brc style={{ padding: "15px" }} separator="›" aria-label="breadcrumb">
+					{links &&
+						links.map((el) => {
+							return (
+								<Link color="inherit" to={el.link}>
+									{el.description}
+								</Link>
+							);
+						})}
+					<Typography
+						style={{
+							maxWidth: "300px",
+							overflow: "hidden",
+							whiteSpace: "nowrap",
+							textOverflow: "ellipsis",
+						}}
+						color="textPrimary"
 					>
-						<ArrowBackIosRoundedIcon fontSize="small" />
-					</IconButton>
-					<Divider
-						style={{ marginRight: "15px" }}
-						orientation="vertical"
-						flexItem
-					/>
-					<Brc
-						style={{ padding: "15px" }}
-						separator="›"
-						aria-label="breadcrumb"
-					>
-						{links &&
-							links.map((el) => {
-								return (
-									<Link color="inherit" to={el.link}>
-										{el.description}
-									</Link>
-								);
-							})}
-						<Typography
-							style={{
-								maxWidth: "300px",
-								overflow: "hidden",
-								whiteSpace: "nowrap",
-								textOverflow: "ellipsis",
-							}}
-							color="textPrimary"
-						>
-							{current}
-						</Typography>
-					</Brc>
-				</div>
-				<div style={{ marginRight: "25px" }} className="beside_breadcrumb">
-					{children}
-				</div>
-			</Box>
-		)
+						{current}
+					</Typography>
+				</Brc>
+			</div>
+			<div
+				style={{ marginRight: "25px", fontSize: "10px" }}
+				className="beside_breadcrumb"
+			>
+				{children}
+			</div>
+		</Box>
+	) : (
+		<Box className="card_layout breadcrumb" mb={3}>
+			<div style={{ display: "flex", alignItems: "center" }}>
+				<IconButton
+					style={{ margin: "0px 10px 0px 5px" }}
+					// size="small"
+					aria-label=""
+					onClick={() => history.goBack()}
+				>
+					<ArrowBackIosRoundedIcon fontSize="small" />
+				</IconButton>
+				<Divider
+					style={{ marginRight: "15px" }}
+					orientation="vertical"
+					flexItem
+				/>
+			</div>
+			<div style={{ fontSize: "10px" }} className="beside_breadcrumb">
+				{children}
+			</div>
+		</Box>
 	);
 }

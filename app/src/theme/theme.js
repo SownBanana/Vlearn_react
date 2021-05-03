@@ -5,6 +5,10 @@ import createPalette from "@material-ui/core/styles/createPalette";
 const theme = createMuiTheme({
 	palette: createPalette({
 		// type: "dark",
+		selected: {
+			main: blue["500"],
+			dark: blue["A200"],
+		},
 		primary: {
 			light: blue["100"],
 			main: blue["900"],
