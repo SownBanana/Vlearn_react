@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
 	setCourse as setCourseAction,
+	setStateCourse,
 	clearEditingCourse,
 } from "features/Course/editingCourseSlice";
 import {
@@ -21,7 +22,10 @@ export default function AddCourse() {
 	const course = useSelector((state) => state.editingCourse.course);
 	const status = useSelector((state) => state.editingCourse.status);
 	const dispatch = useDispatch();
-	const setCourse = (course) => dispatch(setCourseAction({ course: course }));
+	const setCourse = (course) => {
+		dispatch(setStateCourse(course));
+		dispatch(setCourseAction());
+	};
 	const handleStatusChange = (e) => {
 		console.log("on change", e);
 		setCourse({ ...course, status: e.target.value });

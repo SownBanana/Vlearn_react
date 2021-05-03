@@ -5,7 +5,12 @@ import CardActionArea from "@material-ui/core/CardActionArea";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
-import { IconButton, makeStyles, useMediaQuery } from "@material-ui/core";
+import {
+	Divider,
+	IconButton,
+	makeStyles,
+	useMediaQuery,
+} from "@material-ui/core";
 import { useHistory } from "react-router";
 import clsx from "clsx";
 import EditRoundedIcon from "@material-ui/icons/EditRounded";
@@ -31,12 +36,13 @@ export default function FlatCourseItem({ course }) {
 				/>
 				<CardContent className={classes.content}>
 					{isDraft && <PostAddOutlinedIcon />}
+
 					{isMobile ? (
-						<Typography variant="subtitle2" component="h2">
+						<Typography className={classes.title} variant="subtitle2">
 							{course.title}
 						</Typography>
 					) : (
-						<Typography variant="h6" component="h2">
+						<Typography className={classes.title} variant="h6">
 							{course.title}
 						</Typography>
 					)}
@@ -93,5 +99,11 @@ const useStyle = makeStyles((theme) => ({
 		display: "flex",
 		alignItems: "center",
 		minHeight: 60,
+	},
+	title: {
+		textOverflow: "ellipsis",
+		overflow: "hidden",
+		width: "75%",
+		whiteSpace: "nowrap",
 	},
 }));

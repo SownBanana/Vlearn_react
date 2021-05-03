@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
 	fetchCourse,
 	setCourse as setCourseAction,
+	setStateCourse,
 	clearEditingCourse,
 } from "features/Course/editingCourseSlice";
 import {
@@ -23,7 +24,10 @@ export default function EditCourse() {
 	const course = useSelector((state) => state.editingCourse.course);
 	const status = useSelector((state) => state.editingCourse.status);
 	const dispatch = useDispatch();
-	const setCourse = (course) => dispatch(setCourseAction({ course: course }));
+	const setCourse = (course) => {
+		dispatch(setStateCourse(course));
+		dispatch(setCourseAction());
+	};
 	let { id } = useParams();
 	const handleStatusChange = (e) => {
 		console.log("on change", e);

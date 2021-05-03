@@ -2,15 +2,15 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import api from "commons/api/course/resource";
 
 var waitTypeTimeout = 0;
-export const setCourse = (params) => async (dispatch, getState) => {
-	dispatch(setStateCourse(params.course));
+export const setCourse = () => async (dispatch, getState) => {
+	// dispatch(setStateCourse(params.course));
 	dispatch(setStatus("saving"));
-	const { deleteSections, deleteLessons } = getState().editingCourse;
+	const { course, deleteSections, deleteLessons } = getState().editingCourse;
 	try {
 		clearTimeout(waitTypeTimeout);
 		waitTypeTimeout = setTimeout(async () => {
 			const response = await api.store({
-				...params,
+				course,
 				deleteSections,
 				deleteLessons,
 			});
@@ -22,7 +22,7 @@ export const setCourse = (params) => async (dispatch, getState) => {
 				console.log(response);
 				dispatch(setStatus("failed"));
 			}
-		}, 1500);
+		}, 1000);
 	} catch (e) {
 		console.log("Faillllllllllllllllllll", e);
 		dispatch(setStatus("failed"));

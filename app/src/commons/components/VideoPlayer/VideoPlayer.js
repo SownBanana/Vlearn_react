@@ -139,14 +139,14 @@ export default function VideoPlayer({ handlePrevious, handleNext, ...prop }) {
 
 	const handleClickFullscreen = () => {
 		if (screenfull.isFullscreen) {
-			console.log("Full");
+			// console.log("Full");
 			setVideo({ ...video, height: "360px" });
 		} else setVideo({ ...video, height: "100%" });
 		screenfull.toggle(findDOMNode(wholePlayer.current));
 	};
 	var mouseMoveTimeOut = 0;
-	const onMouseMoveInFullScreen = (e) => {
-		if (wholePlayer.current) {
+	const onMouseMoveInFullScreen = () => {
+		if (wholePlayer.current && screenfull.isFullscreen) {
 			clearTimeout(mouseMoveTimeOut);
 			wholePlayer.current.classList.add("hover");
 			mouseMoveTimeOut = setTimeout(() => {
@@ -156,12 +156,14 @@ export default function VideoPlayer({ handlePrevious, handleNext, ...prop }) {
 	};
 	useEffect(() => {
 		if (screenfull.isFullscreen) {
+			console.log("Them su kien");
 			wholePlayer.current.classList.remove("normal");
 			wholePlayer.current.addEventListener(
 				"mousemove",
 				onMouseMoveInFullScreen
 			);
 		} else {
+			console.log("Bo su kien");
 			wholePlayer.current.classList.add("normal");
 			wholePlayer.current.classList.remove("hover");
 			wholePlayer.current.removeEventListener(
@@ -169,12 +171,6 @@ export default function VideoPlayer({ handlePrevious, handleNext, ...prop }) {
 				onMouseMoveInFullScreen
 			);
 		}
-		// return () => {
-		// 	wholePlayer.current.removeEventListener(
-		// 		"mousemove",
-		// 		onMouseMoveInFullScreen
-		// 	);
-		// };
 	}, [screenfull.isFullscreen]);
 	var intentTimeOut;
 	return (
@@ -313,9 +309,17 @@ export default function VideoPlayer({ handlePrevious, handleNext, ...prop }) {
 								max={1}
 								step="any"
 								value={video.volume}
-								value={video.volume}
 								onChange={handleVolumeChange}
 							/>
+							{/* <Slider
+								className="volume-slide"
+								min={0}
+								max={1}
+								step={null}
+								value={video.volume}
+								onChange={handleVolumeChange}
+								orient={isMobile ? "vertical" : "horizontal"}
+							/> */}
 							<FormattedTime
 								className="timestamp"
 								numSeconds={video.duration * video.played}
