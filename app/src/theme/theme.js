@@ -1,5 +1,12 @@
 import { createMuiTheme } from "@material-ui/core";
-import { blue, green, orange, red, yellow } from "@material-ui/core/colors";
+import {
+	blue,
+	green,
+	orange,
+	red,
+	yellow,
+	amber,
+} from "@material-ui/core/colors";
 import createPalette from "@material-ui/core/styles/createPalette";
 
 const theme = createMuiTheme({
@@ -28,6 +35,10 @@ const theme = createMuiTheme({
 			light: yellow["100"],
 			main: yellow["900"],
 			dark: orange["900"],
+		},
+		rate: {
+			main: amber["500"],
+			dark: amber["700"],
 		},
 	}),
 });

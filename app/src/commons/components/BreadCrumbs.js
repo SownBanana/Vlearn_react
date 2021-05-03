@@ -75,7 +75,10 @@ export default function BreadCrumbs({ links, current, children }) {
 					flexItem
 				/>
 			</div>
-			<div style={{ fontSize: "10px" }} className="beside_breadcrumb">
+			<div
+				style={{ fontSize: "10px", marginRight: "10px" }}
+				className="beside_breadcrumb"
+			>
 				{children}
 			</div>
 		</Box>

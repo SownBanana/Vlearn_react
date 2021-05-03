@@ -215,29 +215,37 @@ const editingCourse = createSlice({
 				for (let index = 0; index < state.course.sections.length; index++) {
 					const section = state.course.sections[index];
 					const fetchSection = action.payload.sections[index];
-					section.id = fetchSection.id;
-					section.course_id = fetchSection.course_id;
-					if (fetchSection.lessons)
-						for (let li = 0; li < section.lessons.length; li++) {
-							const lesson = section.lessons[li];
-							const fetchLesson = fetchSection.lessons[li];
-							lesson.id = fetchLesson.id;
-							lesson.section_id = fetchLesson.section_id;
-						}
-					if (fetchSection.questions)
-						for (let qi = 0; qi < section.questions.length; qi++) {
-							const question = section.questions[qi];
-							const fetchQuestion = fetchSection.questions[qi];
-							question.id = fetchQuestion.id;
-							question.section_id = fetchQuestion.section_id;
-						}
-					if (fetchSection.liveLessons)
-						for (let lli = 0; lli < section.live_lessons.length; lli++) {
-							const live_lesson = section.live_lessons[lli];
-							const fetchLiveLesson = fetchSection.liveLessons[lli];
-							live_lesson.id = fetchLiveLesson.id;
-							live_lesson.section_id = fetchLiveLesson.section_id;
-						}
+					if (fetchSection && section) {
+						section.id = fetchSection.id;
+						section.course_id = fetchSection.course_id;
+						if (fetchSection.lessons)
+							for (let li = 0; li < section.lessons.length; li++) {
+								const lesson = section.lessons[li];
+								const fetchLesson = fetchSection.lessons[li];
+								if (fetchLesson && lesson) {
+									lesson.id = fetchLesson.id;
+									lesson.section_id = fetchLesson.section_id;
+								}
+							}
+						if (fetchSection.questions)
+							for (let qi = 0; qi < section.questions.length; qi++) {
+								const question = section.questions[qi];
+								const fetchQuestion = fetchSection.questions[qi];
+								if (fetchQuestion && question) {
+									question.id = fetchQuestion.id;
+									question.section_id = fetchQuestion.section_id;
+								}
+							}
+						if (fetchSection.liveLessons)
+							for (let lli = 0; lli < section.live_lessons.length; lli++) {
+								const live_lesson = section.live_lessons[lli];
+								const fetchLiveLesson = fetchSection.liveLessons[lli];
+								if (fetchLiveLesson && live_lesson) {
+									live_lesson.id = fetchLiveLesson.id;
+									live_lesson.section_id = fetchLiveLesson.section_id;
+								}
+							}
+					}
 				}
 			}
 		},

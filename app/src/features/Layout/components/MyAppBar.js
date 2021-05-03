@@ -18,7 +18,8 @@ import NotificationsIcon from "@material-ui/icons/Notifications";
 // import MoreIcon from "@material-ui/icons/MoreVert";
 import clsx from "clsx";
 import { useDispatch, useSelector } from "react-redux";
-import { logout } from "../../Authenticate/authSlices";
+import { useHistory } from "react-router";
+import { checkPassport, logout } from "features/Authenticate/authSlices";
 
 export default function MyAppBar({ handle, open }) {
 	const dispatch = useDispatch();
@@ -37,6 +38,7 @@ export default function MyAppBar({ handle, open }) {
 	const isMenuOpen = Boolean(anchorEl);
 	const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
+	const history = useHistory();
 	const handleProfileMenuOpen = (event) => {
 		setAnchorEl(event.currentTarget);
 	};
@@ -54,6 +56,18 @@ export default function MyAppBar({ handle, open }) {
 		handleMenuClose();
 		console.log("Logout");
 		dispatch(logout());
+	};
+	const handleLogin = () => {
+		handleMenuClose();
+		history.push("/auth/login");
+	};
+	const handleRegister = () => {
+		handleMenuClose();
+		history.push("/auth/register");
+	};
+	const handleCheckAuth = () => {
+		handleMenuClose();
+		dispatch(checkPassport());
 	};
 
 	// const handleMobileMenuOpen = (event) => {
@@ -74,13 +88,14 @@ export default function MyAppBar({ handle, open }) {
 			{isLoggedIn && (
 				<div>
 					<MenuItem onClick={handleMenuClose}>Tài khoản</MenuItem>
+					<MenuItem onClick={handleCheckAuth}>Check Auth</MenuItem>
 					<MenuItem onClick={handleLogout}>Đăng xuất</MenuItem>
 				</div>
 			)}
 			{!isLoggedIn && (
 				<div>
-					<MenuItem onClick={handleMenuClose}>Đăng nhập</MenuItem>
-					<MenuItem onClick={handleLogout}>Đăng ký</MenuItem>
+					<MenuItem onClick={handleLogin}>Đăng nhập</MenuItem>
+					<MenuItem onClick={handleRegister}>Đăng ký</MenuItem>
 				</div>
 			)}
 		</Menu>
