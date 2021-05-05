@@ -105,17 +105,6 @@ export default function EditCourse() {
 					status
 				)}
 
-				{/* <Select
-					defaultValue={course.status ? course.status : CourseStatus.DRAFT}
-					value={course.status ? course.status : CourseStatus.DRAFT}
-					onChange={handleStatusChange}
-					input={<BootstrapInput />}
-				>
-					<MenuItem value={CourseStatus.DRAFT}>Bản nháp</MenuItem>
-					<MenuItem value={CourseStatus.PUBLISH}>Công khai</MenuItem>
-				</Select> */}
-				{/* <FormControlLabel
-					control={ */}
 				<Switch
 					checked={
 						course.status ? course.status === CourseStatus.PUBLISH : false
@@ -137,15 +126,6 @@ export default function EditCourse() {
 						Bản nháp
 					</Typography>
 				)}
-				{/* }
-					label={
-						!course.status
-							? "Bản nháp"
-							: course.status === CourseStatus.PUBLISH
-							? "Công khai"
-							: "Bản nháp"
-					}
-				/> */}
 			</BreadCrumbs>
 
 			<Box mt={6}>

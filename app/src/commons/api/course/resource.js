@@ -16,10 +16,13 @@ const courseResource = {
 		);
 		return response.data;
 	},
-	index: async ({ page, perPage, columns = "*", instructor_id, status }) => {
+	index: async ({ page, perPage, columns = "*", ...restQuery }) => {
 		var url = `api/courses?page=${page}&perPage=${perPage}&columns=${columns}`;
-		if (instructor_id) url = url + `&instructor_id=${instructor_id}`;
-		if (status) url = url + `&status=${status}`;
+		if (restQuery) {
+			for (let [query, value] of Object.entries(restQuery)) {
+				url = url + `&${query}=${value}`;
+			}
+		}
 		const response = await api.get(url, { headers: headersWithToken() });
 		return response.data;
 	},
