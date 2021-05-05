@@ -1,12 +1,15 @@
 import React from "react";
-import HomeIcon from "@material-ui/icons/Home";
-import ImportContactsIcon from "@material-ui/icons/ImportContacts";
-import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
-import ListItemLink from "../../../commons/components/ListItemLink";
-import globalStyle from "../../../style/GlobalStyles";
+import {
+	Chat as ChatIcon,
+	Notifications as NotificationsIcon,
+	SupervisorAccount as SupervisorAccountIcon,
+	ImportContacts as ImportContactsIcon,
+	Home as HomeIcon,
+} from "@material-ui/icons";
+
+import ListItemLink from "commons/components/ListItemLink";
+import globalStyle from "style/GlobalStyles";
 import { List, makeStyles } from "@material-ui/core";
-import ChatIcon from "@material-ui/icons/Chat";
-import NotificationsIcon from "@material-ui/icons/Notifications";
 
 export default function InstructorDrawer({ handle }) {
 	const classes = useStyles();

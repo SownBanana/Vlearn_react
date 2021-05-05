@@ -1,7 +1,15 @@
 import { makeStyles } from "@material-ui/core/styles";
 
-export default makeStyles({
+export default makeStyles((theme) => ({
 	"@global": {
+		".App": {
+			paddingBottom: "48px",
+			width: "99%",
+			[theme.breakpoints.up("sm")]: {
+				paddingBottom: 0,
+				width: "100%",
+			},
+		},
 		".errorHelperText": {
 			textAlign: "initial",
 			color: "#f44336",
@@ -27,4 +35,4 @@ export default makeStyles({
 			borderLeft: "5px solid #ccc",
 		},
 	},
-});
+}));

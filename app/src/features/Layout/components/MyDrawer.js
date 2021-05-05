@@ -2,10 +2,11 @@ import React from "react";
 import Drawer from "@material-ui/core/Drawer";
 import clsx from "clsx";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import globalStyle from "../../../style/GlobalStyles";
+import globalStyle from "style/GlobalStyles";
 import { IconButton, makeStyles, Hidden, Divider } from "@material-ui/core";
 import { UserRole } from "features/Authenticate/constance";
 import InstructorDrawer from "./InstructorDrawer";
+import InstructorDrawerMobile from "./Mobile/InstructorDrawer";
 import StudentDrawer from "./StudentDrawer";
 import { useSelector } from "react-redux";
 export default function MyDrawer({ handle, open }) {
@@ -43,23 +44,7 @@ export default function MyDrawer({ handle, open }) {
 				</Drawer>
 			</Hidden>
 			<Hidden smUp>
-				<Drawer
-					anchor="left"
-					open={open}
-					ModalProps={{ onBackdropClick: handle }}
-				>
-					<div className={classes.toolbar}>
-						<IconButton onClick={handle}>
-							<ChevronLeftIcon />
-						</IconButton>
-					</div>
-					<Divider />
-					{role === UserRole.INSTRUCTOR ? (
-						<InstructorDrawer handle={handle} />
-					) : (
-						<StudentDrawer handle={handle} />
-					)}
-				</Drawer>
+				<InstructorDrawerMobile />
 			</Hidden>
 		</div>
 	);

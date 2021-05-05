@@ -6,11 +6,12 @@ import { makeStyles } from "@material-ui/core";
 import { UserRole } from "features/Authenticate/constance";
 const useStyles = makeStyles((theme) => ({
 	boundary: {
-		paddingTop: theme.spacing(7),
+		paddingTop: theme.spacing(5),
 		paddingLeft: theme.spacing(0),
 		paddingRight: theme.spacing(0),
 		[theme.breakpoints.up("sm")]: {
 			paddingLeft: theme.spacing(7),
+			paddingTop: theme.spacing(7),
 		},
 	},
 }));

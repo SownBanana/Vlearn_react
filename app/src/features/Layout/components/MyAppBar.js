@@ -9,6 +9,7 @@ import {
 	Badge,
 	Menu,
 	MenuItem,
+	useMediaQuery,
 } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
 import SearchIcon from "@material-ui/icons/Search";
@@ -31,7 +32,7 @@ export default function MyAppBar({ handle, open }) {
 			// put the login here
 		}
 	};
-
+	const isMobile = useMediaQuery("(max-width: 760px)");
 	const [anchorEl, setAnchorEl] = React.useState(null);
 	const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
@@ -123,22 +124,7 @@ export default function MyAppBar({ handle, open }) {
 				</IconButton>
 				<p>Tài khoản</p>
 			</MenuItem>
-			{/* <MenuItem>
-				<IconButton aria-label="show 4 new mails" color="inherit">
-					<Badge badgeContent={4} color="secondary">
-						<MailIcon />
-					</Badge>
-				</IconButton>
-				<p>Messages</p>
-			</MenuItem>
-			<MenuItem>
-				<IconButton aria-label="show 11 new notifications" color="inherit">
-					<Badge badgeContent={11} color="secondary">
-						<NotificationsIcon />
-					</Badge>
-				</IconButton>
-				<p>Notifications</p>
-			</MenuItem> */}
+
 			<MenuItem onClick={handleProfileMenuOpen}>
 				<IconButton
 					aria-label="account of current user"
@@ -162,7 +148,7 @@ export default function MyAppBar({ handle, open }) {
 				})}
 			>
 				<Toolbar variant="dense">
-					{isLoggedIn && (
+					{isLoggedIn && !isMobile && (
 						<IconButton
 							color="inherit"
 							aria-label="open drawer"

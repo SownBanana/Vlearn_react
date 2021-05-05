@@ -13,7 +13,7 @@ import {
 // import Toast from "./features/Toast";
 import Notifier from "./Notifier";
 import { ProgressBarProvider as ProgressBar } from "react-redux-progress";
-import { CssBaseline, ThemeProvider } from "@material-ui/core";
+import { CssBaseline, Hidden, ThemeProvider } from "@material-ui/core";
 import AppFrame from "./features/Layout/components/AppFrame";
 import { enqueueSnackbar } from "./features/Toast/toastSlices";
 import ChatComponent from "./commons/components/ChatComponent";
@@ -21,6 +21,7 @@ import theme from "./theme/theme";
 import Prism from "prismjs";
 // import "prismjs/themes/prism.css";
 import "prismjs/themes/prism-okaidia.css";
+import globalStyle from "style/GlobalStyles";
 
 const Authenticate = React.lazy(() => import("./features/Authenticate/"));
 const Course = React.lazy(() => import("./features/Course/"));
@@ -28,7 +29,7 @@ const Course = React.lazy(() => import("./features/Course/"));
 function App() {
 	const dispatch = useDispatch();
 	const serverError = useSelector((state) => state.auth.error.serverError);
-
+	globalStyle();
 	const isProgressActive = useSelector(
 		(state) => state.common.isActiveProgress
 	);
@@ -83,7 +84,9 @@ function App() {
 						<PrivateRoute exact path="/" component={Home} />
 					</Switch>
 				</Suspense>
-				{/* <ChatComponent /> */}
+				<Hidden xsDown>
+					<ChatComponent />
+				</Hidden>
 			</ThemeProvider>
 		</div>
 	);

@@ -22,23 +22,15 @@ export default function CourseList() {
 		instructor_id: id,
 		search: "",
 	});
-	// const [perPage, setPerPage] = useState(8);
-	// const [nameQuery, setNameQuery] = useState("");
 	const [filter, setFilter] = useState({
-		status: "null",
+		status: CourseStatus.ALL,
+		time: "desc",
 	});
 	const routeChange = () => {
 		let path = `/courses/add`;
 		history.push(path);
 	};
 	const setPage = (e, value) => {
-		// dispatch(
-		// 	fetchCourse({
-		// 		page: value,
-		// 		perPage: perPage,
-		// 		instructor_id: id,
-		// 	})
-		// );
 		e.preventDefault();
 		setNav({ ...nav, page: value });
 	};
@@ -47,8 +39,6 @@ export default function CourseList() {
 	const handleSearch = (e) => {
 		clearTimeout(queryTimeOut);
 		queryTimeOut = setTimeout(() => {
-			// console.log("query");
-			// setNameQuery(e.target.value);
 			setNav({ ...nav, search: e.target.value });
 		}, 300);
 	};
@@ -56,18 +46,12 @@ export default function CourseList() {
 	useEffect(() => {
 		dispatch(
 			fetchCourse({
-				// page: 1,
-				// perPage: perPage,
-				// instructor_id: id,
-				// search: nameQuery,
-				// status: filter.status,
 				...nav,
+				...filter,
 			})
 		);
-		// }, [dispatch, id, perPage, nameQuery, filter]);
-	}, [dispatch, nav]);
+	}, [dispatch, nav, filter]);
 	useEffect(() => {
-		// isMobile ? setPerPage(5) : setPerPage(8);
 		isMobile ? setNav({ ...nav, perPage: 5 }) : setNav({ ...nav, perPage: 8 });
 	}, [isMobile]);
 
