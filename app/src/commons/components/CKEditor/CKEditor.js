@@ -26,7 +26,7 @@ export default function CKEditor({
 				// You can store the "editor" and use when it is needed.
 				try {
 					console.log("Editor is ready to use!");
-					console.log("set editor content ", content);
+					// console.log("set editor content ", content);
 					if (content) {
 						editor.setData(content);
 						timeOut = setTimeout(() => {
