@@ -191,6 +191,9 @@ const editingCourse = createSlice({
 			// 	JSON.stringify(state.course)
 			// );
 		},
+		setStateSections: (state, action) => {
+			state.course.sections = action.payload;
+		},
 		deleteSection: (state, action) => {
 			state.deleteSections.push(action.payload);
 		},
@@ -255,6 +258,7 @@ const editingCourse = createSlice({
 export const {
 	clearEditingCourse,
 	setStateCourse,
+	setStateSections,
 	setStateCourseId,
 	setStatus,
 	deleteSection,

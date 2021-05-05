@@ -53,7 +53,9 @@ export default function SectionInput({
 		setLessons(newLessons);
 		// setSection({ section, lessons: [...section.lessons, { uuid: uuidv4() }] });
 	};
-
+	useEffect(() => {
+		console.log("rerender section");
+	});
 	return (
 		<Box mb={1}>
 			<Accordion

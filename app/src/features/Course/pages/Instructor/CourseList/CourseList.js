@@ -1,7 +1,13 @@
 import React, { useEffect } from "react";
 import Container from "@material-ui/core/Container";
 import { Link, useHistory } from "react-router-dom";
-import { Box, Typography, Button, Grid, useMediaQuery } from "@material-ui/core";
+import {
+	Box,
+	Typography,
+	Button,
+	Grid,
+	useMediaQuery,
+} from "@material-ui/core";
 import BreadCrumbs from "commons/components/BreadCrumbs";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCourse } from "features/Course/courseListSlice";
@@ -25,7 +31,7 @@ export default function CourseList() {
 		dispatch(
 			fetchCourse({
 				page: 1,
-				perPage: 10,
+				perPage: 100,
 				instructor_id: id,
 			})
 		);

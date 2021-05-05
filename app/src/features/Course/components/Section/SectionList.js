@@ -5,9 +5,19 @@ import { Box, Hidden, Grid, makeStyles, Button } from "@material-ui/core";
 import { List, arrayMove, arrayRemove } from "react-movable";
 import { cloneDeep } from "lodash";
 import uuidv4 from "commons/uuidv4";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { deleteSection as deleteAction } from "features/Course/editingCourseSlice";
-function SectionList({ sections, setSections }) {
+import {
+	setStateSections,
+	setCourse as setCourseAction,
+} from "features/Course/editingCourseSlice";
+function SectionList() {
+	const sections = useSelector((state) => state.editingCourse.course.sections);
+	const setSections = (newSections) => {
+		dispatch(setStateSections(newSections));
+		dispatch(setCourseAction());
+	};
+
 	const [expanded, setExpanded] = useState(0);
 	const classes = useStyles();
 	const dispatch = useDispatch();
@@ -21,6 +31,13 @@ function SectionList({ sections, setSections }) {
 			return s;
 		});
 		setSections(newSections);
+	};
+	const setSectionsWithOrder = (newSections) => {
+		const newSectionsWithOrder = cloneDeep(newSections).map((s, index) => {
+			s.order = index;
+			return s;
+		});
+		setSections(newSectionsWithOrder);
 	};
 	const deleteSection = (section) => {
 		dispatch(deleteAction(section.id));
@@ -51,8 +68,8 @@ function SectionList({ sections, setSections }) {
 		setExpanded(isExpanded ? panel : false);
 	};
 	useEffect(() => {
-		console.log("===========> Rerender");
-	}, []);
+		console.log("===========> Rerender section list");
+	});
 	return (
 		<List
 			removableByMove
@@ -61,7 +78,7 @@ function SectionList({ sections, setSections }) {
 				if (newIndex === -1) {
 					dispatch(deleteAction(sections[oldIndex].id));
 				}
-				setSections(
+				setSectionsWithOrder(
 					newIndex === -1
 						? arrayRemove(sections, oldIndex)
 						: arrayMove(sections, oldIndex, newIndex)
@@ -167,4 +184,4 @@ const useStyles = makeStyles((theme) => ({
 
 // SectionList.propTypes = {};
 
-export default SectionList;
+export default React.memo(SectionList);

@@ -32,9 +32,9 @@ const CKEditor = lazy(() => {
 export default function CourseInput({ course, setCourse }) {
 	const classes = useStyles();
 	const status = useSelector((state) => state.editingCourse.status);
-	const setSections = (sections) => {
-		setCourse({ ...course, sections: sections });
-	};
+	// const setSections = (sections) => {
+	// 	setCourse({ ...course, sections: sections });
+	// };
 
 	const introHandler = (data) => {
 		setCourse({ ...course, introduce: data });
@@ -100,8 +100,8 @@ export default function CourseInput({ course, setCourse }) {
 							</Typography>
 							<Grid item container md={12} direction="column">
 								<SectionList
-									sections={course.sections}
-									setSections={setSections}
+								// sections={course.sections}
+								// setSections={setSections}
 								/>
 							</Grid>
 						</Grid>
