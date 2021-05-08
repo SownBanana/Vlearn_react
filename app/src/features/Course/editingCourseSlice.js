@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import api from "commons/api/course/resource";
+import uploadApi from "commons/api/upload/upload";
 
 var waitTypeTimeout = 0;
 export const setCourse = () => async (dispatch, getState) => {
@@ -44,6 +45,34 @@ export const fetchCourse = (id) => async (dispatch) => {
 		dispatch(setStatus("fetchFailed"));
 	}
 };
+export const uploadVideo = (section_id, lesson_id, file) => async (dispatch) => {
+	try {
+		dispatch(setStatus("fetching"));
+		// const response = await uploadApi.upload({ file: file });
+		console.log("Getting presigned url ...");
+		const response = await uploadApi.getPresignedUrl({ file: file });
+		if (response.status === true) {
+			console.log("getting presigned url OK");
+			const { url, presigned_url } = response;
+			console.log(url, presigned_url);
+			console.log("Putting file to s3 ...");
+			const resp_status = await uploadApi.uploadPresigned({ presigned_url, file });
+			console.log("Putting file done: ", resp_status, url);
+			if (resp_status === 200) {
+				const video_url = url;
+				dispatch(setVideoLesson({ section_id, lesson_id, video_url }));
+				dispatch(setStatus("fetched"));
+			} else {
+				dispatch(setStatus("fetchFailed"));
+			}
+		} else {
+			dispatch(setStatus("fetchFailed"));
+		}
+	} catch (e) {
+		console.log("Faillllllllllllllllllll", e);
+		dispatch(setStatus("fetchFailed"));
+	}
+};
 
 function clearCourse(state) {
 	state.course = {
@@ -54,6 +83,7 @@ function clearCourse(state) {
 		sections: [],
 	};
 	state.status = "";
+	state.uploadStatus = "";
 	state.deleteSections = [];
 	state.deleteLessons = [];
 	state.deleteQuestions = [];
@@ -61,117 +91,20 @@ function clearCourse(state) {
 }
 const initialState = {
 	status: "",
+	uploadStatus: "",
+	deleteSections: [],
+	deleteLessons: [],
+	deleteQuestions: [],
+	deleteLiveLessons: [],
 	course: {
 		id: null,
 		title: "",
 		introduce: "",
 		thumbnail_url: "",
 		price: "",
-		sections: [
-			// {
-			// 	id: "",
-			// 	uuid: "12",
-			// 	order: "",
-			// 	course_id: "",
-			// 	name: "",
-			// 	lessons: [
-			// 		{
-			// 			id: "",
-			// 			uuid: "23",
-			// 			order: "",
-			// 			section_id: "",
-			// 			name: "",
-			// 			estimate_time: "",
-			// 			video_url: "",
-			// 			content: "",
-			// 		},
-			// 		{
-			// 			id: "",
-			// 			uuid: "233",
-			// 			order: "",
-			// 			section_id: "",
-			// 			name: "",
-			// 			estimate_time: "",
-			// 			video_url: "",
-			// 			content: "",
-			// 		},
-			// 	],
-			// 	live_lessons: [
-			// 		{
-			// 			id: "",
-			// 			uuid: "34",
-			// 			order: "",
-			// 			section_id: "",
-			// 			name: "",
-			// 			schedule_time: "",
-			// 		},
-			// 	],
-			// 	questions: [
-			// 		{
-			// 			id: "",
-			// 			uuid: "45",
-			// 			order: "",
-			// 			section_id: "",
-			// 			question: "",
-			// 			type: "",
-			// 		},
-			// 	],
-			// },
-			// {
-			// 	id: "",
-			// 	uuid: "128",
-			// 	order: "",
-			// 	course_id: "",
-			// 	name: "",
-			// 	lessons: [
-			// 		{
-			// 			id: "",
-			// 			uuid: "23",
-			// 			order: "",
-			// 			section_id: "",
-			// 			name: "",
-			// 			estimate_time: "",
-			// 			video_url: "",
-			// 			content: "",
-			// 		},
-			// 		{
-			// 			id: "",
-			// 			uuid: "233",
-			// 			order: "",
-			// 			section_id: "",
-			// 			name: "",
-			// 			estimate_time: "",
-			// 			video_url: "",
-			// 			content: "",
-			// 		},
-			// 	],
-			// 	live_lessons: [
-			// 		{
-			// 			id: "",
-			// 			uuid: "34",
-			// 			order: "",
-			// 			section_id: "",
-			// 			name: "",
-			// 			schedule_time: "",
-			// 		},
-			// 	],
-			// 	questions: [
-			// 		{
-			// 			id: "",
-			// 			uuid: "45",
-			// 			order: "",
-			// 			section_id: "",
-			// 			question: "",
-			// 			type: "",
-			// 		},
-			// 	],
-			// },
-		],
+		sections: [],
 	},
-	deleteSections: [],
-	deleteLessons: [],
-	deleteQuestions: [],
-	deleteLiveLessons: [],
+
 };
 
 const editingCourse = createSlice({
@@ -186,10 +119,6 @@ const editingCourse = createSlice({
 		},
 		setStateCourse: (state, action) => {
 			state.course = action.payload;
-			// localStorage.setItem(
-			// 	"editingCourse.course",
-			// 	JSON.stringify(state.course)
-			// );
 		},
 		setStateSections: (state, action) => {
 			state.course.sections = action.payload;
@@ -252,6 +181,20 @@ const editingCourse = createSlice({
 				}
 			}
 		},
+		setVideoLesson: (state, action) => {
+			const { section_id, lesson_id, video_url } = action.payload;
+			for (const section of state.course.sections) {
+				if (section.id === section_id) {
+					for (const lesson of section.lessons) {
+						if (lesson.id === lesson_id) {
+							lesson.video_url = video_url;
+							break;
+						}
+					}
+					break;
+				}
+			}
+		}
 	},
 });
 
@@ -265,5 +208,6 @@ export const {
 	deleteLesson,
 	deleteQuestion,
 	deleteLiveLesson,
+	setVideoLesson,
 } = editingCourse.actions;
 export default editingCourse.reducer;

@@ -1,18 +1,11 @@
 import React, { lazy, Suspense, useEffect } from "react";
 import {
 	TextField,
-	Typography,
 	Accordion,
 	AccordionSummary,
 	AccordionDetails,
-	Chip,
-	AccordionActions,
-	Divider,
 	Button,
 	makeStyles,
-	Box,
-	Hidden,
-	Tooltip,
 	IconButton,
 	Grid,
 } from "@material-ui/core";
@@ -22,7 +15,6 @@ import DragIndicatorIcon from "@material-ui/icons/DragIndicator";
 import DeleteRoundedIcon from "@material-ui/icons/DeleteRounded";
 import EditRoundedIcon from "@material-ui/icons/EditRounded";
 import { Movie } from "@material-ui/icons";
-import CKViewer from "commons/components/CKEditor/CKViewer";
 import VideoPlayer from "commons/components/VideoPlayer/VideoPlayer";
 import ConfirmButton from "commons/components/Button/ConfirmIconButton";
 import {
@@ -32,6 +24,10 @@ import {
 	setHandler,
 } from "commons/components/EditorModal/editorSlice";
 import { useDispatch } from "react-redux";
+import { uploadVideo } from 'features/Course/editingCourseSlice'
+// import CKViewer from "commons/components/CKEditor/CKViewer";
+const CKViewer = lazy(() => import("commons/components/CKEditor/CKViewer"));
+
 export default function LessonInput({
 	lesson,
 	handleChange,
@@ -55,7 +51,10 @@ export default function LessonInput({
 		dispatch(setHandler(changeLessonContent));
 		dispatch(setOpen(true));
 	};
+	const handleVideoUpload = event => {
 
+		dispatch(uploadVideo(lesson.section_id, lesson.id, event.target.files[0]))
+	};
 	return (
 		<Accordion
 			expanded={expanded === lesson.uuid}
@@ -135,19 +134,20 @@ export default function LessonInput({
 						</Grid>
 						<Grid item md={4} xs={12}>
 							<input
-								accept="image/*"
+								accept="video/*"
 								className={classes.input}
-								id="icon-button-file"
+								id={"icon-button-file-" + lesson.id}
 								type="file"
+								onChange={handleVideoUpload}
 							/>
-							<label htmlFor="icon-button-file">
+							<label htmlFor={"icon-button-file-" + lesson.id}>
 								<Button
 									variant="contained"
 									color="primary"
 									component="span"
 									endIcon={<Movie />}
 								>
-									Upload
+									Video bài học
 								</Button>
 							</label>
 						</Grid>
@@ -159,7 +159,9 @@ export default function LessonInput({
 						xs={12}
 						className="handleCKSpace"
 					>
-						<CKViewer content={lesson.content} />
+						<Suspense fallback={<div>Loading ...</div>}>
+							<CKViewer content={lesson.content} highlightTrigger={expanded} reHighlight={true} />
+						</Suspense>
 					</Grid>
 				</Grid>
 			</AccordionDetails>

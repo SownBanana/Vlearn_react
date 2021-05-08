@@ -8,7 +8,7 @@ import { Suspense } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
 	authSuccess,
-	accessTokenExpired,
+	checkPassport,
 } from "./features/Authenticate/authSlices";
 // import Toast from "./features/Toast";
 import Notifier from "./Notifier";
@@ -38,7 +38,7 @@ function App() {
 		JSON.parse(localStorage.getItem("auth")).isLoggedIn
 	) {
 		dispatch(authSuccess(JSON.parse(localStorage.getItem("auth"))));
-		dispatch(accessTokenExpired());
+		dispatch(checkPassport());
 	}
 
 	// Prism treat <br/> as new line

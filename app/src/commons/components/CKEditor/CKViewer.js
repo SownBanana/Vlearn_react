@@ -1,14 +1,20 @@
 import { Grid } from "@material-ui/core";
 import React, { useEffect } from "react";
 import Prism from "prismjs";
+import "prismjs/components/prism-markup-templating.js";
+import "prismjs/components/prism-php.js";
 
-export default function CKViewer({ content }) {
+export default function CKViewer({ content, highlightTrigger = true, reHighlight = true }) {
 	// const createMarkup = () => {
 	// 	return { __html: intro };
 	// };
+
 	useEffect(() => {
-		Prism.highlightAll();
-	}, [content]);
+		if (highlightTrigger && reHighlight) {
+			console.log("CKViewer Rehighlight ..........");
+			Prism.highlightAll();
+		}
+	}, [content, highlightTrigger]);
 	return (
 		// <div dangerouslySetInnerHTML={createMarkup()} className="ck-content"></div>
 		<div
