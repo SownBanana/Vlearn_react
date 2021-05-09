@@ -33,7 +33,7 @@ export default function BreadCrumbs({ links, current, children }) {
 					{links &&
 						links.map((el) => {
 							return (
-								<Link color="inherit" to={el.link}>
+								<Link color="inherit" to={el.link} key={el.link}>
 									{el.description}
 								</Link>
 							);
@@ -59,7 +59,7 @@ export default function BreadCrumbs({ links, current, children }) {
 			</div>
 		</Box>
 	) : (
-		<Box className="card_layout breadcrumb" mb={3}>
+		<Box style={{ width: "90%" }} className="card_layout breadcrumb" mb={3}>
 			<div style={{ display: "flex", alignItems: "center" }}>
 				<IconButton
 					style={{ margin: "0px 10px 0px 5px" }}
@@ -74,6 +74,9 @@ export default function BreadCrumbs({ links, current, children }) {
 					orientation="vertical"
 					flexItem
 				/>
+				<span style={{ fontSize: "12px" }}>
+					{current}
+				</span>
 			</div>
 			<div
 				style={{ fontSize: "10px", marginRight: "10px" }}

@@ -1,7 +1,5 @@
 import {
-	Fade,
-	Modal,
-	Backdrop,
+
 	makeStyles,
 	Dialog,
 	DialogTitle,

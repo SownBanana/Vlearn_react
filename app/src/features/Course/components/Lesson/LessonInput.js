@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useEffect } from "react";
+import React, { lazy, Suspense } from "react";
 import {
 	TextField,
 	Accordion,
@@ -9,7 +9,6 @@ import {
 	IconButton,
 	Grid,
 } from "@material-ui/core";
-import clsx from "clsx";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import DragIndicatorIcon from "@material-ui/icons/DragIndicator";
 import DeleteRoundedIcon from "@material-ui/icons/DeleteRounded";

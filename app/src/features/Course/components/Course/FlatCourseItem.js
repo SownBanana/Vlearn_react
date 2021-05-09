@@ -6,23 +6,23 @@ import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import {
-	Divider,
 	IconButton,
 	makeStyles,
 	useMediaQuery,
 } from "@material-ui/core";
 import { useHistory } from "react-router";
-import clsx from "clsx";
 import EditRoundedIcon from "@material-ui/icons/EditRounded";
 import GradeRoundedIcon from "@material-ui/icons/GradeRounded";
 import PostAddOutlinedIcon from "@material-ui/icons/PostAddOutlined";
 import { CourseStatus } from "features/Course/constance";
+import { useSelector } from "react-redux";
 export default function FlatCourseItem({ course }) {
 	const classes = useStyle();
 	const history = useHistory();
 	const isDraft = course.status === CourseStatus.DRAFT;
+	const username = useSelector(state => state.auth.user.username);
 	const editCourse = () => {
-		let path = `/courses/edit/${course.id}`;
+		let path = `/courses/i/${username}/edit/${course.id}`;
 		history.push(path);
 	};
 	const isMobile = useMediaQuery("(max-width: 760px)");
@@ -65,9 +65,20 @@ export default function FlatCourseItem({ course }) {
 
 const useStyle = makeStyles((theme) => ({
 	root: {
-		border: `2px solid`,
-		borderColor: theme.palette.secondary.dark,
-		minHeight: 64,
+		borderRight: `2px solid ${theme.palette.secondary.dark}`,
+		// minHeight: 64,
+		// borderColor: theme.palette.secondary.dark,
+		'&:before': {
+			position: "absolute",
+			zIndex: 3,
+			content: '"Nháp"',
+			display: "block",
+			border: "1px solid #7f1313c9",
+			background: "#b0002ab0",
+			padding: "2px 10px",
+			color: "white",
+			borderRadius: "5px 0 19px 0"
+		}
 	},
 	media: {
 		minHeight: 60,

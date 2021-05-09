@@ -10,7 +10,7 @@ import { Link as RouterLink, useLocation } from "react-router-dom";
 export default function ListItemLink(props) {
 	const { icon, primary, to } = props;
 	const { pathname } = useLocation();
-	const selected = "/" + pathname.split("/")[1] === to;
+	const selected = pathname.split("/")[1] === to.split("/")[1];
 	const classes = useStyles();
 	const renderLink = React.useMemo(
 		() =>

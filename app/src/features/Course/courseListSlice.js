@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import api from "commons/api/course/resource";
 
-export const fetchCourse = (params) => async (dispatch) => {
+export const fetchCourses = (params) => async (dispatch) => {
 	dispatch(setStatus("loading"));
 	const response = await api.index({
 		...params,

@@ -23,11 +23,11 @@ export default function ChatComponent() {
 		}
 	}, [pusher, id]);
 	return (
-		// <Hidden xsDown>
-		<Fab className={classes.chatBubble} color="secondary" aria-label="add">
-			<ModeComment />
-		</Fab>
-		// </Hidden>
+		<Hidden xsDown>
+			<Fab className={classes.chatBubble} color="secondary" aria-label="add">
+				<ModeComment />
+			</Fab>
+		</Hidden>
 	);
 }
 

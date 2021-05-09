@@ -1,4 +1,4 @@
-import React, { lazy, useEffect, useRef, useState, Suspense } from "react";
+import React, { lazy, Suspense } from "react";
 import {
 	TextField,
 	Grid,
@@ -6,7 +6,6 @@ import {
 	Typography,
 	makeStyles,
 	MuiThemeProvider,
-	Button,
 } from "@material-ui/core";
 import EditorModal from "commons/components/EditorModal/EditorModal";
 import SectionList from "../Section/SectionList";
@@ -78,7 +77,7 @@ export default function CourseInput({ course, setCourse }) {
 									fallback={<TextField disabled fullWidth variant="outlined" />}
 								>
 									{/* <Suspense fallback={<div>Loading...</div>}> */}
-									{status != "fetching" && status != "fetchFailed" && (
+									{status !== "fetching" && status !== "fetchFailed" && (
 										<CKEditor
 											content={course.introduce}
 											handler={introHandler}
@@ -118,7 +117,7 @@ export default function CourseInput({ course, setCourse }) {
 							Thumbnail
 						</Typography>
 						{course.thumbnail_url && (
-							<img className={classes.loadedImage} src={course.thumbnail_url} />
+							<img className={classes.loadedImage} src={course.thumbnail_url} alt={course.title} />
 						)}
 						<MuiThemeProvider theme={dropZoneTheme}>
 							<DropzoneArea

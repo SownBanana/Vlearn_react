@@ -25,6 +25,7 @@ import { CourseStatus } from "features/Course/constance";
 export default function EditCourse() {
 	const course = useSelector((state) => state.editingCourse.course);
 	const status = useSelector((state) => state.editingCourse.status);
+	const username = useSelector(state => state.auth.user.username);
 	const dispatch = useDispatch();
 	const setCourse = (course) => {
 		dispatch(setStateCourse(course));
@@ -52,7 +53,7 @@ export default function EditCourse() {
 	return (
 		<Box mt={2}>
 			<BreadCrumbs
-				links={[{ link: "/courses", description: "Khóa học của tôi" }]}
+				links={[{ link: `/courses/i/${username}`, description: "Khóa học của tôi" }]}
 				current={`Chỉnh sửa ${course.title}`}
 			>
 				{status === "saved" ? (

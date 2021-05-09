@@ -56,11 +56,10 @@ export const uploadVideo = (section_id, lesson_id, file) => async (dispatch) => 
 			const { url, presigned_url } = response;
 			console.log(url, presigned_url);
 			console.log("Putting file to s3 ...");
+			dispatch(setVideoLesson({ section_id, lesson_id, video_url: url }));
 			const resp_status = await uploadApi.uploadPresigned({ presigned_url, file });
 			console.log("Putting file done: ", resp_status, url);
 			if (resp_status === 200) {
-				const video_url = url;
-				dispatch(setVideoLesson({ section_id, lesson_id, video_url }));
 				dispatch(setStatus("fetched"));
 			} else {
 				dispatch(setStatus("fetchFailed"));

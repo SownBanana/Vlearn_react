@@ -3,7 +3,7 @@ import { useHistory } from "react-router-dom";
 import { Box, Button, Grid, useMediaQuery } from "@material-ui/core";
 import BreadCrumbs from "commons/components/BreadCrumbs";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchCourse } from "features/Course/courseListSlice";
+import { fetchCourses } from "features/Course/courseListSlice";
 import CourseItemFlat from "features/Course/components/Course/FlatCourseItem";
 import { Pagination } from "@material-ui/lab";
 import SearchPane from "./SearchPane";
@@ -12,6 +12,7 @@ export default function CourseList() {
 	console.log("course list");
 	const id = useSelector((state) => state.auth.user.id);
 	const courseList = useSelector((state) => state.courseList.data);
+	const username = useSelector(state => state.auth.user.username);
 	const courses = courseList.data;
 	const dispatch = useDispatch();
 	const history = useHistory();
@@ -27,7 +28,7 @@ export default function CourseList() {
 		time: "desc",
 	});
 	const routeChange = () => {
-		let path = `/courses/add`;
+		let path = `/courses/i/${username}/add`;
 		history.push(path);
 	};
 	const setPage = (e, value) => {
@@ -45,7 +46,7 @@ export default function CourseList() {
 
 	useEffect(() => {
 		dispatch(
-			fetchCourse({
+			fetchCourses({
 				...nav,
 				...filter,
 			})

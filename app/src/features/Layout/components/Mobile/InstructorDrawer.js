@@ -9,12 +9,16 @@ import {
 
 import { makeStyles, Paper, Tab, Tabs } from "@material-ui/core";
 import { useHistory, useLocation } from "react-router";
+import { useSelector } from "react-redux";
 
 export default function InstructorDrawer() {
 	const classes = useStyles();
 	const history = useHistory();
+	const username = useSelector(state => state.auth.user.username);
 	const { pathname } = useLocation();
-	const selected = "/" + pathname.split("/")[1];
+	const root = pathname.split("/")[1];
+	const selected = root === "courses" ? "/" + root + "/i/" + username : "/" + root;
+	// console.log(selected);
 	// const [value, setValue] = React.useState(selected);
 
 	const handleChange = (event, link) => {
@@ -38,9 +42,9 @@ export default function InstructorDrawer() {
 						link: "/",
 					},
 					{
-						key: "browser",
+						key: "courses",
 						icon: <ImportContactsIcon />,
-						link: "/courses",
+						link: `/courses/i/${username}`,
 					},
 					{
 						key: "connect",

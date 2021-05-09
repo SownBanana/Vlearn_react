@@ -65,10 +65,10 @@ export default function VideoPlayer({ handlePrevious, handleNext, ...prop }) {
 		volume,
 		muted,
 		loop,
-		played,
-		loaded,
+		// played,
+		// loaded,
 		playbackRate,
-		seeking,
+		// seeking,
 	} = video;
 
 	// const load = (url) => {
@@ -85,7 +85,7 @@ export default function VideoPlayer({ handlePrevious, handleNext, ...prop }) {
 			setVideo({
 				...video,
 				muted: true,
-				lastVolume: video.volume == 0 ? 0.8 : video.volume,
+				lastVolume: video.volume === 0 ? 0.8 : video.volume,
 				volume: 0,
 			});
 		}
@@ -120,9 +120,9 @@ export default function VideoPlayer({ handlePrevious, handleNext, ...prop }) {
 	};
 
 	const handleProgress = (state) => {
-		// console.log("onProgress", state);
 		// console.log(player.current);
 		if (!video.seeking) {
+			console.log("onProgress", state);
 			setVideo({
 				...video,
 				played: state.played,
@@ -201,7 +201,7 @@ export default function VideoPlayer({ handlePrevious, handleNext, ...prop }) {
 				onError={(e) => console.log("onError", e)}
 				onProgress={handleProgress}
 				onDuration={handleDuration}
-				// wrapper={videoWrapper}
+			// wrapper={videoWrapper}
 			/>
 			<div className={"progress-wrapper"}>
 				{/* <PlayerIcon.Play /> */}

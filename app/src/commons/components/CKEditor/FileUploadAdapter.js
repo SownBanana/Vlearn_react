@@ -27,7 +27,7 @@ export default class MyUploadAdapter {
 							}),
 						})
 						.then((response) => {
-							if (response.data.uploaded != true) {
+							if (response.data.uploaded !== true) {
 								reject(response);
 							} else {
 								resolve({

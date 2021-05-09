@@ -10,11 +10,12 @@ import {
 import ListItemLink from "commons/components/ListItemLink";
 import globalStyle from "style/GlobalStyles";
 import { List, makeStyles } from "@material-ui/core";
+import { useSelector } from "react-redux";
 
 export default function InstructorDrawer({ handle }) {
 	const classes = useStyles();
 	globalStyle();
-
+	const username = useSelector(state => state.auth.user.username);
 	return (
 		<List onClick={handle}>
 			{[
@@ -28,7 +29,7 @@ export default function InstructorDrawer({ handle }) {
 					name: "Khóa học của tôi",
 					key: "browser",
 					icon: <ImportContactsIcon />,
-					link: "/courses",
+					link: `/courses/i/${username}`,
 				},
 				{
 					name: "Kết nối",

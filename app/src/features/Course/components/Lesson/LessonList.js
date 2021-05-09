@@ -23,7 +23,7 @@ export default function LessonList({ lessons, setLessons }) {
 	};
 	const deleteLesson = (lesson) => {
 		dispatch(deleteAction(lesson.id));
-		const newLessons = cloneDeep(lessons).filter((l) => l.uuid != lesson.uuid);
+		const newLessons = cloneDeep(lessons).filter((l) => l.uuid !== lesson.uuid);
 		setLessons(newLessons);
 	};
 	const handleExpanded = (panel) => (event, isExpanded) => {

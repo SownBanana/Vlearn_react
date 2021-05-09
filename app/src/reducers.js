@@ -5,6 +5,7 @@ import toast from "./features/Toast/toastSlices";
 import common from "./commons/SliceCommon";
 import externalLink from "./features/Authenticate/externalLinkSlices";
 import editingCourse from "./features/Course/editingCourseSlice";
+import course from "./features/Course/courseSlice";
 import courseList from "./features/Course/courseListSlice";
 import editorModal from "./commons/components/EditorModal/editorSlice";
 // console.log(externalLink);
@@ -17,4 +18,5 @@ export default combineReducers({
 	editingCourse,
 	courseList,
 	editorModal,
+	course,
 });

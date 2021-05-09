@@ -20,6 +20,7 @@ import CourseEditPane from "features/Course/components/Course/CourseEditPane";
 export default function AddCourse() {
 	const course = useSelector((state) => state.editingCourse.course);
 	const status = useSelector((state) => state.editingCourse.status);
+	const username = useSelector(state => state.auth.user.username);
 	const dispatch = useDispatch();
 	const setCourse = (course) => {
 		dispatch(setStateCourse(course));
@@ -42,7 +43,7 @@ export default function AddCourse() {
 	return (
 		<Box mt={2}>
 			<BreadCrumbs
-				links={[{ link: "/courses", description: "Khóa học của tôi" }]}
+				links={[{ link: `/courses/i/${username}`, description: "Khóa học của tôi" }]}
 				current="Thêm khóa học"
 			>
 				{status === "saved" ? (

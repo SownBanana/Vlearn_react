@@ -40,7 +40,7 @@ instance.interceptors.response.use(
 		return response;
 	},
 	(error) => {
-		const originalRequest = error.config;
+		// const originalRequest = error.config;
 		// if (error.response.status === 401 && !originalRequest._retry) {
 		if (error.response.status === 401) {
 			console.log("Trying to refresh Token in Axios");

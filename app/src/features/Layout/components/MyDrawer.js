@@ -8,6 +8,7 @@ import { UserRole } from "features/Authenticate/constance";
 import InstructorDrawer from "./InstructorDrawer";
 import InstructorDrawerMobile from "./Mobile/InstructorDrawer";
 import StudentDrawer from "./StudentDrawer";
+import StudentDrawerMobile from "./Mobile/StudentDrawer";
 import { useSelector } from "react-redux";
 export default function MyDrawer({ handle, open }) {
 	const classes = useStyles();
@@ -44,7 +45,11 @@ export default function MyDrawer({ handle, open }) {
 				</Drawer>
 			</Hidden>
 			<Hidden smUp>
-				<InstructorDrawerMobile />
+				{role === UserRole.INSTRUCTOR ? (
+					<InstructorDrawerMobile />
+				) : (
+					<StudentDrawerMobile />
+				)}
 			</Hidden>
 		</div>
 	);
