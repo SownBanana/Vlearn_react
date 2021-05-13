@@ -6,29 +6,29 @@ import InstructorCourseList from "features/Course/pages/Instructor/CourseList/Co
 import StudentCourseList from "features/Course/pages/Student/CourseList/CourseList";
 import CourseSummary from "features/Course/pages/Student/CourseView/Summary/CourseSummary";
 import {
-	PrivateRoute,
-	Route,
-	StudentRoute,
-	InstructorRoute,
+    PrivateRoute,
+    Route,
+    StudentRoute,
+    InstructorRoute,
 } from "commons/routes/CustomRoute";
 
-export default function Authenticate() {
-	return (
-		<Switch>
-			<InstructorRoute
-				path="/courses/i/:username/add"
-				component={AddCourse}
-			/>
-			<InstructorRoute
-				path="/courses/i/:username/edit/:id"
-				component={EditCourse}
-			/>
-			<InstructorRoute
-				path="/courses/i/:username"
-				component={InstructorCourseList}
-			/>
-			<Route path="/courses/:id" component={CourseSummary} />
-			<Route path="/courses" component={StudentCourseList} />
-		</Switch>
-	);
+export default function Course() {
+    return (
+        <Switch>
+            <InstructorRoute
+                path="/courses/i/:username/add"
+                component={AddCourse}
+            />
+            <InstructorRoute
+                path="/courses/i/:username/edit/:id"
+                component={EditCourse}
+            />
+            <InstructorRoute
+                path="/courses/i/:username"
+                component={InstructorCourseList}
+            />
+            <Route path="/courses/:id" component={CourseSummary} />
+            <Route path="/courses" component={StudentCourseList} />
+        </Switch>
+    );
 }

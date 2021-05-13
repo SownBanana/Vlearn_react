@@ -2,9 +2,9 @@ import React from "react";
 import {
 	Chat as ChatIcon,
 	Notifications as NotificationsIcon,
-	SupervisorAccount as SupervisorAccountIcon,
 	ImportContacts as ImportContactsIcon,
 	Home as HomeIcon,
+	Person as PersonIcon
 } from "@material-ui/icons";
 
 import ListItemLink from "commons/components/ListItemLink";
@@ -32,32 +32,26 @@ export default function InstructorDrawer({ handle }) {
 					link: `/courses/i/${username}`,
 				},
 				{
-					name: "Kết nối",
-					key: "connect",
-					icon: <SupervisorAccountIcon />,
-					link: "/connect",
+					name: "Tin nhắn",
+					key: "message",
+					icon: <ChatIcon />,
+					link: "/message",
+				},
+				{
+					name: "Thông báo",
+					key: "notification",
+					icon: <NotificationsIcon />,
+					link: "/notification",
+				},
+				{
+					name: "Cá nhân",
+					key: "info",
+					icon: <PersonIcon />,
+					link: "/info",
 				},
 			].map(({ name, key, icon, link }) => (
 				<ListItemLink to={link} icon={icon} primary={name} key={key} />
 			))}
-			<div className={classes.sectionMobile}>
-				{[
-					{
-						name: "Tin nhắn",
-						key: "message",
-						icon: <ChatIcon />,
-						link: "/message",
-					},
-					{
-						name: "Thông báo",
-						key: "notification",
-						icon: <NotificationsIcon />,
-						link: "/notification",
-					},
-				].map(({ name, key, icon, link }) => (
-					<ListItemLink to={link} icon={icon} primary={name} key={key} />
-				))}
-			</div>
 		</List>
 	);
 }
@@ -67,12 +61,6 @@ const useStyles = makeStyles((theme) => ({
 		display: "none",
 		[theme.breakpoints.up("sm")]: {
 			display: "block",
-		},
-	},
-	sectionMobile: {
-		display: "block",
-		[theme.breakpoints.up("sm")]: {
-			display: "none",
 		},
 	},
 }));

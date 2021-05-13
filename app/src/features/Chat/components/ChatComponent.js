@@ -20,7 +20,7 @@ import {
 	Avatar
 } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
-import usePusher from "../../../commons/PusherCommon";
+import usePusher from "commons/PusherCommon";
 import { ModeComment } from "@material-ui/icons";
 import SendRoundedIcon from '@material-ui/icons/SendRounded';
 import AttachFileRoundedIcon from '@material-ui/icons/AttachFileRounded';
@@ -28,10 +28,14 @@ import Message from "./Message";
 import RemoveRoundedIcon from '@material-ui/icons/RemoveRounded';
 import ExpandLessRoundedIcon from '@material-ui/icons/ExpandLessRounded';
 import { sendChat, appendMessage, setCurrent, fetchChats } from 'features/Chat/chatSlice'
+import { useLocation } from "react-router";
 
 export default function ChatComponent() {
 	const classes = useStyles();
 	const dispatch = useDispatch();
+
+	const { pathname } = useLocation();
+	const inMessagePath = pathname.split("/")[1] === "message";
 
 	const messageArea = useRef();
 
@@ -97,12 +101,12 @@ export default function ChatComponent() {
 			if (messageArea.current)
 				messageArea.current.scrollTop = messageArea.current.scrollHeight;
 		}, 100)
-	});
+	}, [currentChat]);
 	useEffect(() => {
 		if (messageArea.current)
 			messageArea.current.scrollTop = messageArea.current.scrollHeight;
 	}, [messages]);
-	return id !== null && (
+	return (id !== null && !inMessagePath) && (
 		<Hidden xsDown>
 			<Fab className={classes.chatBubble} color="secondary" aria-label="add" onClick={handleClick}>
 				<ModeComment />
@@ -111,16 +115,15 @@ export default function ChatComponent() {
 				id={type}
 				open={open}
 				anchorEl={anchorEl}
+				style={{ zIndex: 10 }}
 			>
-				<Grid container spacing={1} direction="column">
+				<Grid container spacing={1} direction="column" >
 					{
 						Object.keys(chats).map(key => {
 							const chat = chats[key];
 							const chatUser = chat.users[0].id !== id ? chat.users[0] : chat.users[1];
 							return <Avatar onClick={() => openChat(key)} alt={chatUser.name} src={chatUser.avatar_url} style={{ marginBottom: 10 }} />
-						}
-							// <option value={key}>{tifs[key]}</option>
-						)
+						})
 					}
 				</Grid>
 
@@ -130,6 +133,7 @@ export default function ChatComponent() {
 				open={open}
 				anchorEl={anchorEl}
 				placement="left-end"
+				style={{ zIndex: 10 }}
 			>
 				<Box hidden={isMiniumChatBox} mr={2}>
 					<Paper className={classes.chatBoxRoot}>
@@ -216,6 +220,7 @@ const useStyles = makeStyles((theme) => ({
 		position: "fixed",
 		bottom: theme.spacing(2),
 		right: theme.spacing(2),
+		zIndex: 10000
 	},
 	chatBoxRoot: {
 		height: "fit-content",

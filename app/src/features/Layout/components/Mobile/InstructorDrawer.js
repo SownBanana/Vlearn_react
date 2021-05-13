@@ -2,7 +2,7 @@ import React from "react";
 import {
 	Chat as ChatIcon,
 	Notifications as NotificationsIcon,
-	SupervisorAccount as SupervisorAccountIcon,
+	Person as PersonIcon,
 	ImportContacts as ImportContactsIcon,
 	Home as HomeIcon,
 } from "@material-ui/icons";
@@ -47,11 +47,6 @@ export default function InstructorDrawer() {
 						link: `/courses/i/${username}`,
 					},
 					{
-						key: "connect",
-						icon: <SupervisorAccountIcon />,
-						link: "/connect",
-					},
-					{
 						key: "message",
 						icon: <ChatIcon />,
 						link: "/message",
@@ -60,6 +55,11 @@ export default function InstructorDrawer() {
 						key: "notification",
 						icon: <NotificationsIcon />,
 						link: "/notification",
+					},
+					{
+						key: "info",
+						icon: <PersonIcon />,
+						link: "/info",
 					},
 				].map(({ key, icon, link }) => (
 					// <ListItemLink to={link} icon={icon} primary={name} key={key} />

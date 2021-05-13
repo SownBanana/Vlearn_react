@@ -25,6 +25,8 @@ import globalStyle from "style/GlobalStyles";
 
 const Authenticate = React.lazy(() => import("./features/Authenticate/"));
 const Course = React.lazy(() => import("./features/Course/"));
+const Chat = React.lazy(() => import("./features/Chat/"));
+const Info = React.lazy(() => import("./features/Info/"));
 
 function App() {
 	const dispatch = useDispatch();
@@ -81,6 +83,8 @@ function App() {
 					<Switch>
 						<Route path="/courses" component={Course} />
 						<Route path="/auth" component={Authenticate} />
+						<Route path="/message" component={Chat} />
+						<Route path="/info" component={Info} />
 						<PrivateRoute exact path="/" component={Home} />
 					</Switch>
 				</Suspense>

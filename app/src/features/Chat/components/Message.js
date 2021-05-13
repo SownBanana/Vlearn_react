@@ -15,7 +15,7 @@ function Message({
     const isMe = user === null || user.id === id;
     // console.log("Message: ", content);
     const timePast = moment(Date.now()).diff(moment(timestamp * 1000));
-    console.log("Time past: ", timePast)
+    // console.log("Time past: ", timePast)
     const timeString =
         (timePast < 60000) ?
             "vừa xong" :
