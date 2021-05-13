@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import CourseEditPane from "features/Course/components/Course/CourseEditPane";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -10,16 +10,10 @@ import {
 } from "features/Course/editingCourseSlice";
 import {
 	Box,
-	FormControl,
-	MenuItem,
-	Select,
-	withStyles,
 	Typography,
-	FormControlLabel,
 	Switch,
 } from "@material-ui/core";
 import BreadCrumbs from "commons/components/BreadCrumbs";
-import InputBase from "@material-ui/core/InputBase";
 import { CourseStatus } from "features/Course/constance";
 
 export default function EditCourse() {
@@ -49,7 +43,7 @@ export default function EditCourse() {
 		return () => {
 			dispatch(clearEditingCourse());
 		};
-	}, [dispatch]);
+	}, [dispatch, id]);
 	return (
 		<Box mt={2}>
 			<BreadCrumbs
@@ -135,38 +129,3 @@ export default function EditCourse() {
 		</Box>
 	);
 }
-
-const BootstrapInput = withStyles((theme) => ({
-	root: {
-		"label + &": {
-			marginTop: theme.spacing(3),
-		},
-	},
-	input: {
-		borderRadius: 4,
-		position: "relative",
-		backgroundColor: theme.palette.background.paper,
-		border: "1px solid #ced4da",
-		fontSize: 16,
-		padding: "10px 26px 10px 12px",
-		transition: theme.transitions.create(["border-color", "box-shadow"]),
-		// Use the system font instead of the default Roboto font.
-		fontFamily: [
-			"-apple-system",
-			"BlinkMacSystemFont",
-			'"Segoe UI"',
-			"Roboto",
-			'"Helvetica Neue"',
-			"Arial",
-			"sans-serif",
-			'"Apple Color Emoji"',
-			'"Segoe UI Emoji"',
-			'"Segoe UI Symbol"',
-		].join(","),
-		"&:focus": {
-			borderRadius: 4,
-			borderColor: "#80bdff",
-			boxShadow: "0 0 0 0.2rem rgba(0,123,255,.25)",
-		},
-	},
-}))(InputBase);

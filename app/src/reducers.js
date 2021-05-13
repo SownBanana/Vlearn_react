@@ -7,6 +7,7 @@ import externalLink from "./features/Authenticate/externalLinkSlices";
 import editingCourse from "./features/Course/editingCourseSlice";
 import course from "./features/Course/courseSlice";
 import courseList from "./features/Course/courseListSlice";
+import chat from "./features/Chat/chatSlice";
 import editorModal from "./commons/components/EditorModal/editorSlice";
 // console.log(externalLink);
 export default combineReducers({
@@ -19,4 +20,5 @@ export default combineReducers({
 	courseList,
 	editorModal,
 	course,
+	chat,
 });

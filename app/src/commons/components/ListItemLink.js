@@ -26,8 +26,10 @@ export default function ListItemLink(props) {
 				{icon ? (
 					<ListItemIcon
 						classes={
-							selected && {
+							selected ? {
 								root: classes.root,
+							} : {
+
 							}
 						}
 					>

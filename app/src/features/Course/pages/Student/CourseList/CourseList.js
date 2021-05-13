@@ -30,6 +30,7 @@ export default function CourseList() {
     const setPage = (e, value) => {
         e.preventDefault();
         setNav({ ...nav, page: value });
+        window.scrollTo(0, 0);
     };
 
     var queryTimeOut = 0;
@@ -48,9 +49,9 @@ export default function CourseList() {
             })
         );
     }, [dispatch, nav, filter]);
-    useEffect(() => {
-        isMobile ? setNav({ ...nav, perPage: 5 }) : setNav({ ...nav, perPage: 12 });
-    }, [isMobile]);
+    // useEffect(() => {
+    //     isMobile ? setNav({ ...nav, perPage: 5 }) : setNav({ ...nav, perPage: 12 });
+    // }, [isMobile]);
 
     return (
         <Box mt={2}>
@@ -82,7 +83,7 @@ export default function CourseList() {
                         {courses &&
                             courses.map((course) => {
                                 return (
-                                    <Grid item md={4} xs={12}>
+                                    <Grid item md={4} xs={12} key={course.id} >
                                         <CourseItem course={course} />
                                     </Grid>
                                 );

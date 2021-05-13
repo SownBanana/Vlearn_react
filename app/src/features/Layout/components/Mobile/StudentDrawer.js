@@ -9,7 +9,6 @@ import {
 
 import { makeStyles, Paper, Tab, Tabs } from "@material-ui/core";
 import { useHistory, useLocation } from "react-router";
-import { useSelector } from "react-redux";
 
 export default function StudentDrawer() {
     const classes = useStyles();

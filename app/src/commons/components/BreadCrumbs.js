@@ -59,7 +59,7 @@ export default function BreadCrumbs({ links, current, children }) {
 			</div>
 		</Box>
 	) : (
-		<Box style={{ width: "90%" }} className="card_layout breadcrumb" mb={3}>
+		<Box style={{ width: "100%" }} className="card_layout breadcrumb" mb={3}>
 			<div style={{ display: "flex", alignItems: "center" }}>
 				<IconButton
 					style={{ margin: "0px 10px 0px 5px" }}

@@ -20,7 +20,7 @@ export default function CourseItem({ course }) {
 			<CardActionArea onClick={handleClick} className={classes.cardArea}>
 				<CardMedia
 					className={classes.media}
-					image={course.thumbnail_url}
+					image={course.thumbnail_url ? course.thumbnail_url : "https://i1.sndcdn.com/artworks-000351240072-kbcgdg-t500x500.jpg"}
 					title={course.title}
 				/>
 				<CardContent className={classes.cardContent}>

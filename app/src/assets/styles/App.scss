@@ -44,3 +44,14 @@
   }
 }
 
+#background-image {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  z-index: -20;
+  filter: blur(50px);
+  /* background-size: 100%; */
+  background-position: center;
+  opacity: 0.9;
+}
+

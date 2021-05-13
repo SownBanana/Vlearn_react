@@ -4,7 +4,7 @@ import AddCourse from "features/Course/pages/Instructor/AddCourse/AddCourse";
 import EditCourse from "features/Course/pages/Instructor/EditCourse/EditCourse";
 import InstructorCourseList from "features/Course/pages/Instructor/CourseList/CourseList";
 import StudentCourseList from "features/Course/pages/Student/CourseList/CourseList";
-import CourseSummary from "features/Course/pages/Student/CourseView/CourseSummary";
+import CourseSummary from "features/Course/pages/Student/CourseView/Summary/CourseSummary";
 import {
 	PrivateRoute,
 	Route,

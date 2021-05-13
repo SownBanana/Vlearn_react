@@ -16,7 +16,7 @@ import { ProgressBarProvider as ProgressBar } from "react-redux-progress";
 import { CssBaseline, Hidden, ThemeProvider } from "@material-ui/core";
 import AppFrame from "./features/Layout/components/AppFrame";
 import { enqueueSnackbar } from "./features/Toast/toastSlices";
-import ChatComponent from "./commons/components/ChatComponent";
+import ChatComponent from "./features/Chat/components/ChatComponent";
 import theme from "./theme/theme";
 import Prism from "prismjs";
 // import "prismjs/themes/prism.css";

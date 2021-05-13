@@ -1,21 +1,16 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 import {
 	TextField,
-	Typography,
 	Accordion,
 	AccordionSummary,
 	AccordionDetails,
-	Chip,
-	AccordionActions,
 	Divider,
-	Button,
 	makeStyles,
 	Box,
 	Hidden,
 	Tooltip,
 	IconButton,
 } from "@material-ui/core";
-import clsx from "clsx";
 
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import DragIndicatorIcon from "@material-ui/icons/DragIndicator";
@@ -24,7 +19,6 @@ import AddCircleRoundedIcon from "@material-ui/icons/AddCircleRounded";
 import HelpRoundedIcon from "@material-ui/icons/HelpRounded";
 import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import LessonList from "../Lesson/LessonList";
-import { setCourse } from "features/Course/editingCourseSlice";
 import uuidv4 from "commons/uuidv4";
 import { cloneDeep } from "lodash";
 import ConfirmIconButton from "commons/components/Button/ConfirmIconButton";
