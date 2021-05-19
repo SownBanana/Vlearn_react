@@ -10,11 +10,11 @@ import React from "react";
 // import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import { Link, useHistory } from "react-router-dom";
 import ArrowBackIosRoundedIcon from "@material-ui/icons/ArrowBackIosRounded";
-export default function BreadCrumbs({ links, current, children }) {
+export default function BreadCrumbs({ links, current, children, mb = 3 }) {
 	const isMobile = useMediaQuery("(max-width: 760px)");
 	const history = useHistory();
 	return !isMobile ? (
-		<Box className="card_layout breadcrumb" mx={2} mb={3}>
+		<Box className="card_layout breadcrumb" mx={2} mb={mb}>
 			<div style={{ display: "flex", alignItems: "center" }}>
 				<IconButton
 					style={{ margin: "0px 10px 0px 5px" }}

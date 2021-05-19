@@ -42,7 +42,7 @@ instance.interceptors.response.use(
 	(error) => {
 		// const originalRequest = error.config;
 		// if (error.response.status === 401 && !originalRequest._retry) {
-		if (error.response.status === 401) {
+		if (error.response.status === 401 ) {
 			console.log("Trying to refresh Token in Axios");
 			return instance
 				.post("/api/auth/refresh")

@@ -1,6 +1,6 @@
 import "./assets/styles/App.scss";
 import React, { useEffect } from "react";
-import { Route, Switch } from "react-router-dom";
+import { Route, Switch, useLocation } from "react-router-dom";
 // useHistory, useLocation
 import { PrivateRoute } from "./commons/routes/CustomRoute";
 import Home from "./features/Home";
@@ -22,6 +22,8 @@ import Prism from "prismjs";
 // import "prismjs/themes/prism.css";
 import "prismjs/themes/prism-okaidia.css";
 import globalStyle from "style/GlobalStyles";
+import WebSocket from 'commons/components/WebSocket'
+import { fetch as fetchTopics } from 'features/Topic/topicSlice'
 
 const Authenticate = React.lazy(() => import("./features/Authenticate/"));
 const Course = React.lazy(() => import("./features/Course/"));
@@ -29,26 +31,39 @@ const Chat = React.lazy(() => import("./features/Chat/"));
 const Info = React.lazy(() => import("./features/Info/"));
 
 function App() {
+	globalStyle();
 	const dispatch = useDispatch();
 	const serverError = useSelector((state) => state.auth.error.serverError);
-	globalStyle();
 	const isProgressActive = useSelector(
 		(state) => state.common.isActiveProgress
 	);
-	if (
-		localStorage.getItem("auth") &&
-		JSON.parse(localStorage.getItem("auth")).isLoggedIn
-	) {
-		dispatch(authSuccess(JSON.parse(localStorage.getItem("auth"))));
-		dispatch(checkPassport());
-	}
+	const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
 
+	const { pathname } = useLocation();
+	const root = pathname.split("/");
+
+	useEffect(() => {
+		if (root.length === 2 && root[1] === "courses") {
+			document.getElementsByClassName('App')[0].style.backgroundImage = 'url("/bg-pattern.jpg")';
+		} else {
+			document.getElementsByClassName('App')[0].style.backgroundImage = ""
+		}
+	}, [root]);
 	// Prism treat <br/> as new line
 	useEffect(() => {
+		if (
+			localStorage.getItem("auth") &&
+			JSON.parse(localStorage.getItem("auth")).isLoggedIn
+		) {
+			dispatch(authSuccess(JSON.parse(localStorage.getItem("auth"))));
+			console.log("Checkpassport from App")
+			dispatch(checkPassport());
+		}
 		Prism.hooks.add("before-highlight", function (env) {
 			env.code = env.element.innerText;
 		});
-	});
+		dispatch(fetchTopics());
+	}, []);
 	useEffect(() => {
 		if (serverError) {
 			const key = new Date().getTime() + Math.random();
@@ -89,8 +104,9 @@ function App() {
 					</Switch>
 				</Suspense>
 				<Hidden xsDown>
-					<ChatComponent />
+					{isLoggedIn && <ChatComponent />}
 				</Hidden>
+				{isLoggedIn && <WebSocket />}
 			</ThemeProvider>
 		</div>
 	);

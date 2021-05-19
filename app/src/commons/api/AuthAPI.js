@@ -20,6 +20,7 @@ const authAPI = {
 			});
 			return response.data;
 		} catch (e) {
+			console.log("Error=======?", e)
 			if (e.response.status === 401) return e.response.data;
 		}
 	},
@@ -97,101 +98,12 @@ const authAPI = {
 		});
 		return response.data;
 	},
-};
-
-// Using fetch
-const settingsPost = {
-	method: "POST",
-	headers: {
-		Accept: "application/json",
-		"Content-Type": "application/json",
-		"Access-Control-Allow-Origin": "http://localhost:80",
-		"Access-Control-Allow-Credentials": "false",
-	},
-};
-const settingsGet = {
-	method: "GET",
-	headers: {
-		Accept: "application/json",
-		"Content-Type": "application/json",
-		"Access-Control-Allow-Origin": "http://localhost:80",
-		"Access-Control-Allow-Credentials": "false",
-	},
-};
-export const authAPIFetch = {
-	register: ({ name, username, email, password }) => {
-		const settings = addBody(settingsPost, {
-			name,
-			username,
-			email,
-			password,
-		});
-		try {
-			return fetch(
-				`${process.env.REACT_APP_BACKEND_URL}/api/register`,
-				settings
-			);
-		} catch (e) {
-			throw e;
-		}
-	},
-	login: ({ login, password }) => {
-		const settings = addBody(settingsPost, {
-			login,
-			password,
-		});
-		try {
-			return fetch(`${process.env.REACT_APP_BACKEND_URL}/api/login`, settings);
-		} catch (e) {
-			throw e;
-		}
-	},
-	logout: () => {
-		const settings = addAuthHeader(settingsPost);
-		try {
-			return fetch(`${process.env.REACT_APP_BACKEND_URL}/api/logout`, settings);
-		} catch (e) {
-			throw e;
-		}
-	},
-
-	refreshToken: (refresh_token) => {
-		const settings = addBody(settingsPost, {
-			refresh_token,
-		});
-		try {
-			return fetch(
-				`${process.env.REACT_APP_BACKEND_URL}/api/auth/refresh`,
-				settings
-			);
-		} catch (e) {
-			throw e;
-		}
-	},
-
-	resendEmail: (email) => {
-		const settings = addBody(settingsPost, {
-			email,
-		});
-		try {
-			return fetch(
-				`${process.env.REACT_APP_BACKEND_URL}/api/resend-confirm`,
-				settings
-			);
-		} catch (e) {
-			throw e;
-		}
-	},
-	checkPassport: async () => {
-		const settings = addAuthHeader(settingsGet);
-		try {
-			return fetch(
-				`${process.env.REACT_APP_BACKEND_URL}/api/check-passport`,
-				settings
-			);
-		} catch (e) {
-			throw e;
-		}
+	attachSocial: async (params) => {
+		console.log(
+			params
+		);
+		const response = await api.post(`/api/auth/attach-social`, params);
+		return response.data;
 	},
 };
 

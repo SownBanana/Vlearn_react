@@ -10,6 +10,10 @@ import {
 	Menu,
 	MenuItem,
 	useMediaQuery,
+	Button,
+	Avatar,
+	Typography,
+	Divider
 } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
 import SearchIcon from "@material-ui/icons/Search";
@@ -21,10 +25,12 @@ import clsx from "clsx";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import { checkPassport, logout } from "features/Authenticate/authSlices";
+import { UserRole } from "features/Authenticate/constance";
 
 export default function MyAppBar({ handle, open }) {
 	const dispatch = useDispatch();
 	const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+	const user = useSelector(state => state.auth.user)
 	const classes = useStyles();
 	const keyPress = (e) => {
 		if (e.keyCode === 13) {
@@ -34,23 +40,16 @@ export default function MyAppBar({ handle, open }) {
 	};
 	const isMobile = useMediaQuery("(max-width: 760px)");
 	const [anchorEl, setAnchorEl] = React.useState(null);
-	const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
 	const isMenuOpen = Boolean(anchorEl);
-	const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
 	const history = useHistory();
 	const handleProfileMenuOpen = (event) => {
 		setAnchorEl(event.currentTarget);
 	};
 
-	const handleMobileMenuClose = () => {
-		setMobileMoreAnchorEl(null);
-	};
-
 	const handleMenuClose = () => {
 		setAnchorEl(null);
-		handleMobileMenuClose();
 	};
 
 	const handleLogout = () => {
@@ -71,9 +70,10 @@ export default function MyAppBar({ handle, open }) {
 		dispatch(checkPassport());
 	};
 
-	// const handleMobileMenuOpen = (event) => {
-	// 	setMobileMoreAnchorEl(event.currentTarget);
-	// };
+	const handleInfo = () => {
+		handleMenuClose();
+		history.push("/info");
+	};
 
 	const menuId = "primary-search-account-menu";
 	const renderMenu = (
@@ -86,58 +86,21 @@ export default function MyAppBar({ handle, open }) {
 			open={isMenuOpen}
 			onClose={handleMenuClose}
 		>
-			{isLoggedIn && (
-				<div>
-					<MenuItem onClick={handleMenuClose}>Tài khoản</MenuItem>
-					<MenuItem onClick={handleCheckAuth}>Check Auth</MenuItem>
-					<MenuItem onClick={handleLogout}>Đăng xuất</MenuItem>
-				</div>
-			)}
-			{!isLoggedIn && (
-				<div>
-					<MenuItem onClick={handleLogin}>Đăng nhập</MenuItem>
-					<MenuItem onClick={handleRegister}>Đăng ký</MenuItem>
-				</div>
-			)}
-		</Menu>
+
+			<div>
+				<MenuItem style={{ display: "block" }}>
+					<Typography style={{ fontWeight: "bold" }} variant="body1" color="initial">{user.name}</Typography>
+					{user.role === UserRole.INSTRUCTOR && <Typography style={{ fontSize: 13 }} variant="body1" color="initial">Giảng viên</Typography>}
+				</MenuItem>
+				<Divider />
+				<MenuItem onClick={handleInfo}>Tài khoản</MenuItem>
+				<MenuItem onClick={handleCheckAuth}>Check Auth</MenuItem>
+				<Divider />
+				<MenuItem style={{ color: "red" }} onClick={handleLogout}>Đăng xuất</MenuItem>
+			</div>
+		</Menu >
 	);
 
-	const mobileMenuId = "primary-search-account-menu-mobile";
-	const renderMobileMenu = (
-		<Menu
-			anchorEl={mobileMoreAnchorEl}
-			anchorOrigin={{ vertical: "top", horizontal: "right" }}
-			id={mobileMenuId}
-			keepMounted
-			transformOrigin={{ vertical: "top", horizontal: "right" }}
-			open={isMobileMenuOpen}
-			onClose={handleMobileMenuClose}
-		>
-			<MenuItem onClick={handleProfileMenuOpen}>
-				<IconButton
-					aria-label="account of current user"
-					aria-controls="primary-search-account-menu"
-					aria-haspopup="true"
-					color="inherit"
-				>
-					<AccountCircle />
-				</IconButton>
-				<p>Tài khoản</p>
-			</MenuItem>
-
-			<MenuItem onClick={handleProfileMenuOpen}>
-				<IconButton
-					aria-label="account of current user"
-					aria-controls="primary-search-account-menu"
-					aria-haspopup="true"
-					color="inherit"
-				>
-					<AccountCircle />
-				</IconButton>
-				<p>Đăng xuất</p>
-			</MenuItem>
-		</Menu>
-	);
 
 	return (
 		<div className={classes.grow}>
@@ -178,13 +141,8 @@ export default function MyAppBar({ handle, open }) {
 
 					<div className={classes.grow} />
 					<div className={classes.sectionDesktop}>
-						{isLoggedIn && (
+						{isLoggedIn ? (
 							<div>
-								<IconButton aria-label="show 4 new mails" color="inherit">
-									<Badge badgeContent={4} color="secondary">
-										<MailIcon />
-									</Badge>
-								</IconButton>
 								<IconButton
 									aria-label="show 17 new notifications"
 									color="inherit"
@@ -193,38 +151,61 @@ export default function MyAppBar({ handle, open }) {
 										<NotificationsIcon />
 									</Badge>
 								</IconButton>
+								<IconButton
+									edge="end"
+									aria-label="account of current user"
+									aria-controls={menuId}
+									aria-haspopup="true"
+									onClick={handleProfileMenuOpen}
+									color="inherit"
+								>
+									<Avatar style={{ width: 24, height: 24 }} alt={user.name} src={user.avatar_url} />
+								</IconButton>
+							</div>
+						) : (
+							<div>
+								<Button onClick={handleLogin} color="primary" variant="contained" size="small" style={{ marginRight: 10 }}>
+									Đăng nhập
+								</Button>
+								<Button onClick={handleRegister} color="secondary" variant="contained" size="small">
+									Đăng ký
+								</Button>
 							</div>
 						)}
 
-						<IconButton
-							edge="end"
-							aria-label="account of current user"
-							aria-controls={menuId}
-							aria-haspopup="true"
-							onClick={handleProfileMenuOpen}
-							color="inherit"
-						>
-							<AccountCircle />
-						</IconButton>
 					</div>
 
 					<div className={classes.sectionMobile}>
-						<IconButton
-							aria-label="show more"
-							aria-controls={mobileMenuId}
-							aria-haspopup="true"
-							// onClick={handleMobileMenuOpen}
-							onClick={handleProfileMenuOpen}
-							color="inherit"
-						>
-							{/* <MoreIcon /> */}
-							<AccountCircle />
-						</IconButton>
+						{
+							isLoggedIn
+								?
+								(
+									<IconButton
+										aria-label="show more"
+										aria-haspopup="true"
+										onClick={handleProfileMenuOpen}
+										color="inherit"
+									>
+										<Avatar style={{ width: 24, height: 24 }} alt={user.name} src={user.avatar_url} />
+									</IconButton>
+								)
+								:
+								(
+									<IconButton
+										aria-label="show more"
+										aria-haspopup="true"
+										onClick={handleLogin}
+										color="inherit"
+									>
+										<AccountCircle />
+									</IconButton>
+								)
+						}
+
 					</div>
 				</Toolbar>
 			</AppBar>
-			{renderMobileMenu}
-			{renderMenu}
+			{isLoggedIn && renderMenu}
 		</div>
 	);
 }

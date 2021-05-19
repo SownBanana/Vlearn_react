@@ -22,14 +22,14 @@ export default function ListItemLink(props) {
 
 	return (
 		<li>
-			<ListItem selected={selected} button component={renderLink}>
+			<ListItem selected={selected} button component={renderLink} className={classes.root}>
 				{icon ? (
 					<ListItemIcon
 						classes={
 							selected ? {
-								root: classes.root,
+								root: classes.selected,
 							} : {
-
+								root: classes.notSelected,
 							}
 						}
 					>
@@ -44,6 +44,11 @@ export default function ListItemLink(props) {
 
 const useStyles = makeStyles((theme) => ({
 	root: {
+		height: theme.spacing(7)
+	},
+	selected: {
 		color: theme.palette.selected.dark,
+	},
+	notSelected: {
 	},
 }));

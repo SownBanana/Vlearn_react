@@ -1,12 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 import api from "commons/api/course/resource";
 import uploadApi from "commons/api/upload/upload";
+import { closeSnackbar, makePersistToast, makeToast, ToastType } from "features/Toast/toastSlices";
 
 var waitTypeTimeout = 0;
 export const setCourse = () => async (dispatch, getState) => {
 	// dispatch(setStateCourse(params.course));
 	dispatch(setStatus("saving"));
-	const { course, deleteSections, deleteLessons } = getState().editingCourse;
+	const { course, deleteSections, deleteLessons, deleteQuestions, deleteAnswers } = getState().editingCourse;
 	try {
 		clearTimeout(waitTypeTimeout);
 		waitTypeTimeout = setTimeout(async () => {
@@ -14,6 +15,8 @@ export const setCourse = () => async (dispatch, getState) => {
 				course,
 				deleteSections,
 				deleteLessons,
+				deleteQuestions,
+				deleteAnswers
 			});
 			console.log("+=======> ", response);
 			if (response.status === "success") {
@@ -25,7 +28,6 @@ export const setCourse = () => async (dispatch, getState) => {
 			}
 		}, 1000);
 	} catch (e) {
-		console.log("Faillllllllllllllllllll", e);
 		dispatch(setStatus("failed"));
 	}
 };
@@ -41,14 +43,44 @@ export const fetchCourse = (id) => async (dispatch) => {
 			dispatch(setStatus("fetchFailed"));
 		}
 	} catch (e) {
-		console.log("Faillllllllllllllllllll", e);
+		dispatch(setStatus("fetchFailed"));
+	}
+};
+export const attachTopic = (params) => async (dispatch) => {
+	try {
+		dispatch(setStatus("fetching"));
+		const response = await api.attachTopic(params);
+		console.log("+=======> ", response);
+		if (response.status === "success") {
+			dispatch(setStatus("fetched"));
+			dispatch(setStateCourse(response.data));
+		} else {
+			dispatch(setStatus("fetchFailed"));
+		}
+	} catch (e) {
+		dispatch(setStatus("fetchFailed"));
+	}
+};
+export const detachTopic = (params) => async (dispatch) => {
+	try {
+		dispatch(setStatus("fetching"));
+		const response = await api.detachTopic(params);
+		console.log("+=======> ", response);
+		if (response.status === "success") {
+			dispatch(setStatus("fetched"));
+			dispatch(setStateCourse(response.data));
+		} else {
+			dispatch(setStatus("fetchFailed"));
+		}
+	} catch (e) {
 		dispatch(setStatus("fetchFailed"));
 	}
 };
 export const uploadVideo = (section_id, lesson_id, file) => async (dispatch) => {
+	const uploadKey = new Date().getTime() + Math.random();
 	try {
 		dispatch(setStatus("fetching"));
-		// const response = await uploadApi.upload({ file: file });
+		dispatch(makePersistToast("Đang tải lên video", ToastType.INFO, uploadKey));
 		console.log("Getting presigned url ...");
 		const response = await uploadApi.getPresignedUrl({ file: file });
 		if (response.status === true) {
@@ -61,15 +93,20 @@ export const uploadVideo = (section_id, lesson_id, file) => async (dispatch) => 
 			console.log("Putting file done: ", resp_status, url);
 			if (resp_status === 200) {
 				dispatch(setStatus("fetched"));
+				dispatch(makeToast("Tải lên video thành công", ToastType.SUCCESS, true, 3000))
 			} else {
 				dispatch(setStatus("fetchFailed"));
+				dispatch(makeToast("Có lỗi xảy ra khi tải video", ToastType.ERROR, true, 3000))
 			}
 		} else {
 			dispatch(setStatus("fetchFailed"));
+			dispatch(makeToast("Có lỗi xảy ra khi tải video", ToastType.ERROR, true, 3000))
 		}
+		dispatch(closeSnackbar(uploadKey));
 	} catch (e) {
-		console.log("Faillllllllllllllllllll", e);
 		dispatch(setStatus("fetchFailed"));
+		dispatch(closeSnackbar(uploadKey));
+		dispatch(makeToast("Có lỗi xảy ra khi tải video", ToastType.ERROR, true, 3000))
 	}
 };
 
@@ -87,6 +124,8 @@ function clearCourse(state) {
 	state.deleteLessons = [];
 	state.deleteQuestions = [];
 	state.deleteLiveLessons = [];
+	state.deleteAnswers = [];
+	state.lessonMode = false;
 }
 const initialState = {
 	status: "",
@@ -95,6 +134,7 @@ const initialState = {
 	deleteLessons: [],
 	deleteQuestions: [],
 	deleteLiveLessons: [],
+	deleteAnswers: [],
 	course: {
 		id: null,
 		title: "",
@@ -103,7 +143,8 @@ const initialState = {
 		price: "",
 		sections: [],
 	},
-
+	contentEditMode: false,
+	isLiveLesson: false,
 };
 
 const editingCourse = createSlice({
@@ -134,11 +175,18 @@ const editingCourse = createSlice({
 		deleteLiveLesson: (state, action) => {
 			state.deleteLiveLessons.push(action.payload);
 		},
+		deleteAnswer: (state, action) => {
+			state.deleteAnswers.push(action.payload);
+		},
 		clearDelete: (state) => {
 			state.deleteSections = [];
 			state.deleteLessons = [];
 			state.deleteQuestions = [];
 			state.deleteLiveLessons = [];
+			state.deleteAnswers = [];
+		},
+		setContentEditMode: (state, action) => {
+			state.contentEditMode = action.payload;
 		},
 		setStateCourseId: (state, action) => {
 			state.course.id = action.payload.id;
@@ -165,6 +213,15 @@ const editingCourse = createSlice({
 								if (fetchQuestion && question) {
 									question.id = fetchQuestion.id;
 									question.section_id = fetchQuestion.section_id;
+									if (fetchQuestion.answers && question.answers)
+										for (let ai = 0; ai < question.answers.length; ai++) {
+											const answer = question.answers[ai];
+											const fetchAnswer = fetchQuestion.answers[ai];
+											if (fetchAnswer && answer) {
+												answer.id = fetchAnswer.id;
+												answer.question_id = fetchAnswer.question_id;
+											}
+										}
 								}
 							}
 						if (fetchSection.liveLessons)
@@ -207,6 +264,8 @@ export const {
 	deleteLesson,
 	deleteQuestion,
 	deleteLiveLesson,
+	deleteAnswer,
 	setVideoLesson,
+	setContentEditMode
 } = editingCourse.actions;
 export default editingCourse.reducer;

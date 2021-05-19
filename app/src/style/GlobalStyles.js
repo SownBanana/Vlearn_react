@@ -3,10 +3,10 @@ import { makeStyles } from "@material-ui/core/styles";
 export default makeStyles((theme) => ({
 	"@global": {
 		".App": {
-			paddingBottom: "48px",
+			paddingBottom: "60px",
 			// width: "99%",
 			[theme.breakpoints.up("sm")]: {
-				paddingBottom: 0,
+				paddingBottom: "1px",
 				// width: "100%",
 			},
 		},
@@ -34,5 +34,17 @@ export default makeStyles((theme) => ({
 			fontStyle: "italic",
 			borderLeft: "5px solid #ccc",
 		},
+
+		".avatar--center": {
+			margin: "auto"
+		},
+		".avatar--large": {
+			width: theme.spacing(9),
+			height: theme.spacing(9),
+		},
+		".avatar--small": {
+			width: theme.spacing(3),
+			height: theme.spacing(3),
+		}
 	},
 }));

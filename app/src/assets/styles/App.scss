@@ -3,10 +3,12 @@
 @import "./section/nav-controller.scss";
 @import "./video-player";
 @import "./breadcrumb";
-
+@import "./badge";
+@import "./jitsi";
 
 .App {
   text-align: center;
+  background-size: 300px;
 }
 
 .App-logo {

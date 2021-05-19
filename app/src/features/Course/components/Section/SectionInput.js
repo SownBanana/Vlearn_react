@@ -22,6 +22,7 @@ import LessonList from "../Lesson/LessonList";
 import uuidv4 from "commons/uuidv4";
 import { cloneDeep } from "lodash";
 import ConfirmIconButton from "commons/components/Button/ConfirmIconButton";
+import QuestionList from "../Question/QuestionList";
 export default function SectionInput({
 	section,
 	handleChange,
@@ -45,6 +46,18 @@ export default function SectionInput({
 		var newLessons = cloneDeep(section.lessons);
 		newLessons.push({ uuid: uuidv4() });
 		setLessons(newLessons);
+		// setSection({ section, lessons: [...section.lessons, { uuid: uuidv4() }] });
+	};
+	const setQuestions = (questions) => {
+		setSection({ ...section, questions: questions });
+	};
+	const addQuestion = (e) => {
+		e.stopPropagation();
+		console.log(e);
+		console.log("Add Question");
+		var newQuestions = cloneDeep(section.questions);
+		newQuestions.push({ uuid: uuidv4(), answers: [], order: newQuestions.length > 0 ? newQuestions[newQuestions.length - 1].order + 1 : 0 });
+		setQuestions(newQuestions);
 		// setSection({ section, lessons: [...section.lessons, { uuid: uuidv4() }] });
 	};
 	useEffect(() => {
@@ -72,6 +85,7 @@ export default function SectionInput({
 						>
 							<IconButton
 								// color="warning.main"
+								onClick={addQuestion}
 								classes={{ root: classes.warningBtn }}
 							>
 								<HelpRoundedIcon />
@@ -141,6 +155,8 @@ export default function SectionInput({
 				<Divider />
 				<AccordionDetails className={classes.details}>
 					<LessonList lessons={section.lessons} setLessons={setLessons} />
+					<Divider />
+					<QuestionList questions={section.questions} setQuestions={setQuestions} />
 				</AccordionDetails>
 			</Accordion>
 		</Box>
@@ -182,6 +198,7 @@ const useStyles = makeStyles((theme) => ({
 	details: {
 		alignItems: "center",
 		padding: 0,
+		display: "block",
 	},
 	column: {
 		flexBasis: "33.33%",

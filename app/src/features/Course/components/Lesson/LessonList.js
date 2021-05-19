@@ -51,7 +51,7 @@ export default function LessonList({ lessons, setLessons }) {
 					xs={12}
 					{...props}
 					style={{
-						padding: "0em 0em 1em 0em",
+						padding: "0em 0em 0.5em 0em",
 						cursor: isDragged ? "grabbing" : undefined,
 						listStyle: "none",
 					}}
@@ -79,8 +79,8 @@ export default function LessonList({ lessons, setLessons }) {
 								isDragged || isSelected
 									? isOutOfBounds
 										? "6px solid #F08080"
-										: "6px solid #0d47a169"
-									: "6px solid #0d47a1",
+										: "6px solid #147b0269"
+									: "6px solid #147b02",
 						}}
 					>
 						<LessonInput

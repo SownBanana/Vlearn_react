@@ -4,6 +4,7 @@ import BackToPrevious from "../../../../commons/components/BackToPrevious";
 import NewSocialAccount from "../../components/NewSocialAccount";
 import { getSocialCallback } from "../../socialAuthSlices";
 import { activeProgress } from "../../../../commons/SliceCommon";
+import ExistSocialAccount from "features/Authenticate/components/ExistSocialAccount";
 export default function Google({ location }) {
 	const status = useSelector((state) => state.social.pendingSocial.status);
 	const isAuthed = useSelector((state) => state.auth.isLoggedIn);
@@ -18,7 +19,7 @@ export default function Google({ location }) {
 		<div>
 			{/* <div> {location.search}</div> */}
 			{isAuthed && <BackToPrevious />}
-			{status === "existed" && <div>Tai khoan da ton tai</div>}
+			{status === "existed" && <ExistSocialAccount/>}
 			{status === "new" && <NewSocialAccount />}
 		</div>
 	);

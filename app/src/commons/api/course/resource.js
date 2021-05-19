@@ -1,7 +1,7 @@
 import api, { headersWithToken } from "commons/AxiosCommon";
 
 const courseResource = {
-	store: async ({ course, deleteSections, deleteLessons }) => {
+	store: async ({ course, deleteSections, deleteLessons, deleteQuestions, deleteAnswers }) => {
 		console.log(course);
 		const response = await api.post(
 			`/api/courses`,
@@ -9,6 +9,8 @@ const courseResource = {
 				course,
 				deleteSections,
 				deleteLessons,
+				deleteQuestions,
+				deleteAnswers,
 			},
 			{
 				headers: headersWithToken(),
@@ -38,6 +40,28 @@ const courseResource = {
 		});
 		return response.data;
 	},
+	buy: async (id) => {
+		const response = await api.get(`api/buy-course/${id}`, {
+			headers: headersWithToken(),
+		})
+		return response.data;
+	},
+	attachTopic: async (params) => {
+		const response = await api.post(`api/attach-topic/`,
+			params,
+			{
+				headers: headersWithToken(),
+			})
+		return response.data;
+	},
+	detachTopic: async (params) => {
+		const response = await api.post(`api/detach-topic/`,
+			params,
+			{
+				headers: headersWithToken(),
+			})
+		return response.data;
+	}
 };
 
 export default courseResource;

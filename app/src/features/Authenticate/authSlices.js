@@ -36,6 +36,18 @@ export const createSocial = createAsyncThunk(
 		}
 	}
 );
+export const attachSocial = createAsyncThunk(
+	"auth/attachSocial",
+	async (params) => {
+		console.log("params", params);
+		try {
+			return await AuthAPI.attachSocial(params);
+		} catch (e) {
+			console.log(e);
+		}
+	}
+);
+
 
 var logoutTimeout = 0;
 var refreshEffort = 0;
@@ -113,12 +125,12 @@ export const checkPassport = () => async (dispatch) => {
 			message: "success" in data ? "Authenticated" : "Unauthenticated",
 			options: {
 				key: key,
-				// preventDuplicate: true,
+				preventDuplicate: true,
 				variant: "success" in data ? "success" : "error",
-				autoHideDuration: 2000,
+				autoHideDuration: 500,
 				anchorOrigin: {
-					vertical: "bottom",
-					horizontal: "left",
+					vertical: "top",
+					horizontal: "center",
 				},
 			},
 		})
@@ -210,6 +222,9 @@ const auth = createSlice({
 		setServerError: (state, status) => {
 			state.error.serverError = status;
 		},
+		setUser: (state, action) => {
+			state.user = action.payload;
+		}
 	},
 	extraReducers: {
 		[login.fulfilled]: (state, action) => {
@@ -237,9 +252,13 @@ const auth = createSlice({
 			setSuccess(state, action.payload);
 			localStorage.setItem("auth", JSON.stringify({ ...state, error: null }));
 		},
+		[attachSocial.fulfilled]: (state, action) => {
+			setSuccess(state, action.payload);
+			localStorage.setItem("auth", JSON.stringify({ ...state, error: null }));
+		},
 	},
 });
 
-export const { authSuccess, authFail } = auth.actions;
+export const { authSuccess, authFail, setUser } = auth.actions;
 
 export default auth.reducer;

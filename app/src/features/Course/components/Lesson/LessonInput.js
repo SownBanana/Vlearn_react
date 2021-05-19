@@ -23,7 +23,8 @@ import {
 	setHandler,
 } from "commons/components/EditorModal/editorSlice";
 import { useDispatch } from "react-redux";
-import { uploadVideo } from 'features/Course/editingCourseSlice'
+import { setContentEditMode, uploadVideo } from 'features/Course/editingCourseSlice'
+import { useHistory, useParams } from "react-router-dom";
 // import CKViewer from "commons/components/CKEditor/CKViewer";
 const CKViewer = lazy(() => import("commons/components/CKEditor/CKViewer"));
 
@@ -39,21 +40,23 @@ export default function LessonInput({
 	const changeLessonContent = (content) => {
 		handleChange({ ...lesson, content: content });
 	};
-
 	const deleteLesson = () => {
 		handleDelete(lesson);
 	};
-	const openEditor = (e) => {
-		e.stopPropagation();
-		dispatch(setTitle("Bài " + lesson.name));
-		dispatch(setContent(lesson.content));
-		dispatch(setHandler(changeLessonContent));
-		dispatch(setOpen(true));
-	};
+
 	const handleVideoUpload = event => {
 
 		dispatch(uploadVideo(lesson.section_id, lesson.id, event.target.files[0]))
 	};
+	const history = useHistory();
+	const params = useParams();
+	const openLessonEdit = (e) => {
+		e.stopPropagation();
+		dispatch(setTitle("Bài " + lesson.name));
+		dispatch(setContent(lesson.content));
+		dispatch(setHandler(changeLessonContent));
+		dispatch(setContentEditMode(true));
+	}
 	return (
 		<Accordion
 			expanded={expanded === lesson.uuid}
@@ -63,7 +66,7 @@ export default function LessonInput({
 			<AccordionSummary
 				expandIcon={<ExpandMoreIcon />}
 				aria-controls="panel1a-content"
-				id="panel1a-header"
+				classes={{ root: classes.summary, content: classes.summaryContent }}
 			>
 				<DragIndicatorIcon color="action" data-movable-handle />
 				<TextField
@@ -85,7 +88,8 @@ export default function LessonInput({
 				/>
 				<IconButton
 					color="primary"
-					onClick={openEditor}
+					// onClick={openEditor}
+					onClick={openLessonEdit}
 					edge="start"
 					className="button"
 				>
@@ -195,16 +199,14 @@ const useStyles = makeStyles((theme) => ({
 		display: "none",
 	},
 	content: {
-		backgroundColor: "#f0f0f0",
+		backgroundColor: "#f0f0f050",
 		padding: "15px",
 	},
-	// playerWrapper: {
-	// 	position: "relative",
-	// 	paddingTop: "56.25%" /* Player ratio: 100 / (1280 / 720) */,
-	// },
-	// reactPlayer: {
-	// 	position: "absolute",
-	// 	top: 0,
-	// 	left: 0,
-	// },
+	summary: {
+		height: "70px",
+		borderBottom: "1px solid #cecece60"
+	},
+	summaryContent: {
+		alignItems: "center",
+	}
 }));

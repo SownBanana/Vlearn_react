@@ -123,7 +123,7 @@ export default function EditCourse() {
 				)}
 			</BreadCrumbs>
 
-			<Box mt={6}>
+			<Box mt={6} >
 				<CourseEditPane course={course} setCourse={setCourse} />
 			</Box>
 		</Box>

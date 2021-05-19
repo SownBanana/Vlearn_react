@@ -10,8 +10,8 @@ export default function Info() {
     dispatch(setPreviousURL("/info"));
     return (
         <Switch>
-            <PrivateRoute path="/info/:username" component={PersonalInfo} />
-            <PrivateRoute path="/info" component={InfoPage} />
+            <PrivateRoute path="/info/:username" component={InfoPage} />
+            <PrivateRoute path="/info" component={PersonalInfo} />
         </Switch>
     );
 }

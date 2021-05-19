@@ -1,18 +1,41 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
-import { fetchCourseSummary, clearCourse } from 'features/Course/courseSlice'
-import { Grid, Box, Typography, makeStyles, Button } from '@material-ui/core'
+import { useHistory, useLocation, useParams } from 'react-router-dom';
+import { fetchCourseSummary, clearCourse, buyCourse as buyCourseAction } from 'features/Course/courseSlice'
+import { Grid, Box, Typography, makeStyles, Button, useMediaQuery } from '@material-ui/core'
 import BreadCrumbs from "commons/components/BreadCrumbs";
 import { Parallax } from 'react-parallax'
 import CKViewer from 'commons/components/CKEditor/CKViewer';
 import SectionList from 'features/Course/pages/Student/CourseView/Summary/SectionList'
+import { UserRole } from 'features/Authenticate/constance';
+import { setPreviousURL } from "commons/SliceCommon";
+import RatingStats from 'commons/components/Rating/RatingStats';
+import CommentView from 'commons/components/Comment/CommentView';
 
 export default function CourseSummary() {
     const classes = useStyles();
     const { id } = useParams();
+    const { pathname } = useLocation();
     const dispatch = useDispatch();
     const course = useSelector(state => state.course.course)
+    const bought = useSelector(state => state.course.bought)
+    const status = useSelector(state => state.course.status)
+    const role = useSelector(state => state.auth.user.role)
+    const history = useHistory();
+    const isMobile = useMediaQuery("(max-width: 760px)");
+    const buyCourse = () => {
+        if (!role) {
+            dispatch(setPreviousURL(pathname));
+            history.push('/auth/login');
+        } else if (role === UserRole.STUDENT) {
+            dispatch(buyCourseAction(id));
+        }
+    }
+    const learnCourse = () => {
+        console.log("Learn ", id);
+        history.push(`/courses/learn/${id}`)
+    }
+
     useEffect(() => {
         dispatch(fetchCourseSummary(id));
         return () => {
@@ -27,7 +50,6 @@ export default function CourseSummary() {
     }, [course]);
     return (
         <div>
-
             <Parallax bgImage={course.thumbnail_url} blur={{ min: 2, max: 10 }} strength={500}>
                 <Box mt={2}>
                     <div className={classes.header}>
@@ -53,30 +75,63 @@ export default function CourseSummary() {
                                 container
                                 direction="column"
                                 justify="center"
-                                alignItems="center"
-                                alignContent="center">
-                                <Typography variant="h3" className={classes.title}>
+                                // alignItems="center"
+                                alignContent="center"
+                            >
+                                <Typography align="left" variant="h3" className={classes.title}>
                                     {course.title}
                                 </Typography>
 
-                                <Typography variant="body1" className={classes.introduce}>
+                                <Typography align="left" variant="body1" className={classes.introduce}>
                                     <CKViewer content={course.introduce} />
                                 </Typography>
                             </Grid>
                             <Grid item xs={12} md={5}>
                                 <img className={classes.thumbnail} src={course.thumbnail_url} alt={course.title} />
                             </Grid>
-                            <Button className={classes.button} variant="contained" color="default">
-                                Mua khóa học
-                            </Button>
+                            {!bought ?
+                                <Button onClick={() => buyCourse()} className={classes.button} variant="contained" color="default">
+                                    Mua khóa học
+                                </Button>
+                                :
+                                <Button onClick={() => learnCourse()} className={classes.button} variant="contained" color="default">
+                                    Vào học
+                                </Button>
+                            }
                         </Grid>
                     </div>
                 </Box>
             </Parallax>
             <Box className={classes.body}>
-                {course.sections.length > 0 && <SectionList sections={course.sections} />}
+                <Typography variant="h5" align="left" color="initial">Nội dung khóa học</Typography>
+                {course.sections.length > 0 && <SectionList sections={course.sections} instructor={course.instructor} />}
             </Box>
-        </div>
+            <Box mx={isMobile ? 1 : 5} mb={isMobile ? 1 : 5}>
+                <Grid container direction="row">
+                    <Grid md={6} xs={12} container item spacing={1}>
+                        <Grid item md={10}>
+                            <RatingStats ratings={[20, 25, 12, 7, 3]} raterCount={67} />
+                        </Grid>
+                    </Grid>
+                    <Grid item md={6} xs={12}>
+                        <CommentView />
+                    </Grid>
+                </Grid>
+            </Box>
+            {/* {
+                    isMobile ?
+                        (
+                            <Box mx={1} mt={3}>
+                                <CommentView />
+                            </Box>
+                        ) :
+                        (
+                            <Box mx={10} my={10}>
+                                <CommentView />
+                            </Box>
+                        )
+                } */}
+        </div >
     )
 }
 
@@ -103,6 +158,7 @@ const useStyles = makeStyles((theme) => ({
     introduce: {
         color: "white",
         opacity: "0.9",
+        fontSize: "1.2rem",
     },
     thumbnail: {
         width: "90%",

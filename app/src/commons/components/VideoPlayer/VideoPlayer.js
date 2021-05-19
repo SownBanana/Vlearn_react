@@ -24,7 +24,7 @@ import FastRewindRoundedIcon from "@material-ui/icons/FastRewindRounded";
 // 		{children}
 // 	</div>
 // );
-export default function VideoPlayer({ handlePrevious, handleNext, ...prop }) {
+export default function VideoPlayer({ handlePrevious, handleNext, videoHeight = "360px", ...prop }) {
 	const isMobile = useMediaQuery("(max-width: 760px)");
 	const [showSpeed, setShowSpeed] = useState(false);
 
@@ -39,7 +39,7 @@ export default function VideoPlayer({ handlePrevious, handleNext, ...prop }) {
 
 	const [video, setVideo] = useState({
 		width: "100%",
-		height: "360px",
+		height: videoHeight,
 		playing: false,
 		controls: false,
 		light: false,
@@ -140,7 +140,7 @@ export default function VideoPlayer({ handlePrevious, handleNext, ...prop }) {
 	const handleClickFullscreen = () => {
 		if (screenfull.isFullscreen) {
 			// console.log("Full");
-			setVideo({ ...video, height: "360px" });
+			setVideo({ ...video, height: videoHeight });
 		} else setVideo({ ...video, height: "100%" });
 		screenfull.toggle(findDOMNode(wholePlayer.current));
 	};

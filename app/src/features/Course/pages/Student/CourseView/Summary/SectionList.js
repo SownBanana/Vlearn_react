@@ -5,11 +5,11 @@ import {
     AccordionDetails,
     Divider,
     makeStyles,
-    Box, Typography, Grid, Paper
+    Box, Typography, Grid, Paper, Avatar
 } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
-function SectionList({ sections }) {
+function SectionList({ sections, instructor }) {
     const classes = useStyles();
     return (
         <Grid
@@ -55,8 +55,14 @@ function SectionList({ sections }) {
                     })
                 }
             </Grid>
-            <Grid item md={4} xs={12} style={{ background: "lightblue", height: "100vh" }}>
-                Right
+            <Grid item md={4} xs={12} >
+                <Avatar className="avatar--large avatar--center" src={instructor.avatar_url} />
+                <Typography variant="h6" color="initial">
+                    {instructor.name}
+                </Typography>
+                <Typography variant="body1" color="initial">
+                    {instructor.introduce}
+                </Typography>
             </Grid>
         </Grid>
     );

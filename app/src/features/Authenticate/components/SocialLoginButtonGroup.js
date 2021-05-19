@@ -7,17 +7,20 @@ import {
 	FacebookLoginButton,
 } from "react-social-login-buttons";
 import { logout } from "../authSlices";
-import { fetchGoogleLink } from "../externalLinkSlices";
+import { fetchFacebookLink, fetchGithubLink, fetchGoogleLink } from "../externalLinkSlices";
 
 export default function SocialLoginButtonGroup() {
 	const dispatch = useDispatch();
 	const googleLoginLink = useSelector(
 		(state) => state.externalLink.googleLoginLink
 	);
-
+	const facebookLoginLink = useSelector(state => state.externalLink.facebookLoginLink)
+	const githubLoginLink = useSelector(state => state.externalLink.githubLoginLink)
 	useEffect(() => {
 		dispatch(fetchGoogleLink());
-		return () => {};
+		dispatch(fetchFacebookLink());
+		dispatch(fetchGithubLink());
+		return () => { };
 	}, [dispatch]);
 
 	return (
@@ -40,10 +43,16 @@ export default function SocialLoginButtonGroup() {
 					/>
 				</Box>
 				<Box mx={1}>
-					<FacebookLoginButton text="" onClick={() => alert("Facebook")} />
+					<FacebookLoginButton text="" onClick={() => {
+						dispatch(logout());
+						window.location.href = facebookLoginLink;
+					}} />
 				</Box>
 				<Box mx={1}>
-					<GithubLoginButton text="" onClick={() => alert("Github")} />
+					<GithubLoginButton text="" onClick={() => {
+						dispatch(logout());
+						window.location.href = githubLoginLink;
+					}} />
 				</Box>
 			</Grid>
 		</div>

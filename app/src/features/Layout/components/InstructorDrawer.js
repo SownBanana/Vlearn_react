@@ -8,16 +8,16 @@ import {
 } from "@material-ui/icons";
 
 import ListItemLink from "commons/components/ListItemLink";
-import globalStyle from "style/GlobalStyles";
+// import globalStyle from "style/GlobalStyles";
 import { List, makeStyles } from "@material-ui/core";
 import { useSelector } from "react-redux";
 
 export default function InstructorDrawer({ handle }) {
 	const classes = useStyles();
-	globalStyle();
+	// globalStyle();
 	const username = useSelector(state => state.auth.user.username);
 	return (
-		<List onClick={handle}>
+		<List onClick={handle} className={classes.root}>
 			{[
 				{
 					name: "Trang chủ",
@@ -57,10 +57,7 @@ export default function InstructorDrawer({ handle }) {
 }
 
 const useStyles = makeStyles((theme) => ({
-	sectionDesktop: {
-		display: "none",
-		[theme.breakpoints.up("sm")]: {
-			display: "block",
-		},
+	root: {
+		paddingTop: 0
 	},
 }));

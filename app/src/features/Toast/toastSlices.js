@@ -1,4 +1,56 @@
 import { createSlice } from "@reduxjs/toolkit";
+import SnackButton from "./SnackButton";
+
+export const makeToast = (message, type, isClosable = false, autoHideDuration = 2000, isPersis = false, key = null) => dispatch => {
+	if (key === null) key = new Date().getTime() + Math.random();
+	var options = {
+		key: key,
+		preventDuplicate: true,
+		variant: type,
+		autoHideDuration: autoHideDuration,
+		anchorOrigin: {
+			vertical: "top",
+			horizontal: "right",
+		},
+		
+	};
+	if (isClosable) {
+		options.action = (key) => (
+			<SnackButton notifyKey={key} />
+		)
+	}
+
+	dispatch(
+		enqueueSnackbar({
+			key: key,
+			message: message,
+			options: options
+		})
+	);
+}
+export const makePersistToast = (message, type, key) => dispatch => {
+	var options = {
+		key: key,
+		preventDuplicate: true,
+		variant: type,
+		anchorOrigin: {
+			vertical: "top",
+			horizontal: "right",
+		},
+		persist: true,
+		action: (key) => (
+			<SnackButton notifyKey={key} />
+		)
+	};
+
+	dispatch(
+		enqueueSnackbar({
+			key: key,
+			message: message,
+			options: options
+		})
+	);
+}
 
 export const ToastType = {
 	SUCCESS: "success",
@@ -7,44 +59,14 @@ export const ToastType = {
 	INFO: "info",
 };
 
-// const initialState = {
-// 	open: false,
-// 	type: ToastType.SUCCESS,
-// 	title: "",
-// 	message: "",
-// 	duration: 3000,
-// };
-
 const initialState = {
 	notifications: [],
 };
-
-// notification:{
-// 	key: timestamp,
-// 	message: "",
-// 	option: {},
-// 	dismissed = false
-// }
 
 const toast = createSlice({
 	name: "toast",
 	initialState,
 	reducers: {
-		// openToast: (state, action) => {
-		// 	state.type = action.payload.type;
-		// 	state.title = action.payload.title;
-		// 	state.message = action.payload.message;
-		// 	state.duration = action.payload.duration
-		// 		? action.payload.duration
-		// 		: state.duration;
-		// 	state.open = true;
-		// },
-
-		// closeToast: (state) => {
-		// 	console.log("close");
-		// 	state.open = false;
-		// 	state.duration = 3000;
-		// },
 		enqueueSnackbar: (state, action) => {
 			state.notifications.push(action.payload);
 		},
@@ -54,10 +76,6 @@ const toast = createSlice({
 					? { ...notification, dismissed: true }
 					: { ...notification }
 			);
-			// 	notification.options.key === action.payload
-			// 		? (notification.dismissed = true)
-			// 		: notification
-			// );
 		},
 		removeSnackbar: (state, action) => {
 			state.notifications = state.notifications.filter(
@@ -68,8 +86,6 @@ const toast = createSlice({
 });
 
 export const {
-	// openToast,
-	//  closeToast,
 	enqueueSnackbar,
 	removeSnackbar,
 	closeSnackbar,

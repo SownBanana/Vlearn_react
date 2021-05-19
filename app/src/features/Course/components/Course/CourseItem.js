@@ -24,7 +24,7 @@ export default function CourseItem({ course }) {
 					title={course.title}
 				/>
 				<CardContent className={classes.cardContent}>
-					<Typography variant="h6">
+					<Typography variant="body1" className={classes.title}>
 						{course.title}
 					</Typography>
 					<Typography
@@ -68,15 +68,15 @@ const useStyle = makeStyles((theme) => ({
 		height: "100%"
 	},
 	media: {
-		height: "75%",
+		height: "65%",
 		width: "-webkit-fill-available",
 		position: "absolute",
 		transition: "0.4s ease-out",
 		top: 0,
 	},
 	cardContent: {
-		height: "25%",
-		padding: 0,
+		height: "35%",
+		padding: 5,
 		display: "flex",
 		justifyContent: "center",
 		alignItems: "center",
@@ -95,5 +95,8 @@ const useStyle = makeStyles((theme) => ({
 		height: 0,
 		opacity: "0",
 		transition: "0.3s ease-out"
+	},
+	title: {
+		// color: "#424242",
 	},
 }));

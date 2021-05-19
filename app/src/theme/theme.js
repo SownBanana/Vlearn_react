@@ -23,7 +23,7 @@ const theme = createMuiTheme({
 		},
 		success: {
 			light: green["100"],
-			main: green["900"],
+			main: green["600"],
 			dark: green["900"],
 		},
 		error: {

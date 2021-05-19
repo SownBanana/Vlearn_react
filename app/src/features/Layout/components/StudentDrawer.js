@@ -11,10 +11,10 @@ import PersonIcon from '@material-ui/icons/Person';
 
 export default function StudentDrawer({ handle }) {
 	const classes = useStyles();
-	globalStyle();
+	// globalStyle();
 
 	return (
-		<List onClick={handle}>
+		<List onClick={handle} className={classes.root}>
 			{[
 				{
 					name: "Trang chủ",
@@ -54,10 +54,7 @@ export default function StudentDrawer({ handle }) {
 }
 
 const useStyles = makeStyles((theme) => ({
-	sectionDesktop: {
-		display: "none",
-		[theme.breakpoints.up("sm")]: {
-			display: "block",
-		},
+	root: {
+		paddingTop: 0
 	},
 }));

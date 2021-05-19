@@ -5,7 +5,7 @@ import BreadCrumbs from "commons/components/BreadCrumbs";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCourses } from "features/Course/courseListSlice";
 import CourseItem from "features/Course/components/Course/CourseItem";
-import { Pagination } from "@material-ui/lab";
+import { Pagination, Skeleton } from "@material-ui/lab";
 import { CourseStatus } from "features/Course/constance";
 export default function CourseList() {
     console.log("course list");
@@ -80,14 +80,27 @@ export default function CourseList() {
                         alignItems="center"
                         alignContent="center"
                     >
-                        {courses &&
+                        {courses ?
                             courses.map((course) => {
                                 return (
-                                    <Grid item md={4} xs={12} key={course.id} >
-                                        <CourseItem course={course} />
+                                    <Grid item md={3} sm={4} xs={12} key={course.id} >
+                                        <Box>
+                                            <CourseItem course={course} />
+                                        </Box>
                                     </Grid>
                                 );
-                            })}
+                            }) : (
+                                Array(8).fill(
+                                    <Grid item md={3} sm={4} xs={12}>
+                                        <Box>
+                                            <Skeleton variant="rect" width="100%" height={200} />
+                                            <Skeleton />
+                                            <Skeleton width="60%" />
+                                        </Box>
+                                    </Grid>
+                                )
+                            )
+                        }
                     </Grid>
                 </Grid>
             </Box>

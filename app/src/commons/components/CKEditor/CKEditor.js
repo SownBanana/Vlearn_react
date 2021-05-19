@@ -48,15 +48,17 @@ export default function CKEditor({
 			}}
 			onChange={(event, editor) => {
 				clearTimeout(timeOut);
-				const data = getRawData(editor).innerHTML;
-				// console.log("prepare data", data);
+				const prepareData = getRawData(editor).innerHTML;
+				// console.log("prepare data", editor.getData(), getRawData(editor).innerHTML);
 				timeOut = setTimeout(() => {
 					// console.log(getRawData(editor).innerHTML);
-					console.log("change data", data);
+					// console.log("change data", data);
 					try {
+						const data = getRawData(editor).innerHTML;
 						handler(data);
 					} catch (e) {
 						console.error(e);
+						handler(prepareData);
 					}
 				}, 500);
 				// console.log(event);

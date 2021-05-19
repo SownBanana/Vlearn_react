@@ -7,9 +7,12 @@ import externalLink from "./features/Authenticate/externalLinkSlices";
 import editingCourse from "./features/Course/editingCourseSlice";
 import course from "./features/Course/courseSlice";
 import courseList from "./features/Course/courseListSlice";
-import chat from "./features/Chat/chatSlice";
 import editorModal from "./commons/components/EditorModal/editorSlice";
-// console.log(externalLink);
+import chat from "./features/Chat/chatSlice";
+import info from "./features/Info/infoSlice";
+import learnCourse from "./features/Course/pages/Student/LearnCourse/learnSlice";
+import topic from "./features/Topic/topicSlice";
+
 export default combineReducers({
 	auth,
 	social,
@@ -21,4 +24,7 @@ export default combineReducers({
 	editorModal,
 	course,
 	chat,
+	info,
+	learnCourse,
+	topic
 });

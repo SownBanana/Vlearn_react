@@ -1,14 +1,16 @@
 import { Box, Grid, makeStyles } from '@material-ui/core'
 import BreadCrumbs from 'commons/components/BreadCrumbs'
 import React from 'react'
-import { useSelector } from 'react-redux'
+import { useParams } from 'react-router';
 
 export default function Info() {
     const classes = useStyles();
-    const user = useSelector(state => state.auth.user)
+    const { username } = useParams();
+
     return (
         <Box mt={2}>
             <BreadCrumbs current="Thông tin cá nhân">
+                
             </BreadCrumbs>
             <Box mx={2}>
                 <Grid
@@ -18,7 +20,7 @@ export default function Info() {
                     justify="space-evenly"
                 >
                     <Grid container item md={4} direction="column" justify="flex-start" className={classes.space}>
-                        {user.name}
+                        {username}
                     </Grid>
                     <Grid direction="column" container item md={7} className={classes.space}>
 

@@ -5,6 +5,7 @@ const initialState = {
 	currentURL: "/",
 	isActiveProgress: false,
 	activeProgressCount: 0,
+	uploadProgress: 0,
 };
 var timeOut = 0;
 export const activeProgressWithTimeOut = (duration = 5000) => (dispatch) => {
@@ -38,6 +39,12 @@ const common = createSlice({
 			state.activeProgressCount = 0;
 			state.isActiveProgress = false;
 		},
+		setUploadProgress(state, action) {
+			state.uploadProgress = action.payload;
+		},
+		resetUploadProgress(state) {
+			state.uploadProgress = 0;
+		}
 	},
 });
 
@@ -46,6 +53,8 @@ export const {
 	setCurrentURL,
 	activeProgress,
 	deactiveProgress,
+	setUploadProgress,
+	resetUploadProgress,
 } = common.actions;
 
 export default common.reducer;

@@ -7,17 +7,15 @@ import {
 	Paper,
 	List,
 	ListItem,
-	ListItemText,
 	Box,
 	Grid,
-	Dialog,
 	DialogTitle,
 	DialogContent,
 	DialogActions,
-	Button,
 	IconButton,
 	TextField,
-	Avatar
+	Avatar,
+	Badge
 } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
 import usePusher from "commons/PusherCommon";
@@ -53,7 +51,7 @@ export default function ChatComponent() {
 	const handleFileUpload = (e) => {
 		console.log(e.target.files)
 	}
-
+	const token = useSelector(state => state.auth.refresh_token);
 	const id = useSelector((state) => state.auth.user.id);
 	const currentChat = useSelector(state => state.chat.current)
 	const { users, messages } = currentChat;
@@ -75,24 +73,11 @@ export default function ChatComponent() {
 		}
 	}
 
-	const pusher = usePusher(id);
-	// console.log("Pusher: ", pusher);
-	// if (pusher) console.log("Socket: ", pusher.socketId());
 	useEffect(() => {
-		dispatch(fetchChats());
-		console.log("Check login chat for", id);
-		if (id && pusher) {
-			pusher.leave("App.PrivateMessage." + id);
-			console.log("connect chat channel");
-			pusher
-				.private("App.PrivateMessage." + id)
-				.listen(`PrivateMessageSend`, (data) => {
-					console.log(pusher.socketId());
-					console.log(data);
-					dispatch(appendMessage(data.data));
-				});
+		if (Object.keys(chats).length === 0) {
+			dispatch(fetchChats())
 		}
-	}, [pusher, id]);
+	}, [token])
 
 	var scrollTimeOut = 0;
 	useEffect(() => {
@@ -106,11 +91,15 @@ export default function ChatComponent() {
 		if (messageArea.current)
 			messageArea.current.scrollTop = messageArea.current.scrollHeight;
 	}, [messages]);
+
 	return (id !== null && !inMessagePath) && (
 		<Hidden xsDown>
-			<Fab className={classes.chatBubble} color="secondary" aria-label="add" onClick={handleClick}>
-				<ModeComment />
-			</Fab>
+
+			<Badge className={classes.chatBubble} color="primary" variant="dot" overlap="circle">
+				<Fab color="secondary" aria-label="add" onClick={handleClick}>
+					<ModeComment />
+				</Fab>
+			</Badge>
 			<Popper
 				id={type}
 				open={open}
@@ -121,8 +110,10 @@ export default function ChatComponent() {
 					{
 						Object.keys(chats).map(key => {
 							const chat = chats[key];
-							const chatUser = chat.users[0].id !== id ? chat.users[0] : chat.users[1];
-							return <Avatar onClick={() => openChat(key)} alt={chatUser.name} src={chatUser.avatar_url} style={{ marginBottom: 10 }} />
+							if (chat.users.length > 0) {
+								const chatUser = chat.users[0].id !== id ? chat.users[0] : chat.users[1];
+								return <Avatar onClick={() => openChat(key)} alt={chatUser.name} src={chatUser.avatar_url} style={{ marginBottom: 10 }} />
+							}
 						})
 					}
 				</Grid>
@@ -153,7 +144,7 @@ export default function ChatComponent() {
 						<DialogContent ref={messageArea} dividers className={classes.chatBoxContent}>
 							<List className={classes.chatBackground} component="nav" aria-label="main mailbox folders">
 								{messages.map(mess => {
-									return <ListItem button>
+									return <ListItem>
 										<Message user={mess.sender_id !== id ? user : null}
 											content={mess.content}
 											files={mess.file}
@@ -220,7 +211,9 @@ const useStyles = makeStyles((theme) => ({
 		position: "fixed",
 		bottom: theme.spacing(2),
 		right: theme.spacing(2),
-		zIndex: 10000
+		zIndex: 10000,
+		color: "orange",
+
 	},
 	chatBoxRoot: {
 		height: "fit-content",
@@ -242,7 +235,7 @@ const useStyles = makeStyles((theme) => ({
 		height: "9vh",
 	},
 	chatBackground: {
-		backgroundColor: "aliceblue",
+		backgroundColor: "#cecece25",
 	},
 	expandButton: {
 		background: "white",

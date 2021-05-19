@@ -15,6 +15,18 @@ function Message({
     const isMe = user === null || user.id === id;
     // console.log("Message: ", content);
     const timePast = moment(Date.now()).diff(moment(timestamp * 1000));
+    const getURL = (text) => {
+        var urlRegex = /((http:\/\/|https:\/\/|ftp:\/\/|)(www.|)[a-zA-Z0-9]+(\.[a-zA-Z]+)+[^ ]+)/g;
+        return text.replace(urlRegex, function (url) {
+            var hrefUrl = url;
+            if (!(url.substring(0, 4) == 'http' || url.substring(0, 3) == 'ftp')) {
+                hrefUrl = 'https://' + url
+            }
+            return '<a href="' + hrefUrl + '" target="_blank">' + url + '</a>';
+        })
+        // or alternatively
+        // return text.replace(urlRegex, '<a href="$1">$1</a>')
+    }
     // console.log("Time past: ", timePast)
     const timeString =
         (timePast < 60000) ?
@@ -22,8 +34,8 @@ function Message({
             (timePast < HOUR) ?
                 moment(timePast).format("m ") + "phút trước" :
                 (timePast < DAY) ?
-                    moment(timePast).format("HH ") + "giờ trước" :
-                    moment(timestamp * 1000).format("DD MMMM MM:mm")
+                    moment(timestamp * 1000).format("HH:mm") :
+                    moment(timestamp * 1000).format("DD MMMM HH:mm")
     return !isMe ? (
         <Grid
             container
@@ -33,19 +45,14 @@ function Message({
             className={classes.body}
             wrap="nowrap"
         >
-            <Grid item md={2}>
-                <Avatar alt={user.name} src={user.avatar_url} className={classes.smallAvatar} />
-            </Grid>
-            <Grid item md={9}>
-                <Paper className={classes.message} elevation={3}>
-                    <div className={classes.timestamp}>
-                        {timeString}
-                    </div>
-                    <div>
-                        {content}
-                    </div>
-                </Paper>
-            </Grid>
+            <Avatar alt={user.name} src={user.avatar_url} className={classes.smallAvatar} />
+            <Paper className={classes.message} elevation={3}>
+                <div className={classes.timestamp}>
+                    {timeString}
+                </div>
+                <div dangerouslySetInnerHTML={{ __html: getURL(content) }}>
+                </div>
+            </Paper>
         </Grid>
     ) : (
         <Grid
@@ -61,9 +68,9 @@ function Message({
                     <div className={classes.timestamp}>
                         {timeString}
                     </div>
-                    <div>
-                        {content}
-                    </div></Paper>
+                    <div dangerouslySetInnerHTML={{ __html: getURL(content) }}>
+                    </div>
+                </Paper>
             </Grid>
         </Grid>
     )
@@ -84,6 +91,7 @@ const useStyles = makeStyles((theme) => ({
         padding: "3px 5px",
         fontSize: "0.9rem",
         whiteSpace: "pre-wrap",
+        overflowWrap: "anywhere"
     },
     myMessageBounder: {
         display: "flex",

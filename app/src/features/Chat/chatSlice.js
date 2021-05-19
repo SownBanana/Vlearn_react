@@ -1,4 +1,4 @@
-import { createSlice, current } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 import api from "commons/api/chat";
 export const fetchChats = () => async (dispatch) => {
     try {
