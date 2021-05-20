@@ -26,6 +26,7 @@ import AddIcon from '@material-ui/icons/Add';
 import AnswerList from "../Answer/AnswerList";
 import FilterFramesIcon from '@material-ui/icons/FilterFrames';
 import uuidv4 from "commons/uuidv4";
+import { getPureText } from "commons/getPureText";
 // import CKViewer from "commons/components/CKEditor/CKViewer";
 const CKViewer = lazy(() => import("commons/components/CKEditor/CKViewer"));
 
@@ -74,6 +75,7 @@ export default function QuestionInput({
         dispatch(setHandler(changeQuestionContent));
         dispatch(setContentEditMode(true));
     }
+    
     return (
         <Accordion
             expanded={expanded === question.uuid}
@@ -86,7 +88,7 @@ export default function QuestionInput({
                 classes={{ root: classes.summary, content: classes.summaryContent }}
             >
                 <DragIndicatorIcon color="action" data-movable-handle />
-                {!isMobile && <Typography style={{ width: "100%" }} align="left" variant="body1" color="textSecondary">{`Câu hỏi ${question.order + 1}`}</Typography>}
+                <Typography className={classes.questionText} align="left" variant="body1" color="textSecondary">{getPureText(question.question)}</Typography>
                 {/* <Select
                     style={{ marginRight: "10px" }}
                     value={question.type || 0}
@@ -172,12 +174,19 @@ const useStyles = makeStyles((theme) => ({
         padding: "5px",
     },
     summaryContent: {
-        alignItems: "center"
+        alignItems: "center",
+        width: "90%"
     },
     summary: {
         height: "50px"
     },
     addButton: {
         color: theme.palette.success.main,
+    },
+    questionText: {
+        width: "100%",
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        whiteSpace: "nowrap"
     }
 }));

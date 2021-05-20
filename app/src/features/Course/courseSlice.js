@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import api from "commons/api/course/resource";
+import { makeToast, ToastType } from "features/Toast/toastSlices";
 
 export const fetchCourseSummary = (id) => async (dispatch) => {
     try {
@@ -29,6 +30,12 @@ export const buyCourse = (id) => async (dispatch) => {
         const response = await api.buy(id);
         console.log("+=======> ", response);
         dispatch(setStatus(response.status));
+        if (response.status === "success") {
+            dispatch(makeToast("Mua khóa học thành công", ToastType.SUCCESS));
+            dispatch(setBuyCourse(true));
+        } else {
+            dispatch(makeToast(response.status, ToastType.INFO));
+        }
     } catch (e) {
         dispatch(setStatus("fail"));
         console.log("Faillllllllllllllllllll", e);
@@ -76,12 +83,16 @@ const course = createSlice({
             state.course = action.payload.data;
             state.bought = action.payload.bought;
         },
+        setBuyCourse: (state, action) => {
+            state.bought = action.payload;
+        }
     },
 });
 
 export const {
     clearCourse,
     setCourse,
-    setStatus
+    setStatus,
+    setBuyCourse
 } = course.actions;
 export default course.reducer;

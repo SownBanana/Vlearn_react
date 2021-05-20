@@ -8,12 +8,13 @@ import {
     Paper,
     TextField, Typography,
 } from "@material-ui/core";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import globalStyles from "style/GlobalStyles";
 import { verifyResetPassword } from "features/Authenticate/authSlices";
 import checkPassword from "features/Authenticate/components/CheckPassword";
+import { useHistory } from "react-router";
 
 export default function ChangePassword({ location }) {
     globalStyles();
@@ -21,7 +22,7 @@ export default function ChangePassword({ location }) {
     const classes = useStyles();
     const { register, handleSubmit, errors, getValues } = useForm();
     const code = location.search.substr(6, location.search.length);
-
+    const isResetSuccess = useSelector(state => state.auth.isResetSuccess)
     const onSubmit = ({ password }) => {
         console.log("Error", errors);
         dispatch(
@@ -50,7 +51,12 @@ export default function ChangePassword({ location }) {
             checkPassword(password, setPasswordErrorCheck);
         }, 100);
     };
-
+    const history = useHistory();
+    useEffect(() => {
+        if (isResetSuccess) {
+            history.push('/auth/login');
+        }
+    }, [isResetSuccess])
 
     return (
         <Box mt={10}>

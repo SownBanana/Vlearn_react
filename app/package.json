@@ -26,6 +26,7 @@
     "pusher-js": "^7.0.3",
     "react": "^17.0.1",
     "react-animations": "^1.0.0",
+    "react-countdown-circle-timer": "^2.5.3",
     "react-dom": "^17.0.1",
     "react-hook-form": "^6.15.5",
     "react-jutsu": "^3.0.2",

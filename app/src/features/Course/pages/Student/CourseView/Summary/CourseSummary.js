@@ -11,6 +11,7 @@ import { UserRole } from 'features/Authenticate/constance';
 import { setPreviousURL } from "commons/SliceCommon";
 import RatingStats from 'commons/components/Rating/RatingStats';
 import CommentView from 'commons/components/Comment/CommentView';
+import { makeToast, ToastType } from 'features/Toast/toastSlices';
 
 export default function CourseSummary() {
     const classes = useStyles();
@@ -29,6 +30,8 @@ export default function CourseSummary() {
             history.push('/auth/login');
         } else if (role === UserRole.STUDENT) {
             dispatch(buyCourseAction(id));
+        } else {
+            dispatch(makeToast('Chỉ học sinh mới có thể mua khoa học', ToastType.INFO));
         }
     }
     const learnCourse = () => {

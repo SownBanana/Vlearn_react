@@ -66,12 +66,15 @@ export const verifyResetPassword = (params) => async (dispatch) => {
 		const response = await AuthAPI.verifyResetPassword(params);
 		if (response.status === "success") {
 			dispatch(makeToast("Đổi mật khẩu thành công", ToastType.SUCCESS))
+			dispatch(setIsResetSuccess(true));
 		}
 		else {
 			dispatch(makeToast("Đổi mật khẩu thất bại", ToastType.ERROR))
+			dispatch(setIsResetSuccess(false));
 		}
 	} catch (e) {
 		dispatch(makeToast("Đổi mật khẩu thất bại", ToastType.ERROR))
+		dispatch(setIsResetSuccess(false));
 		console.log(e);
 	}
 };
@@ -186,6 +189,7 @@ function setFail(state) {
 	state.user.email = null;
 	state.user.avatar_url = null;
 	state.user.role = null;
+	state.isResetSuccess = false;
 	clearError(state);
 }
 function setSuccess(
@@ -233,6 +237,7 @@ const initialState = {
 		avatar_url: null,
 		role: null,
 	},
+	isResetSuccess: false,
 };
 
 const auth = createSlice({
@@ -252,6 +257,9 @@ const auth = createSlice({
 		},
 		setUser: (state, action) => {
 			state.user = action.payload;
+		},
+		setIsResetSuccess: (state, action) => {
+			state.isResetSuccess = action.payload;
 		}
 	},
 	extraReducers: {
@@ -287,6 +295,6 @@ const auth = createSlice({
 	},
 });
 
-export const { authSuccess, authFail, setUser } = auth.actions;
+export const { authSuccess, authFail, setUser, setIsResetSuccess } = auth.actions;
 
 export default auth.reducer;

@@ -20,6 +20,7 @@ import {
     setTitle,
 } from "commons/components/EditorModal/editorSlice";
 import { useDispatch } from "react-redux";
+import { getPureText } from "commons/getPureText";
 const CKViewer = lazy(() => import("commons/components/CKEditor/CKViewer"));
 
 export default function AnswerInput({
@@ -59,7 +60,7 @@ export default function AnswerInput({
             >
                 <DragIndicatorIcon color="action" data-movable-handle />
                 <FormControlLabel
-                    style={{ width: "100%" }}
+                    className={classes.contentLabel}
                     control={
                         <Checkbox
                             checked={answer.is_true}
@@ -71,7 +72,7 @@ export default function AnswerInput({
                             inputProps={{ 'aria-label': 'primary checkbox' }}
                         />
                     }
-                    label="Đáp án đúng"
+                    label={getPureText(answer.content)}
                 />
 
                 <div style={{ width: "100%" }} ></div>
@@ -132,12 +133,19 @@ const useStyles = makeStyles((theme) => ({
         padding: "15px",
     },
     summaryContent: {
-        alignItems: "center"
+        alignItems: "center",
+        width: "90%",
     },
     summary: {
         height: "50px"
     },
     addButton: {
         color: theme.palette.success.main,
+    },
+    contentLabel: {
+        width: "100%",
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        whiteSpace: "nowrap"
     }
 }));

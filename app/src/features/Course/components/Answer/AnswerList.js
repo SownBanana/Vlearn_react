@@ -80,8 +80,8 @@ export default function AnswerList({ answers, setAnswers }) {
                                 isDragged || isSelected
                                     ? isOutOfBounds
                                         ? "6px solid #F08080"
-                                        : "6px solid #e4de0a69"
-                                    : "6px solid #e4de0a",
+                                        : "6px solid #e4800a69"
+                                    : "6px solid #e4800a",
                         }}
                     >
                         <AnswerInput

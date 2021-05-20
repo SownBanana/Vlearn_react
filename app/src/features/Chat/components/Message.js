@@ -24,8 +24,6 @@ function Message({
             }
             return '<a href="' + hrefUrl + '" target="_blank">' + url + '</a>';
         })
-        // or alternatively
-        // return text.replace(urlRegex, '<a href="$1">$1</a>')
     }
     // console.log("Time past: ", timePast)
     const timeString =

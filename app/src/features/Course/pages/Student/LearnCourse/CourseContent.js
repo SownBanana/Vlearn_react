@@ -2,15 +2,19 @@ import React from 'react'
 import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
-import { getLesson } from 'features/Course/pages/Student/LearnCourse/learnSlice'
+import { getLesson, getQuestions } from 'features/Course/pages/Student/LearnCourse/learnSlice'
 import clsx from 'clsx'
 export default function CourseContent() {
     const classes = useStyles();
     const course = useSelector(state => state.learnCourse.course);
     const selectedLesson = useSelector(state => state.learnCourse.lesson);
+    const selectedQuestion = useSelector(state => state.learnCourse.question);
     const dispatch = useDispatch();
     const changeLesson = (id) => {
         dispatch(getLesson(id));
+    }
+    const changeQuestions = (id) => {
+        dispatch(getQuestions(id));
     }
     return (
         <Typography variant="body2" color="textSecondary" className={classes.root}>
@@ -19,16 +23,27 @@ export default function CourseContent() {
                 {
                     course.sections.map((section) => {
                         return (
-                            <li>
+                            <li key={section.id}>
                                 <p className={classes.ulTitle}>{section.name}</p>
                                 <ul className={classes.ul}>
                                     {section.lessons.map((lesson) => {
                                         return (
-                                            <li className={clsx(classes.li, lesson.id === selectedLesson.id && classes.liSelected)} onClick={() => changeLesson(lesson.id)}>
+                                            <li key={lesson.id} className={clsx(classes.li, lesson.id === selectedLesson.id && classes.liSelected)}
+                                                onClick={() => changeLesson(lesson.id)}>
                                                 {lesson.name}
                                             </li>
                                         )
                                     })}
+                                    {
+                                        (section.questions.length > 0) && (
+                                            <li key={section.id + "qs"} className={clsx(classes.li,
+                                                (section.id === selectedQuestion.section_id)
+                                                && classes.liSelected)}
+                                                onClick={() => changeQuestions(section.id)}>
+                                                Câu hỏi
+                                            </li>
+                                        )
+                                    }
                                 </ul>
                             </li>
                         )
@@ -56,19 +71,22 @@ const useStyles = makeStyles((theme) => ({
         marginLeft: 10,
     },
     ulTitle: {
-        color: "gray",
+        color: "#585858",
         fontWeight: "bold"
     },
     li: {
         cursor: "pointer",
         padding: "5px",
+        color: "#585858",
+        borderLeft: "3px solid #ffffff00",
+        transition: "0.2s",
         "&:hover": {
-            borderLeft: "3px solid #cecece",
-            backgroundColor: "#cecece40",
+            borderLeft: "3px solid #0753c780",
+            backgroundColor: "#0753c720",
         }
     },
     liSelected: {
-        borderLeft: "3px solid #cecece90",
-        backgroundColor: "#cecece20",
+        borderLeft: "3px solid #0753c770",
+        backgroundColor: "#0753c710",
     }
 }))
