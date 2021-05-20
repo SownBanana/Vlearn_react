@@ -9,7 +9,7 @@ import {
 import { logout } from "../authSlices";
 import { fetchFacebookLink, fetchGithubLink, fetchGoogleLink } from "../externalLinkSlices";
 
-export default function SocialLoginButtonGroup() {
+export default function SocialLoginButtonGroup({ isPersist = false }) {
 	const dispatch = useDispatch();
 	const googleLoginLink = useSelector(
 		(state) => state.externalLink.googleLoginLink
@@ -25,7 +25,7 @@ export default function SocialLoginButtonGroup() {
 
 	return (
 		<div>
-			<Grid container direction="row" justify="center" alignItems="center">
+			<Grid container direction="row">
 				<Box mx={1}>
 					<GoogleLoginButton
 						text=""
@@ -37,20 +37,20 @@ export default function SocialLoginButtonGroup() {
 						// 	setloginGoogleText("");
 						// }}
 						onClick={() => {
-							dispatch(logout());
+							if (!isPersist) dispatch(logout());
 							window.location.href = googleLoginLink;
 						}}
 					/>
 				</Box>
 				<Box mx={1}>
 					<FacebookLoginButton text="" onClick={() => {
-						dispatch(logout());
+						if (!isPersist) dispatch(logout());
 						window.location.href = facebookLoginLink;
 					}} />
 				</Box>
 				<Box mx={1}>
 					<GithubLoginButton text="" onClick={() => {
-						dispatch(logout());
+						if (!isPersist) dispatch(logout());
 						window.location.href = githubLoginLink;
 					}} />
 				</Box>

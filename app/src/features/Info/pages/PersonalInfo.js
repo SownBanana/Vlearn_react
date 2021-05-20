@@ -1,11 +1,13 @@
 import React, { useEffect } from 'react'
-import { Avatar, Box, Button, Grid, makeStyles, Typography } from '@material-ui/core'
+import { Avatar, Box, Button, Grid, makeStyles, Typography, IconButton, Divider } from '@material-ui/core'
 import BreadCrumbs from 'commons/components/BreadCrumbs'
 import { useDispatch, useSelector } from 'react-redux'
-import { fetchMyData, setNewInfo, updateMyData } from 'features/Info/infoSlice'
-
+import { detachSocial, fetchMyData, setNewInfo, updateMyData } from 'features/Info/infoSlice'
+import ConfirmIconButton from "commons/components/Button/ConfirmIconButton";
 import uploadApi from "commons/api/upload/upload";
 import { UserRole } from 'features/Authenticate/constance'
+import { Add, Close } from '@material-ui/icons'
+import SocialLoginButtonGroup from 'features/Authenticate/components/SocialLoginButtonGroup'
 
 export default function PersonalInfo() {
     const classes = useStyles();
@@ -73,22 +75,65 @@ export default function PersonalInfo() {
                             </Box>
                         </Grid>
                     </Grid>
-                    <Grid direction="column" container item md={7} className={classes.space}>
-                        {
-                            user.social_accounts && user.social_accounts.map((account) => {
-                                return <Grid item container direction="row" justify="space-evenly">
-                                    <Typography>
-                                        {account.social_provider}
-                                    </Typography>
-                                    <Typography>
-                                        {account.social_name}
-                                    </Typography>
-                                    <Typography>
-                                        {account.social_email}
-                                    </Typography>
-                                </Grid>
-                            })
-                        }
+                    <Grid direction="column" container item xs={12} md={7} className={classes.space}>
+                        <Grid direction="column" container spacing={0} item xs={12} style={{ flexBasis: "0" }}>
+                            <Grid container spacing={1} item xs={12} >
+                                <Typography align="left" color="textSecondary" variant="h6">
+                                    Tài khoản xã hội
+                                    <IconButton onClick={(e) => console.log("Add social")}>
+                                        <Add fontSize="small" />
+                                    </IconButton>
+                                </Typography>
+                            </Grid>
+                            {
+                                user.social_accounts && user.social_accounts.map((account) => {
+                                    return (
+                                        <Grid item xs={12}>
+
+                                            <Grid item xs={12} container direction="row" alignItems="center" spacing={2} style={{ padding: 10 }}>
+                                                <Grid item xs={2}>
+                                                    <Typography align="left">
+                                                        {account.social_provider}
+                                                    </Typography>
+                                                </Grid>
+                                                <Grid item xs={3}>
+                                                    <Typography align="left">
+                                                        {account.social_name}
+                                                    </Typography>
+                                                </Grid>
+                                                <Grid item xs={6}>
+                                                    <Typography align="left">
+                                                        {account.social_email}
+                                                    </Typography>
+                                                </Grid>
+                                                <Grid item xs={1}>
+                                                    <ConfirmIconButton
+                                                        onClick={() => {
+                                                            dispatch(detachSocial({
+                                                                social_id: account.id
+                                                            }))
+                                                        }}
+                                                        edge="start"
+                                                        className="button"
+                                                        title={"Xóa câu hỏi"}
+                                                        message={"Bạn thực sự muốn hủy liên kết?"}
+                                                    >
+                                                        <Close />
+                                                    </ConfirmIconButton>
+                                                </Grid>
+                                            </Grid>
+                                            <Divider />
+                                        </Grid>
+                                    )
+                                })
+                            }
+                        </Grid>
+                        <Typography align="left" color="textSecondary" variant="body2">
+                            Thêm tài khoản
+                        </Typography>
+                        <Grid item xs={12} justify="flex-start" style={{ transform: "scale(0.8)" }}>
+                            <SocialLoginButtonGroup isPersist={true} />
+                        </Grid>
                     </Grid>
                 </Grid>
             </Box>
@@ -101,7 +146,7 @@ const useStyles = makeStyles((theme) => ({
         borderRadius: "10px",
         boxShadow: "black 1px 1px 6px -3px",
         marginBottom: theme.spacing(2),
-        padding: "15px !important"
+        padding: "20px !important"
     },
     imageContainer: {
         width: "100%",

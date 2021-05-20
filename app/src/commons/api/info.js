@@ -24,6 +24,22 @@ const info = {
     index: async () => {
         const response = await api.get('api/users');
         return response.data;
+    },
+    attach: async ({ social, search }) => {
+        const response = await api.get(`/api/user/${social}/attach-social${search}`,
+            {
+                headers: headersWithToken(),
+            }
+        );
+        return response.data;
+    },
+    detach: async (params) => {
+        const response = await api.post(`/api/user/detach-social`, params,
+            {
+                headers: headersWithToken(),
+            }
+        );
+        return response.data;
     }
 
 };

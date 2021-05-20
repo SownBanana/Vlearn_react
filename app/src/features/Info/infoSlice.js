@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import api from "commons/api/info";
 import { setUser } from 'features/Authenticate/authSlices'
+import { makeToast, ToastType } from "features/Toast/toastSlices";
 
 export const fetchMyData = () => async (dispatch) => {
     try {
@@ -30,9 +31,43 @@ export const updateMyData = (params) => async (dispatch) => {
     }
 };
 
+export const attachSocial = (params) => async (dispatch) => {
+    try {
+        const response = await api.attach(params);
+        console.log("+=======> ", response);
+        if (response.status === "success") {
+            dispatch(setNewInfo({}));
+            console.log(response);
+            if (response.user) {
+                dispatch(setMyInfo(response.user));
+                dispatch(setUser(response.user));
+            }
+        }
+    } catch (e) {
+        console.log(e)
+    }
+}
+export const detachSocial = (params) => async (dispatch) => {
+    try {
+        const response = await api.detach(params);
+        console.log("+=======> ", response);
+        if (response.status === "success") {
+            dispatch(makeToast("Hủy liên kết thành công", ToastType.SUCCESS))
+            dispatch(setNewInfo({}));
+            console.log(response);
+            if (response.user) {
+                dispatch(setMyInfo(response.user));
+                dispatch(setUser(response.user));
+            }
+        }
+    } catch (e) {
+        console.log(e)
+    }
+}
+
 const initialState = {
     myInfo: {},
-    newInfo: {}
+    newInfo: {},
 };
 
 const info = createSlice({

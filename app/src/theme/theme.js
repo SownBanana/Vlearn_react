@@ -10,6 +10,21 @@ import {
 import createPalette from "@material-ui/core/styles/createPalette";
 
 const theme = createMuiTheme({
+	typography: {
+		// Use the system font instead of the default Roboto font.
+		fontFamily: [
+			'-apple-system',
+			'BlinkMacSystemFont',
+			// 'Open Sans',
+			'Arial',
+			'Roboto',
+			'"Helvetica Neue"',
+			'sans-serif',
+			'"Apple Color Emoji"',
+			'"Segoe UI Emoji"',
+			'"Segoe UI Symbol"',
+		].join(','),
+	},
 	palette: createPalette({
 		// type: "dark",
 		selected: {

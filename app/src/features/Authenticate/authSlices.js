@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import AuthAPI from "../../commons/api/AuthAPI";
-import { enqueueSnackbar } from "../Toast/toastSlices";
+import { enqueueSnackbar, makeToast, ToastType } from "../Toast/toastSlices";
 
 export const logout = () => (dispatch) => {
 	try {
@@ -47,6 +47,34 @@ export const attachSocial = createAsyncThunk(
 		}
 	}
 );
+export const resetPassword = (params) => async (dispatch) => {
+	try {
+		const response = await AuthAPI.resetPassword(params);
+		if (response.status === "success") {
+			dispatch(makeToast("Đã gửi mail đến email chính của bạn, hãy kiểm tra email", ToastType.SUCCESS))
+		}
+		else {
+			dispatch(makeToast(response.mss, ToastType.ERROR))
+		}
+	} catch (e) {
+		dispatch(makeToast("Có lỗi xảy ra", ToastType.ERROR))
+		console.log(e);
+	}
+};
+export const verifyResetPassword = (params) => async (dispatch) => {
+	try {
+		const response = await AuthAPI.verifyResetPassword(params);
+		if (response.status === "success") {
+			dispatch(makeToast("Đổi mật khẩu thành công", ToastType.SUCCESS))
+		}
+		else {
+			dispatch(makeToast("Đổi mật khẩu thất bại", ToastType.ERROR))
+		}
+	} catch (e) {
+		dispatch(makeToast("Đổi mật khẩu thất bại", ToastType.ERROR))
+		console.log(e);
+	}
+};
 
 
 var logoutTimeout = 0;

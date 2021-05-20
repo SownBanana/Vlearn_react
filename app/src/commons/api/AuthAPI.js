@@ -105,6 +105,22 @@ const authAPI = {
 		const response = await api.post(`/api/auth/attach-social`, params);
 		return response.data;
 	},
+	//email/username
+	resetPassword: async (params) => {
+		console.log(
+			params
+		);
+		const response = await api.post(`/api/auth/reset-password`, params);
+		return response.data;
+	},
+	//code & password
+	verifyResetPassword: async (params) => {
+		console.log(
+			params
+		);
+		const response = await api.post(`/api/auth/verify-reset-password`, params);
+		return response.data;
+	},
 };
 
 export default authAPI;
