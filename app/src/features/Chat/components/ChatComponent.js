@@ -15,18 +15,20 @@ import {
 	IconButton,
 	TextField,
 	Avatar,
-	Badge
+	Badge,
+	Zoom,
+	Grow
 } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
-import usePusher from "commons/PusherCommon";
 import { ModeComment } from "@material-ui/icons";
 import SendRoundedIcon from '@material-ui/icons/SendRounded';
 import AttachFileRoundedIcon from '@material-ui/icons/AttachFileRounded';
 import Message from "./Message";
 import RemoveRoundedIcon from '@material-ui/icons/RemoveRounded';
 import ExpandLessRoundedIcon from '@material-ui/icons/ExpandLessRounded';
-import { sendChat, appendMessage, setCurrent, fetchChats } from 'features/Chat/chatSlice'
+import { sendChat, setCurrent, fetchChats } from 'features/Chat/chatSlice'
 import { useLocation } from "react-router";
+import NavigationRoundedIcon from '@material-ui/icons/NavigationRounded';
 
 export default function ChatComponent() {
 	const classes = useStyles();
@@ -95,28 +97,41 @@ export default function ChatComponent() {
 	return (id !== null && !inMessagePath) && (
 		<Hidden xsDown>
 
-			<Badge className={classes.chatBubble} color="primary" variant="dot" overlap="circle">
-				<Fab color="secondary" aria-label="add" onClick={handleClick}>
-					<ModeComment />
-				</Fab>
-			</Badge>
+			<div className={classes.chatBubble}>
+				<Badge color="primary" variant="dot" overlap="circle">
+					<Fab color="secondary" aria-label="add" onClick={handleClick}>
+						<ModeComment />
+					</Fab>
+					<NavigationRoundedIcon
+						className={classes.scrollTop}
+						onClick={() => { window.scrollTo({ top: 0, behavior: 'smooth' }) }}
+					/>
+				</Badge>
+			</div>
 			<Popper
 				id={type}
 				open={open}
 				anchorEl={anchorEl}
 				style={{ zIndex: 10 }}
 			>
-				<Grid container spacing={1} direction="column" >
-					{
-						Object.keys(chats).map(key => {
-							const chat = chats[key];
-							if (chat.users.length > 0) {
-								const chatUser = chat.users[0].id !== id ? chat.users[0] : chat.users[1];
-								return <Avatar onClick={() => openChat(key)} alt={chatUser.name} src={chatUser.avatar_url} style={{ marginBottom: 10 }} />
-							}
-						})
-					}
-				</Grid>
+				<Grow in={open} style={{ transformOrigin: '100% 100%' }}>
+					<Grid container spacing={1} direction="column" >
+						{
+							Object.keys(chats).map(key => {
+								const chat = chats[key];
+								if (chat.users.length > 0) {
+									const chatUser = chat.users[0].id !== id ? chat.users[0] : chat.users[1];
+									return <Avatar onClick={() => openChat(key)} alt={chatUser.name} src={chatUser.avatar_url} style={{ marginBottom: 10 }} />
+								}
+							})
+						}
+						<Avatar src={""} style={{ marginBottom: 10 }} />
+						<Avatar src={""} style={{ marginBottom: 10 }} />
+						<Avatar src={""} style={{ marginBottom: 10 }} />
+						<Avatar src={""} style={{ marginBottom: 10 }} />
+						<Avatar src={""} style={{ marginBottom: 10 }} />
+					</Grid>
+				</Grow>
 
 			</Popper>
 			<Popper
@@ -126,76 +141,78 @@ export default function ChatComponent() {
 				placement="left-end"
 				style={{ zIndex: 10 }}
 			>
-				<Box hidden={isMiniumChatBox} mr={2}>
-					<Paper className={classes.chatBoxRoot}>
-						<DialogTitle className={classes.chatBoxTitle} disableTypography>
-							<Grid container spacing={0} direction="row">
-								<Grid md={10} xs={10} item container direction="row" alignItems="center">
-									<Avatar alt={user.name} src={user.avatar_url} style={{ marginRight: 4 }} />
-									{user.name}
+				<Zoom in={open && !isMiniumChatBox}  {...(open && !isMiniumChatBox ? { timeout: 300 } : {})} style={{ transformOrigin: '100% 100%' }}>
+					<Box className={isMiniumChatBox && classes.hideComponent} mr={2}>
+						<Paper className={classes.chatBoxRoot}>
+							<DialogTitle className={classes.chatBoxTitle} disableTypography>
+								<Grid container spacing={0} direction="row">
+									<Grid md={10} xs={10} item container direction="row" alignItems="center">
+										<Avatar alt={user.name} src={user.avatar_url} style={{ marginRight: 4 }} />
+										{user.name}
+									</Grid>
+									<Grid item md={2} xs={2}>
+										<IconButton onClick={() => setMiniumChatBox(true)}>
+											<RemoveRoundedIcon />
+										</IconButton>
+									</Grid>
 								</Grid>
-								<Grid item md={2} xs={2}>
-									<IconButton onClick={() => setMiniumChatBox(true)}>
-										<RemoveRoundedIcon />
-									</IconButton>
-								</Grid>
-							</Grid>
-						</DialogTitle>
-						<DialogContent ref={messageArea} dividers className={classes.chatBoxContent}>
-							<List className={classes.chatBackground} component="nav" aria-label="main mailbox folders">
-								{messages.map(mess => {
-									return <ListItem>
-										<Message user={mess.sender_id !== id ? user : null}
-											content={mess.content}
-											files={mess.file}
-											timestamp={mess.timestamp}
-										/>
-									</ListItem>
-								})}
-							</List>
-						</DialogContent>
-						{isFile && <DialogContent dividers>
+							</DialogTitle>
+							<DialogContent ref={messageArea} dividers className={classes.chatBoxContent}>
+								<List className={classes.chatBackground} component="nav" aria-label="main mailbox folders">
+									{messages.map(mess => {
+										return <ListItem>
+											<Message user={mess.sender_id !== id ? user : null}
+												content={mess.content}
+												files={mess.file}
+												timestamp={mess.timestamp}
+											/>
+										</ListItem>
+									})}
+								</List>
+							</DialogContent>
+							{isFile && <DialogContent dividers>
 
-						</DialogContent>}
-						<DialogActions className={classes.chatBoxAction}>
-							<input
-								accept="*/*"
-								style={{ display: "none" }}
-								id={"icon-button-file"}
-								type="file"
-								onChange={handleFileUpload}
-							/>
-							<IconButton color="primary" size="small" style={{ margin: 0 }}>
-								<label htmlFor={"icon-button-file"}>
-									<AttachFileRoundedIcon size="inherit" />
-								</label>
-							</IconButton>
-							<TextField
-								id=""
-								label=""
-								fullWidth={true}
-								variant="outlined"
-								style={{ padding: 0, marginLeft: 10 }}
-								size="small"
-								multiline
-								rows={1}
-								value={typingMessage}
-								onChange={(e) => setTypingMessage(e.target.value)}
-								onKeyUp={(e) => {
-									if (e.code === 'Enter')
-										if (!e.ctrlKey) sendMessage();
-										else {
-											console.log("Enter");
-											setTypingMessage(typingMessage + '\n')
-										}
-								}}
-							/>
-							<IconButton color="primary" size="small">
-								<SendRoundedIcon onClick={sendMessage} />
-							</IconButton>
-						</DialogActions>
-					</Paper>
-				</Box>
+							</DialogContent>}
+							<DialogActions className={classes.chatBoxAction}>
+								<input
+									accept="*/*"
+									style={{ display: "none" }}
+									id={"icon-button-file"}
+									type="file"
+									onChange={handleFileUpload}
+								/>
+								<IconButton color="primary" size="small" style={{ margin: 0 }}>
+									<label htmlFor={"icon-button-file"}>
+										<AttachFileRoundedIcon size="inherit" />
+									</label>
+								</IconButton>
+								<TextField
+									id=""
+									label=""
+									fullWidth={true}
+									variant="outlined"
+									style={{ padding: 0, marginLeft: 10 }}
+									size="small"
+									multiline
+									rows={1}
+									value={typingMessage}
+									onChange={(e) => setTypingMessage(e.target.value)}
+									onKeyUp={(e) => {
+										if (e.code === 'Enter')
+											if (!e.ctrlKey) sendMessage();
+											else {
+												console.log("Enter");
+												setTypingMessage(typingMessage + '\n')
+											}
+									}}
+								/>
+								<IconButton color="primary" size="small">
+									<SendRoundedIcon onClick={sendMessage} />
+								</IconButton>
+							</DialogActions>
+						</Paper>
+					</Box>
+				</Zoom>
 				<div hidden={!isMiniumChatBox} className={classes.expandButton}>
 					<IconButton size="small" onClick={() => setMiniumChatBox(false)}>
 						<ExpandLessRoundedIcon size="small" />
@@ -214,6 +231,12 @@ const useStyles = makeStyles((theme) => ({
 		zIndex: 10000,
 		color: "orange",
 
+	},
+	scrollTop: {
+		position: "absolute",
+		bottom: -5,
+		right: -15,
+		cursor: "pointer"
 	},
 	chatBoxRoot: {
 		height: "fit-content",
@@ -243,5 +266,8 @@ const useStyles = makeStyles((theme) => ({
 		opacity: "0.8",
 		marginBottom: theme.spacing(2),
 		marginRight: theme.spacing(1)
+	},
+	hideComponent: {
+		display: "none"
 	}
 }));

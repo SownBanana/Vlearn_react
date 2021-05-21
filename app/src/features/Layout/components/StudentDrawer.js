@@ -8,6 +8,7 @@ import { List, makeStyles } from "@material-ui/core";
 import ChatIcon from "@material-ui/icons/Chat";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import PersonIcon from '@material-ui/icons/Person';
+import DashboardIcon from '@material-ui/icons/Dashboard';
 
 export default function StudentDrawer({ handle }) {
 	const classes = useStyles();
@@ -18,9 +19,15 @@ export default function StudentDrawer({ handle }) {
 			{[
 				{
 					name: "Trang chủ",
-					key: "dashboard",
+					key: "home",
 					icon: <HomeIcon />,
 					link: "/",
+				},
+				{
+					name: "Dashboard",
+					key: "dashboard",
+					icon: <DashboardIcon />,
+					link: "/dashboard",
 				},
 				{
 					name: "Khóa học của tôi",

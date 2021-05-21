@@ -21,12 +21,12 @@ export default function LearnCourse() {
             </BreadCrumbs>
             <Box mx={2}>
                 <Grid container direction="row" spacing={1}>
-                    <Grid item md={10} xs={12}>
+                    <Grid item md={9} xs={12}>
                         {learnView === LESSON && <LessonView />}
                         {learnView === QUESTION && <QuestionView />}
                         {learnView === LIVE_LESSON && <LessonView />}
                     </Grid>
-                    <Grid item md={2} xs={12}>
+                    <Grid item md={3} xs={12}>
                         <CourseContent />
                     </Grid>
                 </Grid>

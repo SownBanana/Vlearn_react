@@ -49,6 +49,7 @@ const authAPI = {
 		return response.data;
 	},
 	checkPassport: async () => {
+		
 		const response = await api.get(`/api/check-passport`, {
 			headers: headersWithToken(),
 		});

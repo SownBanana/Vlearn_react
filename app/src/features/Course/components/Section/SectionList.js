@@ -47,20 +47,20 @@ function SectionList() {
 		setSections(newSections);
 	};
 	const addSection = () => {
-		var newSection = cloneDeep(sections);
-		console.log("==============>", newSection);
-		newSection.push({
+		var newSections = cloneDeep(sections);
+		// console.log("==============>", newSections);
+		newSections.push({
 			id: "",
 			uuid: uuidv4(),
-			order: "",
+			order: newSections.length > 0 ? newSections[newSections.length - 1].order + 1 : 0,
 			course_id: "",
 			name: "",
 			lessons: [],
 			live_lessons: [],
 			questions: [],
 		});
-		console.log("==============>", newSection);
-		setSections(newSection);
+		// console.log("==============>", newSections);
+		setSections(newSections);
 		// setSection({ section, lessons: [...section.lessons, { uuid: uuidv4() }] });
 	};
 

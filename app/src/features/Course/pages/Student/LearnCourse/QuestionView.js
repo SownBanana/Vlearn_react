@@ -1,11 +1,27 @@
-import { Box, useMediaQuery, Typography, Divider, Grid, Checkbox, FormControlLabel, RadioGroup, Radio, IconButton, Button, makeStyles } from '@material-ui/core';
+import React, { useEffect, useState } from 'react'
+import {
+    Box,
+    useMediaQuery,
+    Typography,
+    Divider,
+    Grid,
+    Checkbox,
+    RadioGroup,
+    Radio,
+    IconButton,
+    Button,
+    makeStyles,
+    Zoom,
+    Collapse
+} from '@material-ui/core';
 import { ArrowLeft, ArrowRight } from '@material-ui/icons';
 import clsx from 'clsx';
 import CKViewer from 'commons/components/CKEditor/CKViewer';
-import React, { useEffect, useState } from 'react'
 import { CountdownCircleTimer } from 'react-countdown-circle-timer';
 import { useDispatch, useSelector } from 'react-redux';
-import { calculateAnswers, checkAnswer, checkSingleAnswer, navQuestion } from './learnSlice';
+import { calculateAnswers, checkAnswer, checkSingleAnswer, getNextSection, navQuestion, setLesson } from './learnSlice';
+import { css, StyleSheet } from 'aphrodite';
+import { headShake } from 'react-animations';
 
 export default function QuestionView() {
     const dispatch = useDispatch();
@@ -15,31 +31,31 @@ export default function QuestionView() {
     const result = useSelector(state => state.learnCourse.result);
     const question = useSelector(state => state.learnCourse.question);
     const isMobile = useMediaQuery("(max-width: 790px)");
-
+    const isTimeUp = Object.keys(result).length > 0;
     const renderTimer = ({ remainingTime }) => {
         if (remainingTime === 0) {
-            return <div className={classes.timer}>Hết giờ</div>;
+            return <Typography variant="h6" className={css(styles.headShake)}>Hết giờ!!!</Typography>;
         }
 
         return (
             <div className={classes.timer}>
                 <div className={classes.timerText}>Còn lại</div>
                 <div className={classes.timerValue}>{remainingTime}</div>
-            </div>
+            </div >
         );
     };
     return (
         question &&
         <Grid container direction="row">
             <Grid item xs={12} md={3}>
-                <Box ml={isMobile ? 0 : 2} mt={2} pt={2} style={{ backgroundColor: "white", border: "1px solid #cecece60", boxShadow: "black 1px 1px 5px -3px", borderRadius: "5px" }}>
+                <Box ml={isMobile ? 0 : 2} mt={2} py={2} style={{ backgroundColor: "white", border: "1px solid #cecece60", boxShadow: "black 1px 1px 5px -3px", borderRadius: "5px" }}>
                     <Grid item xs={12} style={{ display: "flex", justifyContent: "center" }}>
                         <CountdownCircleTimer
                             isPlaying
-                            duration={60}
-                            colors={[["#004777", 0.3], ["#004777", 0.3], ["#F7B801", 0.3], ["#A30000"]]}
+                            duration={!isTimeUp ? 10 : 0}
+                            colors={[["#004777", 0.15], ["#004777", 0.4], ["#F7B801", 0.4], ["#A30000"]]}
                             onComplete={() => {
-                                console.log("Cham diem")
+                                dispatch(calculateAnswers());
                             }}
                             size={140}
                         >
@@ -70,7 +86,35 @@ export default function QuestionView() {
             </Grid>
             <Grid item xs={12} md={9}>
                 {
-                    if()
+                    <Collapse in={isTimeUp}>
+                        <Box mx={isMobile ? 0 : 2} mt={2} p={2} style={{ backgroundColor: "white", border: "1px solid #cecece60", boxShadow: "black 1px 1px 5px -3px", borderRadius: "5px" }}>
+                            <Button style={{
+                                float: "right",
+                                marginBottom: -50,
+                            }}
+                                variant="contained"
+                                size="small"
+                                color="primary"
+                                onClick={() => dispatch(getNextSection(question.section_id))}
+                            >
+                                Chương tiếp theo
+                                </Button>
+                            <Grid
+                                container
+                                spacing={1}
+                                direction="column"
+                                justify="center"
+                                alignItems="center"
+                                alignContent="center"
+                            >
+                                <Typography variant="h5" color="initial">Kết quả</Typography>
+                                <Typography variant="h4" color="textSecondary">{result.fancy_point} điểm</Typography>
+                                <Divider />
+                                <Typography style={{ marginTop: 10 }} variant="body2" color="initial">Điểm cao nhất đã đạt được {result.fancy_point > result.last_highest_point && "trước đó"}</Typography>
+                                <Typography variant="h6" color="textSecondary">{result.last_highest_point} điểm</Typography>
+                            </Grid>
+                        </Box>
+                    </Collapse>
                 }
                 <Box mx={isMobile ? 0 : 2} mt={2} p={2} style={{ backgroundColor: "white", border: "1px solid #cecece60", boxShadow: "black 1px 1px 5px -3px", borderRadius: "5px" }}>
                     <Grid container spacing={1} direction="row" justify="space-evenly" alignItems="center" style={{ marginBottom: 20 }}>
@@ -96,6 +140,7 @@ export default function QuestionView() {
                                         return (
                                             <Grid container spacing={1} direction="row">
                                                 <Checkbox
+                                                    disabled={isTimeUp}
                                                     checked={answer.is_check || false}
                                                     onChange={(e) => { dispatch(checkAnswer({ index, value: e.target.checked })) }}
                                                     color="primary"
@@ -111,7 +156,7 @@ export default function QuestionView() {
                                             question.answers.map((answer, index) => {
                                                 return (
                                                     <Grid container spacing={1} direction="row">
-                                                        <Radio value={index} />
+                                                        <Radio disabled={isTimeUp} value={index} />
                                                         <CKViewer content={answer.content} />
                                                     </Grid>
                                                 )
@@ -126,9 +171,12 @@ export default function QuestionView() {
                         <IconButton color="primary" size="small" disabled={questionIndex === 0} onClick={() => dispatch(navQuestion(questionIndex - 1))}>
                             <ArrowLeft fontSize="large" />
                         </IconButton>
-                        <Button variant="outlined" color="primary" size="small" onClick={() => dispatch(calculateAnswers())}>
-                            Chấm điểm
-                        </Button>
+                        {
+                            !isTimeUp &&
+                            <Button variant="outlined" color="primary" size="small" onClick={() => dispatch(calculateAnswers())}>
+                                Chấm điểm
+                            </Button>
+                        }
                         <IconButton color="primary" size="small" disabled={questionIndex === questions.length - 1} onClick={() => dispatch(navQuestion(questionIndex + 1))}>
                             <ArrowRight fontSize="large" />
                         </IconButton>
@@ -139,6 +187,13 @@ export default function QuestionView() {
     )
 }
 
+const styles = StyleSheet.create({
+    headShake: {
+        animationName: headShake,
+        animationDuration: "1s",
+    },
+});
+
 const useStyles = makeStyles((theme) => ({
     footer: {
         marginTop: 20,
@@ -146,7 +201,8 @@ const useStyles = makeStyles((theme) => ({
     gridContainer: {
         display: "grid",
         gridTemplateColumns: "auto auto auto auto",
-        padding: 3
+        padding: 3,
+        marginTop: 20
     },
     gridItem: {
         padding: "10px 7px",

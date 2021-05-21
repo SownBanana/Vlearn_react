@@ -1,3 +1,5 @@
 export const getPureText = (text) => {
-    return text.replace(/(<([^>]+)>)/ig, '');
+    if (text !== null && text !== undefined)
+        return text.replace(/(<([^>]+)>)/ig, '');
+    return text;
 }

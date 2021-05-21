@@ -44,7 +44,7 @@ export default function SectionInput({
 		console.log(e);
 		console.log("Add Lesson");
 		var newLessons = cloneDeep(section.lessons);
-		newLessons.push({ uuid: uuidv4() });
+		newLessons.push({ uuid: uuidv4(), order: newLessons.length > 0 ? newLessons[newLessons.length - 1].order + 1 : 0 });
 		setLessons(newLessons);
 		// setSection({ section, lessons: [...section.lessons, { uuid: uuidv4() }] });
 	};

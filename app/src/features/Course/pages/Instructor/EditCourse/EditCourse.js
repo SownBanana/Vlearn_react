@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import CourseEditPane from "features/Course/components/Course/CourseEditPane";
 import { useDispatch, useSelector } from "react-redux";
 import {
 	fetchCourse,
@@ -15,6 +14,7 @@ import {
 } from "@material-ui/core";
 import BreadCrumbs from "commons/components/BreadCrumbs";
 import { CourseStatus } from "features/Course/constance";
+import CourseInput from "features/Course/components/Course/CourseInput";
 
 export default function EditCourse() {
 	const course = useSelector((state) => state.editingCourse.course);
@@ -124,7 +124,7 @@ export default function EditCourse() {
 			</BreadCrumbs>
 
 			<Box mt={6} >
-				<CourseEditPane course={course} setCourse={setCourse} />
+				<CourseInput course={course} setCourse={setCourse} />
 			</Box>
 		</Box>
 	);

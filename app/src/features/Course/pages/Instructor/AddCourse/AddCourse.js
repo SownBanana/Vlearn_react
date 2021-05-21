@@ -12,7 +12,7 @@ import {
 } from "@material-ui/core";
 import BreadCrumbs from "commons/components/BreadCrumbs";
 import { CourseStatus } from "features/Course/constance";
-import CourseEditPane from "features/Course/components/Course/CourseEditPane";
+import CourseInput from "features/Course/components/Course/CourseInput";
 
 export default function AddCourse() {
 	const course = useSelector((state) => state.editingCourse.course);
@@ -106,7 +106,7 @@ export default function AddCourse() {
 			</BreadCrumbs>
 
 			<Box mt={6}>
-				<CourseEditPane course={course} setCourse={setCourse} />
+				<CourseInput course={course} setCourse={setCourse} />
 			</Box>
 		</Box>
 	);

@@ -21,9 +21,10 @@ export const updateMyData = (params) => async (dispatch) => {
         if (response.status === "success") {
             dispatch(setNewInfo({}));
             console.log(response);
-            if (response.user) {
-                dispatch(setMyInfo(response.user));
-                dispatch(setUser(response.user));
+            if (response.data) {
+                dispatch(setMyInfo(response.data));
+                dispatch(setUser(response.data));
+                dispatch(makeToast("Thông tin đã được cập nhật", ToastType.SUCCESS, true, 1000));
             }
         }
     } catch (e) {
@@ -36,6 +37,7 @@ export const attachSocial = (params) => async (dispatch) => {
         const response = await api.attach(params);
         console.log("+=======> ", response);
         if (response.status === "success") {
+            dispatch(makeToast("Liên kết tài khoản thành công", ToastType.SUCCESS))
             dispatch(setNewInfo({}));
             console.log(response);
             if (response.user) {
@@ -76,6 +78,7 @@ const info = createSlice({
     reducers: {
         setMyInfo: (state, action) => {
             state.myInfo = action.payload;
+            state.newInfo.settings = action.payload.settings;
         },
         setNewInfo: (state, action) => {
             state.newInfo = action.payload;

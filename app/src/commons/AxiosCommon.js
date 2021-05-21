@@ -1,4 +1,5 @@
 import axios from "axios";
+import { authFail } from "features/Authenticate/authSlices";
 
 export const headersWithToken = (access_token = null) => {
 	if (access_token === null && localStorage) {
@@ -35,28 +36,31 @@ const instance = axios.create({
 	},
 });
 
-instance.interceptors.response.use(
-	(response) => {
-		return response;
-	},
-	(error) => {
-		// const originalRequest = error.config;
-		// if (error.response.status === 401 && !originalRequest._retry) {
-		if (error.response.status === 401 ) {
-			console.log("Trying to refresh Token in Axios");
-			return instance
-				.post("/api/auth/refresh")
-				.then((response) => {
-					error.response.config.headers["Authorization"] =
-						"Bearer " + response.data.access_token;
-					return instance(error.config);
-				})
-				.catch((error) => {
-					return Promise.reject(error);
-				});
+export const initAxiosInterceptors = (store) => {
+	instance.interceptors.response.use(
+		(response) => {
+			return response;
+		},
+		(error) => {
+			// const originalRequest = error.config;
+			// if (error.response.status === 401 && !originalRequest._retry) {
+			if (error.response.status === 401) {
+				console.log("Trying to refresh Token in Axios");
+				return instance
+					.post("/api/auth/refresh")
+					.then((response) => {
+						error.response.config.headers["Authorization"] =
+							"Bearer " + response.data.access_token;
+						return instance(error.config);
+					})
+					.catch((error) => {
+						store.dispatch(authFail());
+						return Promise.reject(error);
+					});
+			}
+			return Promise.reject(error);
 		}
-		return Promise.reject(error);
-	}
-);
+	);
+}
 
 export default instance;

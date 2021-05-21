@@ -4,6 +4,7 @@ import apiLesson from "commons/api/course/lesson";
 import apiQuestion from "commons/api/course/question";
 import { LESSON, LIVE_LESSON, QUESTION } from "commons/enums/LearnView";
 import shuffle from "commons/shuffer";
+import { makeToast, ToastType } from "features/Toast/toastSlices";
 
 export const fetchCourseSummary = (id) => async (dispatch) => {
     try {
@@ -64,6 +65,27 @@ export const calculateAnswers = () => async (dispatch, getState) => {
     }
 };
 
+export const getNextSection = (current_section_id) => async (dispatch, getState) => {
+    const { course } = getState().learnCourse;
+    var notLast = false;
+    for (let index = 0; index < course.sections.length - 1; index++) {
+        const section = course.sections[index];
+        if (section.id === current_section_id) {
+            const nextSection = course.sections[index + 1];
+            if (nextSection.lessons.length > 0) {
+                notLast = true;
+                dispatch(getLesson(nextSection.lessons[0].id))
+            } else if (nextSection.questions.length > 0) {
+                dispatch(getQuestions(nextSection.id));
+            } else {
+                dispatch(makeToast("Có gì đó không đúng ở đây", ToastType.WARNING))
+            }
+            break;
+        }
+    }
+    if (!notLast) dispatch(makeToast("Đây là chương cuối cùng", ToastType.INFO))
+}
+
 function clear(state) {
     state.course = {
         id: null,
@@ -74,10 +96,22 @@ function clear(state) {
     };
     state.status = "";
     state.lesson = {};
+    state.liveLesson = {
+    };
+    state.questions = [];
+    state.question = {};
+    state.currentQuestionIndex = -1;
+    state.learnView = LESSON;
+    state.result = {};
 
 }
+function clearQuestion(state) {
+    state.questions = [];
+    state.question = {};
+    state.currentQuestionIndex = -1;
+    state.result = {};
+}
 const initialState = {
-    status: "",
     course: {
         id: null,
         title: "",
@@ -90,6 +124,7 @@ const initialState = {
     },
     liveLesson: {
     },
+    status: "",
     questions: [],
     question: {},
     currentQuestionIndex: -1,
@@ -117,6 +152,7 @@ const learnCourse = createSlice({
             state.liveLesson = {};
         },
         setQuestions: (state, action) => {
+            clearQuestion(state);
             state.questions = shuffle(action.payload);
             state.currentQuestionIndex = 0;
             state.question = state.questions[0];

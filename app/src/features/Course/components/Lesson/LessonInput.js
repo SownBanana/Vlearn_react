@@ -1,4 +1,4 @@
-import React, { lazy, Suspense } from "react";
+import React, { lazy, Suspense, useState } from "react";
 import {
 	TextField,
 	Accordion,
@@ -13,7 +13,7 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import DragIndicatorIcon from "@material-ui/icons/DragIndicator";
 import DeleteRoundedIcon from "@material-ui/icons/DeleteRounded";
 import EditRoundedIcon from "@material-ui/icons/EditRounded";
-import { Movie } from "@material-ui/icons";
+import { Movie, Refresh } from "@material-ui/icons";
 import VideoPlayer from "commons/components/VideoPlayer/VideoPlayer";
 import ConfirmButton from "commons/components/Button/ConfirmIconButton";
 import {
@@ -37,6 +37,8 @@ export default function LessonInput({
 }) {
 	const dispatch = useDispatch();
 	const classes = useStyles();
+
+	const [reload, setReload] = useState(true);
 	const changeLessonContent = (content) => {
 		handleChange({ ...lesson, content: content });
 	};
@@ -45,9 +47,14 @@ export default function LessonInput({
 	};
 
 	const handleVideoUpload = event => {
-
 		dispatch(uploadVideo(lesson.section_id, lesson.id, event.target.files[0]))
 	};
+	const reloadVideo = () => {
+		setReload((state) => state = false);
+		setTimeout(() => {
+			setReload(state => state = true);
+		}, 100);
+	}
 	const history = useHistory();
 	const params = useParams();
 	const openLessonEdit = (e) => {
@@ -57,6 +64,7 @@ export default function LessonInput({
 		dispatch(setHandler(changeLessonContent));
 		dispatch(setContentEditMode(true));
 	}
+
 	return (
 		<Accordion
 			expanded={expanded === lesson.uuid}
@@ -109,8 +117,8 @@ export default function LessonInput({
 			<AccordionDetails className={classes.content}>
 				<Grid container spacing={1} direction="column">
 					<Grid item md={12} xs={12}>
-						{lesson.video_url && (
-							<VideoPlayer width="inherit" url={lesson.video_url} />
+						{(lesson.video_url) && (
+							<VideoPlayer width="inherit" url={reload && lesson.video_url} />
 						)}
 					</Grid>
 					<Grid
@@ -124,16 +132,23 @@ export default function LessonInput({
 						alignItems="center"
 						justify="space-between"
 					>
-						<Grid item md={8} xs={12}>
-							<TextField
-								id=""
-								label=""
-								value={lesson.video_url}
-								fullWidth
-								onChange={(e) =>
-									handleChange({ ...lesson, video_url: e.target.value })
-								}
-							/>
+						<Grid container direction="row" alignItems="center" item md={8} xs={12}>
+							<Grid item xs={1}>
+								<IconButton size="small" onClick={reloadVideo}>
+									<Refresh fontSize="small" />
+								</IconButton>
+							</Grid>
+							<Grid item xs={11}>
+								<TextField
+									id=""
+									label=""
+									value={lesson.video_url}
+									fullWidth
+									onChange={(e) =>
+										handleChange({ ...lesson, video_url: e.target.value })
+									}
+								/>
+							</Grid>
 						</Grid>
 						<Grid item md={4} xs={12}>
 							<input

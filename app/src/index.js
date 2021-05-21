@@ -10,6 +10,7 @@ import rootReducer from "./reducers";
 import RefreshTokenMiddleWare from "./middlewares/RefreshTokenMiddleWare";
 import logger from "redux-logger";
 import { SnackbarProvider } from "notistack";
+import { initAxiosInterceptors } from "commons/AxiosCommon";
 
 const store = configureStore({
 	reducer: rootReducer,
@@ -28,6 +29,8 @@ const store = configureStore({
 		logger,
 	],
 });
+
+initAxiosInterceptors(store);
 
 ReactDOM.render(
 	<React.StrictMode>

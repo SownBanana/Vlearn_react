@@ -11,6 +11,7 @@ import ListItemLink from "commons/components/ListItemLink";
 // import globalStyle from "style/GlobalStyles";
 import { List, makeStyles } from "@material-ui/core";
 import { useSelector } from "react-redux";
+import DashboardIcon from '@material-ui/icons/Dashboard';
 
 export default function InstructorDrawer({ handle }) {
 	const classes = useStyles();
@@ -21,9 +22,15 @@ export default function InstructorDrawer({ handle }) {
 			{[
 				{
 					name: "Trang chủ",
-					key: "dashboard",
+					key: "home",
 					icon: <HomeIcon />,
 					link: "/",
+				},
+				{
+					name: "Dashboard",
+					key: "dashboard",
+					icon: <DashboardIcon />,
+					link: "/dashboard",
 				},
 				{
 					name: "Khóa học của tôi",
