@@ -88,7 +88,7 @@ export default function LessonInput({
 							input: classes.labelInput,
 						},
 					}}
-					value={lesson.name}
+					value={lesson.name || ""}
 					onClick={(e) => e.stopPropagation()}
 					onChange={(e) => {
 						handleChange({ ...lesson, name: e.target.value });
@@ -142,7 +142,7 @@ export default function LessonInput({
 								<TextField
 									id=""
 									label=""
-									value={lesson.video_url}
+									value={lesson.video_url || ""}
 									fullWidth
 									onChange={(e) =>
 										handleChange({ ...lesson, video_url: e.target.value })

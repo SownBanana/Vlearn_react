@@ -29,6 +29,7 @@ import ExpandLessRoundedIcon from '@material-ui/icons/ExpandLessRounded';
 import { sendChat, setCurrent, fetchChats } from 'features/Chat/chatSlice'
 import { useLocation } from "react-router";
 import NavigationRoundedIcon from '@material-ui/icons/NavigationRounded';
+import clsx from "clsx";
 
 export default function ChatComponent() {
 	const classes = useStyles();
@@ -142,7 +143,7 @@ export default function ChatComponent() {
 				style={{ zIndex: 10 }}
 			>
 				<Zoom in={open && !isMiniumChatBox}  {...(open && !isMiniumChatBox ? { timeout: 300 } : {})} style={{ transformOrigin: '100% 100%' }}>
-					<Box className={isMiniumChatBox && classes.hideComponent} mr={2}>
+					<Box className={clsx({ [classes.hideComponent]: isMiniumChatBox })} mr={2}>
 						<Paper className={classes.chatBoxRoot}>
 							<DialogTitle className={classes.chatBoxTitle} disableTypography>
 								<Grid container spacing={0} direction="row">

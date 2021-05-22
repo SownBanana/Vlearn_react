@@ -12,14 +12,32 @@ export default function LessonView() {
     const user = useSelector(state => state.auth.user);
     const bounder = useRef();
     const mobileVideo = useRef();
-    const [isFloat, setFloat] = useState(false);
-
+    const [status, setStatus] = useState({ isFloat: false });
+    // const [isFloat, setFloat] = useState();
+    // var isFloat = false;
     const trackScrolling = () => {
-        setFloat(false);
-        console.log(isFloat, window.scrollY);
-        const video = bounder.current.children[0]
-        if (video.getBoundingClientRect().top < -200) {
-            setFloat(true);
+        try {
+
+            if (!status.isFloat) {
+                console.log(status.isFloat, window.scrollY);
+                // const video = bounder.current.children[0]
+                // if (video.getBoundingClientRect().top < -100) {
+                if (window.scrollY > 500) {
+                    setStatus({ isFloat: true });
+                    status.isFloat = true;
+                    // isFloat = true;
+                }
+            } else {
+                console.log("small", status.isFloat, window.scrollY)
+                if (window.scrollY < 500) {
+                    // setFloat((state) => state = false);
+                    setStatus({ isFloat: false });
+                    status.isFloat = false;
+                    // isFloat = false;
+                }
+            }
+        } catch (e) {
+            document.removeEventListener('scroll', trackScrolling);
         }
     };
 
@@ -32,7 +50,7 @@ export default function LessonView() {
     return (
         <div>
             <Box ref={bounder} ml={isMobile ? 0 : 5} py={1} style={{ backgroundColor: "white", border: "1px solid #cecece60", borderRadius: "5px" }}>
-                <div className={isFloat && isMobile ? classes.floatVideoMobile : isFloat && !isMobile ? classes.floatVideo : ''} >
+                <div className={status.isFloat ? (isMobile ? classes.floatVideoMobile : classes.floatVideo) : ''} >
 
                     {
                         isMobile ? (
@@ -43,8 +61,8 @@ export default function LessonView() {
                     }
                 </div>
                 {!!lesson.content &&
-                    <Box mt={2} px={6}>
-                        <CKViewer content={lesson.content} />
+                    <Box mt={status.isFloat ? isMobile ? 30 : 60 : 2} px={isMobile ? 2 : 6}>
+                        <CKViewer style={{ overflow: "hidden" }} content={lesson.content} />
                     </Box>
                 }
             </Box>
@@ -63,7 +81,7 @@ const useStyles = makeStyles(theme => ({
     },
     floatVideoMobile: {
         position: "fixed",
-        top: theme.spacing(8),
+        top: theme.spacing(5),
         left: 0
     }
 }))

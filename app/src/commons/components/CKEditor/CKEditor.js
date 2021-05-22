@@ -9,7 +9,7 @@ export default function CKEditor({
 	handler,
 	...props
 }) {
-	const getRawData = (editor) => editor.editing.view.domRoots.get("main");
+	// const getRawData = (editor) => editor.editing.view.domRoots.get("main");
 
 	var timeOut;
 
@@ -48,13 +48,16 @@ export default function CKEditor({
 			}}
 			onChange={(event, editor) => {
 				clearTimeout(timeOut);
-				const prepareData = getRawData(editor).innerHTML;
-				// console.log("prepare data", editor.getData(), getRawData(editor).innerHTML);
+				// const prepareData = getRawData(editor).innerHTML;
+				const prepareData = editor.getData();
+				// console.log("prepare data", editor.getData());
 				timeOut = setTimeout(() => {
 					// console.log(getRawData(editor).innerHTML);
 					// console.log("change data", data);
 					try {
-						const data = getRawData(editor).innerHTML;
+						// const data = getRawData(editor).innerHTML;
+						const data = editor.getData();
+						// console.log(data);
 						handler(data);
 					} catch (e) {
 						console.error(e);
@@ -134,7 +137,7 @@ const editorConfiguration = {
 			"tableCellProperties",
 			"tableProperties",
 		],
-	},
+	}
 };
 
 const editorNoSideConfiguration = {
@@ -193,7 +196,7 @@ const editorNoSideConfiguration = {
 			"tableCellProperties",
 			"tableProperties",
 		],
-	},
+	}
 };
 
 // const editorClassicConfiguration = {

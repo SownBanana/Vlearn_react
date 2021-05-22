@@ -63,10 +63,10 @@ export default function AnswerInput({
                     className={classes.contentLabel}
                     control={
                         <Checkbox
-                            checked={answer.is_true}
+                            checked={answer.is_true === 1}
                             onChange={(e) => {
                                 e.stopPropagation();
-                                handleChange({ ...answer, is_true: e.target.checked })
+                                handleChange({ ...answer, is_true: e.target.checked ? 1 : 0 })
                             }
                             }
                             inputProps={{ 'aria-label': 'primary checkbox' }}

@@ -97,7 +97,7 @@ export default function SectionInput({
 							placement="top"
 							enterDelay={200}
 							arrow
-						>
+						>	
 							<IconButton
 								onClick={addLesson}
 								classes={{ root: classes.successBtn }}
