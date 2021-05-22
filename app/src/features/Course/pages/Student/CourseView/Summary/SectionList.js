@@ -8,13 +8,16 @@ import {
     Box, Typography, Grid, Paper, Avatar
 } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import CKViewer from "commons/components/CKEditor/CKViewer";
+import useCheckMobile from "commons/hooks/useCheckMobile";
 
 function SectionList({ sections, instructor }) {
     const classes = useStyles();
+    const isMobile = useCheckMobile();
     return (
         <Grid
             container spacing={3}>
-            <Grid item md={8} xs={12}>
+            <Grid item md={6} xs={12}>
                 {
                     sections.map((section) => {
                         return (
@@ -55,14 +58,16 @@ function SectionList({ sections, instructor }) {
                     })
                 }
             </Grid>
-            <Grid item md={4} xs={12} >
-                <Avatar className="avatar--large avatar--center" src={instructor.avatar_url} />
-                <Typography variant="h6" color="initial">
-                    {instructor.name}
-                </Typography>
-                <Typography variant="body1" color="initial">
-                    {instructor.introduce}
-                </Typography>
+            <Grid item md={6} xs={12} >
+                <Box p={0} mt={isMobile ? 0 : -6}>
+                    <Avatar className="avatar--large avatar--center" src={instructor.avatar_url} />
+                    <Typography variant="h6" color="initial">
+                        {instructor.name}
+                    </Typography>
+                    <Typography variant="body1" color="initial">
+                        <CKViewer content={instructor.introduce} />
+                    </Typography>
+                </Box>
             </Grid>
         </Grid>
     );

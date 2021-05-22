@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
-import { fetchCourseSummary, clearCourse, buyCourse as buyCourseAction } from 'features/Course/courseSlice'
+import { fetchCourseSummary, clearCourse, buyCourse as buyCourseAction, rateCourse } from 'features/Course/courseSlice'
 import { Grid, Box, Typography, makeStyles, Button, useMediaQuery } from '@material-ui/core'
 import BreadCrumbs from "commons/components/BreadCrumbs";
 import { Parallax } from 'react-parallax'
@@ -12,6 +12,8 @@ import { setPreviousURL } from "commons/SliceCommon";
 import RatingStats from 'commons/components/Rating/RatingStats';
 import CommentView from 'commons/components/Comment/CommentView';
 import { makeToast, ToastType } from 'features/Toast/toastSlices';
+import { Rating } from '@material-ui/lab';
+import useCheckMobile from 'commons/hooks/useCheckMobile';
 
 export default function CourseSummary() {
     const classes = useStyles();
@@ -23,7 +25,16 @@ export default function CourseSummary() {
     const status = useSelector(state => state.course.status)
     const role = useSelector(state => state.auth.user.role)
     const history = useHistory();
-    const isMobile = useMediaQuery("(max-width: 760px)");
+    const isMobile = useCheckMobile();
+    const statistic = useSelector(state => state.course.statistic)
+    var ratingArray = [0, 0, 0, 0, 0]
+    var totalBought = 0;
+    statistic.forEach(rating => {
+        if (rating.rate)
+            ratingArray[rating.rate - 1] = rating.rate_count;
+        totalBought += rating.rate_count;
+    })
+
     const buyCourse = () => {
         if (!role) {
             dispatch(setPreviousURL(pathname));
@@ -113,11 +124,25 @@ export default function CourseSummary() {
                 <Grid container direction="row">
                     <Grid md={6} xs={12} container item spacing={1}>
                         <Grid item md={10}>
-                            <RatingStats ratings={[20, 25, 12, 7, 3]} raterCount={67} />
+                            <RatingStats ratings={ratingArray.reverse()} />
                         </Grid>
                     </Grid>
-                    <Grid item md={6} xs={12}>
-                        <CommentView />
+                    <Grid container direction="column" alignItems={isMobile ? "center" : "flex-start"} spacing={0} item md={6} xs={12}>
+                        {
+                            bought &&
+                            <Box mb={isMobile ? 1 : 3} mt={isMobile ? 3 : 0}>
+                                <Rating
+                                    name="course-rate"
+                                    defaultValue={course.rate}
+                                    size="large"
+                                    onChange={(e, value) => dispatch(rateCourse({
+                                        course_id: course.id,
+                                        rate: value
+                                    }))}
+                                />
+                            </Box>
+                        }
+                        <CommentView course={course} content={course.comment} commentable={bought} />
                     </Grid>
                 </Grid>
             </Box>

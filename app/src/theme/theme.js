@@ -37,7 +37,7 @@ const theme = createMuiTheme({
 			dark: blue["900"],
 		},
 		success: {
-			light: green["100"],
+			light: green["400"],
 			main: green["600"],
 			dark: green["900"],
 		},

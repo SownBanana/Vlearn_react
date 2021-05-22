@@ -17,6 +17,7 @@ export default function SearchPane({ handleSearch, filter, handleFilter }) {
 		<Box mb={3} style={{ display: "flex", justifyContent: "center" }}>
 			<Grid container item md={10} xs={10} sm={10} spacing={1} direction="row">
 				<Grid container item md={6} sm={12} xs={12} justify="flex-start">
+
 					<FormControl
 						variant="outlined"
 						size="small"
@@ -26,6 +27,7 @@ export default function SearchPane({ handleSearch, filter, handleFilter }) {
 						<Select
 							labelId="status-label"
 							id="status"
+							label="Trạng thái"
 							value={filter.status}
 							onChange={(e) => {
 								handleFilter({ ...filter, status: e.target.value });
@@ -45,6 +47,7 @@ export default function SearchPane({ handleSearch, filter, handleFilter }) {
 						<Select
 							labelId="time-label"
 							id="time"
+							label="Thời gian"
 							defaultValue={filter.time}
 							value={filter.time}
 							onChange={(e) => {

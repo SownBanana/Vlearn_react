@@ -18,6 +18,7 @@ export const getSocialCallback = (params) => async (dispatch) => {
 		}
 	} catch (e) {
 		console.log(e);
+		dispatch(setSocialState({ status: "fail" }));
 	} finally {
 		dispatch(deactiveProgress());
 	}

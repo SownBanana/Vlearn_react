@@ -7,12 +7,12 @@ import { logout } from "./authSlices";
 import Github from "./pages/OAuth/Github";
 import Google from "./pages/OAuth/Google";
 import Facebook from "./pages/OAuth/Facebook";
-import { setPreviousURL } from "../../commons/SliceCommon";
+// import { setPreviousURL } from "../../commons/SliceCommon";
 import ChangePassword from "./pages/Reset/ChangePassword";
 
 export default function Authenticate() {
     const dispatch = useDispatch();
-    dispatch(setPreviousURL("/auth"));
+    // dispatch(setPreviousURL("/auth"));
 
     return (
         <Switch>

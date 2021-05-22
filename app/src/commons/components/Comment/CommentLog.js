@@ -1,22 +1,30 @@
-import { Grid, List, ListItem, makeStyles } from '@material-ui/core'
+import { Box, Divider, Grid, List, ListItem, makeStyles, Typography } from '@material-ui/core'
 import { Message } from '@material-ui/icons'
+import { Rating } from '@material-ui/lab';
 import React from 'react'
 
-export default function CommentLog({ messageArea, user, comments }) {
+export default function CommentLog({ students }) {
     const classes = useStyles();
     return (
-        <Grid ref={messageArea} item md={12} className={classes.commentSpace}>
+        <Grid item md={12} className={classes.commentSpace}>
             <List className={classes.chatBackground} component="nav" aria-label="main mailbox folders">
-                {comments.map(comment => {
-                    return <ListItem button>
-                        <Message
-                            style={{ marginTop: 10 }}
-                            user={user}
-                            content={comment.content}
-                            files={comment.file}
-                            timestamp={comment.timestamp}
-                        />
-                    </ListItem>
+                {students && students.map(student => {
+                    const rating = student.pivot
+                    return (
+                        <div>
+
+                            <ListItem button>
+                                <Box my={2}>
+                                    <Grid container spacing={1} direction="column">
+                                        <Typography variant="subtitle2" style={{ fontWeight: "bold" }} color="textPrimary">{student.name}</Typography>
+                                        <Rating size="small" value={rating.rate} readOnly={true} />
+                                        <Typography variant="subtitle2" color="textSecondary">{rating.comment}</Typography>
+                                    </Grid>
+                                </Box>
+                            </ListItem>
+                            <Divider />
+                        </div>
+                    )
                 })}
             </List>
         </Grid>
@@ -33,6 +41,7 @@ const useStyles = makeStyles((theme) => ({
         overflowY: "auto",
         minHeight: "10vh",
         maxHeight: "66vh",
-        marginBottom: theme.spacing(0)
+        marginBottom: theme.spacing(0),
+        marginTop: theme.spacing(2),
     },
 }));

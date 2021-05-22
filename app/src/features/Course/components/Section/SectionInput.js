@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
 	TextField,
 	Accordion,
@@ -10,6 +10,7 @@ import {
 	Hidden,
 	Tooltip,
 	IconButton,
+	Typography,
 } from "@material-ui/core";
 
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
@@ -23,6 +24,8 @@ import uuidv4 from "commons/uuidv4";
 import { cloneDeep } from "lodash";
 import ConfirmIconButton from "commons/components/Button/ConfirmIconButton";
 import QuestionList from "../Question/QuestionList";
+import SettingsIcon from '@material-ui/icons/Settings';
+import SectionSettingDialog from './SectionSettingDialog'
 export default function SectionInput({
 	section,
 	handleChange,
@@ -60,6 +63,11 @@ export default function SectionInput({
 		setQuestions(newQuestions);
 		// setSection({ section, lessons: [...section.lessons, { uuid: uuidv4() }] });
 	};
+	const [open, setOpen] = useState(false)
+	const openSetting = (e) => {
+		e.stopPropagation();
+		setOpen(true);
+	}
 	useEffect(() => {
 		console.log("rerender section");
 	});
@@ -97,7 +105,7 @@ export default function SectionInput({
 							placement="top"
 							enterDelay={200}
 							arrow
-						>	
+						>
 							<IconButton
 								onClick={addLesson}
 								classes={{ root: classes.successBtn }}
@@ -148,9 +156,13 @@ export default function SectionInput({
 							}}
 						/>
 					</div>
-					{/* <div className={classes.column}>
+					<div className={classes.column}>
 						<Typography className={classes.secondaryHeading}>Select</Typography>
-					</div> */}
+					</div>
+					<IconButton onClick={openSetting}>
+						<SettingsIcon color="action" />
+					</IconButton>
+
 				</AccordionSummary>
 				<Divider />
 				<AccordionDetails className={classes.details}>
@@ -159,6 +171,15 @@ export default function SectionInput({
 					<QuestionList questions={section.questions} setQuestions={setQuestions} />
 				</AccordionDetails>
 			</Accordion>
+			<SectionSettingDialog
+				open={open}
+				handleClose={(e) => {
+					setOpen(false)
+				}}
+				section={section}
+				setSection={setSection}
+
+			/>
 		</Box>
 	);
 }

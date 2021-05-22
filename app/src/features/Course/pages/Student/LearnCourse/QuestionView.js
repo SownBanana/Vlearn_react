@@ -14,7 +14,7 @@ import {
     Zoom,
     Collapse
 } from '@material-ui/core';
-import { ArrowLeft, ArrowRight } from '@material-ui/icons';
+import { ArrowLeft, ArrowRight, Settings } from '@material-ui/icons';
 import clsx from 'clsx';
 import CKViewer from 'commons/components/CKEditor/CKViewer';
 import { CountdownCircleTimer } from 'react-countdown-circle-timer';
@@ -22,6 +22,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { calculateAnswers, checkAnswer, checkSingleAnswer, getNextSection, navQuestion, setLesson } from './learnSlice';
 import { css, StyleSheet } from 'aphrodite';
 import { headShake } from 'react-animations';
+import { palette } from '@material-ui/system';
 
 export default function QuestionView() {
     const dispatch = useDispatch();
@@ -29,9 +30,11 @@ export default function QuestionView() {
     const questions = useSelector(state => state.learnCourse.questions);
     const questionIndex = useSelector(state => state.learnCourse.currentQuestionIndex);
     const result = useSelector(state => state.learnCourse.result);
+    const questionSetting = useSelector(state => state.learnCourse.questionSetting);
     const question = useSelector(state => state.learnCourse.question);
     const isMobile = useMediaQuery("(max-width: 790px)");
     const isTimeUp = Object.keys(result).length > 0;
+    const [isDone, setDone] = useState(false);
     const renderTimer = ({ remainingTime }) => {
         if (remainingTime === 0) {
             return <Typography variant="h6" className={css(styles.headShake)}>Hết giờ!!!</Typography>;
@@ -49,20 +52,27 @@ export default function QuestionView() {
         <Grid container direction="row">
             <Grid item xs={12} md={3}>
                 <Box ml={isMobile ? 0 : 2} mt={2} py={2} style={{ backgroundColor: "white", border: "1px solid #cecece60", boxShadow: "black 1px 1px 5px -3px", borderRadius: "5px" }}>
-                    <Grid item xs={12} style={{ display: "flex", justifyContent: "center" }}>
-                        <CountdownCircleTimer
-                            isPlaying
-                            duration={!isTimeUp ? 10 : 0}
-                            colors={[["#004777", 0.15], ["#004777", 0.4], ["#F7B801", 0.4], ["#A30000"]]}
-                            onComplete={() => {
-                                dispatch(calculateAnswers());
-                            }}
-                            size={140}
-                        >
-                            {renderTimer}
-                        </CountdownCircleTimer>
-                    </Grid>
-                    <div className={classes.gridContainer}>
+                    {
+                        questionSetting.question_duration ?
+                            <Grid item xs={12} style={{ display: "flex", justifyContent: "center" }}>
+                                <CountdownCircleTimer
+                                    isPlaying={!isTimeUp && !isDone}
+                                    duration={questionSetting.question_duration * 60}
+                                    colors={[["#004777", 0.15], ["#004777", 0.4], ["#F7B801", 0.4], ["#A30000"]]}
+                                    onComplete={() => {
+                                        setDone(true);
+                                        dispatch(calculateAnswers());
+                                    }}
+                                    size={140}
+                                >
+                                    {renderTimer}
+                                </CountdownCircleTimer>
+                            </Grid>
+                            : <div></div>
+                    }
+                    <div className={classes.gridContainer} style={{
+                        marginTop: questionSetting.question_duration ? 20 : 0
+                    }}>
                         {
                             questions.map((question, index) => {
                                 const doneQuestion = question.answers.some((answer) => {
@@ -89,10 +99,10 @@ export default function QuestionView() {
                     <Collapse in={isTimeUp}>
                         <Box mx={isMobile ? 0 : 2} mt={2} p={2} style={{ backgroundColor: "white", border: "1px solid #cecece60", boxShadow: "black 1px 1px 5px -3px", borderRadius: "5px" }}>
                             <Button style={{
-                                float: "right",
-                                marginBottom: -50,
+                                float: isMobile ? "" : "right",
+                                marginBottom: isMobile ? 20 : -50,
                             }}
-                                variant="contained"
+                                variant="outlined"
                                 size="small"
                                 color="primary"
                                 onClick={() => dispatch(getNextSection(question.section_id))}
@@ -108,10 +118,11 @@ export default function QuestionView() {
                                 alignContent="center"
                             >
                                 <Typography variant="h5" color="initial">Kết quả</Typography>
-                                <Typography variant="h4" color="textSecondary">{result.fancy_point} điểm</Typography>
-                                <Divider />
+                                <Box color={result.fancy_point < questionSetting.pass_point ? "error.main" : "success.light"}>
+                                    <Typography variant="h4" >{result.fancy_point} điểm</Typography>
+                                </Box>
                                 <Typography style={{ marginTop: 10 }} variant="body2" color="initial">Điểm cao nhất đã đạt được {result.fancy_point > result.last_highest_point && "trước đó"}</Typography>
-                                <Typography variant="h6" color="textSecondary">{result.last_highest_point} điểm</Typography>
+                                <Typography variant="h6" color="primary">{result.last_highest_point} điểm</Typography>
                             </Grid>
                         </Box>
                     </Collapse>
@@ -173,7 +184,7 @@ export default function QuestionView() {
                         </IconButton>
                         {
                             !isTimeUp &&
-                            <Button variant="outlined" color="primary" size="small" onClick={() => dispatch(calculateAnswers())}>
+                            <Button variant="outlined" color="primary" size="small" onClick={() => { setDone(true); dispatch(calculateAnswers()) }}>
                                 Chấm điểm
                             </Button>
                         }
@@ -202,21 +213,21 @@ const useStyles = makeStyles((theme) => ({
         display: "grid",
         gridTemplateColumns: "auto auto auto auto",
         padding: 3,
-        marginTop: 20
     },
     gridItem: {
         padding: "10px 7px",
         margin: 5,
         borderRadius: 5,
         fontWeight: "bold",
-        border: "1px dashed #cecece"
+        border: "1px dashed #cecece",
+        cursor: "pointer"
     },
     doneItem: {
         backgroundColor: "#3481f3d9",
         color: "white",
     },
     currentItem: {
-        border: `1px solid ${theme.palette.secondary.main}`,
+        border: `1px solid ${theme.palette.primary.dark}`,
     },
     timer: {
         display: "flex",

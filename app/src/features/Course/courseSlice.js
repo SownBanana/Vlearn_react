@@ -42,6 +42,17 @@ export const buyCourse = (id) => async (dispatch) => {
     }
 };
 
+export const rateCourse = (params) => async (dispatch) => {
+    try {
+        const response = await api.rate(params);
+        console.log("+=======> ", response);
+        if (response.status === "success") {
+            dispatch(setCourse(response));
+        }
+    } catch (e) {
+        console.log("Faillllllllllllllllllll", e);
+    }
+};
 function clear(state) {
     state.course = {
         id: null,
@@ -53,11 +64,13 @@ function clear(state) {
     state.bought = false;
     state.status = "";
     state.uploadStatus = "";
+    state.statistic = [];
 }
 const initialState = {
     status: "",
     uploadStatus: "",
     bought: false,
+    statistic: [],
     course: {
         id: null,
         title: "",
@@ -82,6 +95,7 @@ const course = createSlice({
         setCourse: (state, action) => {
             state.course = action.payload.data;
             state.bought = action.payload.bought;
+            state.statistic = action.payload.statistic;
         },
         setBuyCourse: (state, action) => {
             state.bought = action.payload;

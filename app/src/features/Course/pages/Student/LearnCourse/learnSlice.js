@@ -5,6 +5,8 @@ import apiQuestion from "commons/api/course/question";
 import { LESSON, LIVE_LESSON, QUESTION } from "commons/enums/LearnView";
 import shuffle from "commons/shuffer";
 import { makeToast, ToastType } from "features/Toast/toastSlices";
+import { humanDayDiff } from "commons/humanTimeDuration";
+import moment from "moment";
 
 export const fetchCourseSummary = (id) => async (dispatch) => {
     try {
@@ -48,7 +50,17 @@ export const getQuestions = (section_id) => async (dispatch) => {
     try {
         const response = await apiQuestion.getInSection(section_id);
         if (response.status === "success") {
-            dispatch(setQuestions(response.data));
+            dispatch(setQuestions(response));
+        } else {
+            const { last_test, wait_time, question_step } = response.data;
+            dispatch(
+                makeToast(
+                    `Bạn chưa thể làm bài ngay lúc này, 
+                    `, ToastType.WARNING, true, 4000));
+            dispatch(
+                makeToast(
+                    ` Lần cuối bạn làm vào ${moment(Date.parse(last_test)).format('DD-MM-YYYY hh:mm')}, giới hạn làm bài là ${question_step} ngày, 
+                        thử lại sau ${humanDayDiff(wait_time)}`, ToastType.INFO, true, 4000));
         }
     } catch (e) {
         console.log("Faillllllllllllllllllll", e);
@@ -103,6 +115,7 @@ function clear(state) {
     state.currentQuestionIndex = -1;
     state.learnView = LESSON;
     state.result = {};
+    state.questionSetting = {};
 
 }
 function clearQuestion(state) {
@@ -110,6 +123,7 @@ function clearQuestion(state) {
     state.question = {};
     state.currentQuestionIndex = -1;
     state.result = {};
+    state.questionSetting = {};
 }
 const initialState = {
     course: {
@@ -129,7 +143,8 @@ const initialState = {
     question: {},
     currentQuestionIndex: -1,
     learnView: LESSON,
-    result: {}
+    result: {},
+    questionSetting: {},
 };
 
 const learnCourse = createSlice({
@@ -152,8 +167,10 @@ const learnCourse = createSlice({
             state.liveLesson = {};
         },
         setQuestions: (state, action) => {
+            const { data, settings } = action.payload;
             clearQuestion(state);
-            state.questions = shuffle(action.payload);
+            state.questionSetting = settings;
+            state.questions = shuffle(data);
             state.currentQuestionIndex = 0;
             state.question = state.questions[0];
             state.learnView = QUESTION;

@@ -11,7 +11,7 @@ import {
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import DragIndicatorIcon from "@material-ui/icons/DragIndicator";
 import DeleteRoundedIcon from "@material-ui/icons/DeleteRounded";
-import EditRoundedIcon from "@material-ui/icons/EditRounded";
+import FilterFramesIcon from "@material-ui/icons/FilterFrames";
 import ConfirmButton from "commons/components/Button/ConfirmIconButton";
 import {
     setContent,
@@ -82,7 +82,7 @@ export default function AnswerInput({
                     edge="start"
                     className="button"
                 >
-                    <EditRoundedIcon fontSize="small" />
+                    <FilterFramesIcon fontSize="small" />
                 </IconButton>
                 <ConfirmButton
                     color="secondary"

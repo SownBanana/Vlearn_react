@@ -75,14 +75,20 @@ const useStyles = makeStyles(({
 
 export default function RatingStats({
   ratings,
-  raterCount,
+  raterCount = null,
   colors = [lightGreen[300], lime[400], amber[300], orange[300], red[200]]
 }) {
   const classes = useStyles();
+  if (!raterCount) {
+    raterCount = ratings.reduce((sum, rating) => {
+      return sum + rating;
+    }, 0)
+  }
   const ratingAverage = Math.ceil((ratings.reduce((sum, rate, index) => {
-    console.log(sum, rate, index);
+    // console.log(sum, rate, index);
     return sum + rate * (5 - index);
-  }, 0) / raterCount) * 10) / 10;
+  }, 0) / raterCount) * 10) / 10 || 0;
+  // debugger
   function getStars(classes, stars) {
     let i = 0
     let yellowStars = [...Array(stars)].map(() => {

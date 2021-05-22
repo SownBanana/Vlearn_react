@@ -10,6 +10,7 @@ import { Add, Close, Edit } from '@material-ui/icons'
 import SocialLoginButtonGroup from 'features/Authenticate/components/SocialLoginButtonGroup'
 import CKViewer from 'commons/components/CKEditor/CKViewer'
 import CKEditor from 'commons/components/CKEditor/CKEditor'
+import { resetPassword } from 'features/Authenticate/authSlices'
 
 export default function PersonalInfo() {
     const classes = useStyles();
@@ -201,6 +202,22 @@ export default function PersonalInfo() {
                             <Grid item xs={12} justify="flex-start" style={{ transform: "scale(0.8)" }}>
                                 <SocialLoginButtonGroup isPersist={true} />
                             </Grid>
+                            <Typography style={{ marginBottom: 15, marginTop: 20 }} align="left" color="textSecondary" variant="h6">
+                                Bảo mật
+                                </Typography>
+                            <Button
+                                variant="outlined"
+                                color="secondary"
+                                onClick={() => {
+                                    dispatch(
+                                        resetPassword({
+                                            email: user.email,
+                                        })
+                                    );
+                                }}
+                            >
+                                Thay đổi mật khẩu
+                            </Button>
                         </Grid>
                     </Grid>
                 </Grid>

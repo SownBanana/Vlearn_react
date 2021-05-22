@@ -61,6 +61,12 @@ const courseResource = {
 				headers: headersWithToken(),
 			})
 		return response.data;
+	},
+	rate: async (params) => {
+		const response = await api.post('api/rate-course', params, {
+			headers: headersWithToken()
+		})
+		return response.data;
 	}
 };
 

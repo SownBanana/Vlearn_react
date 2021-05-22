@@ -7,6 +7,7 @@ import { activeProgress } from "../../../../commons/SliceCommon";
 import ExistSocialAccount from "features/Authenticate/components/ExistSocialAccount";
 import { attachSocial } from "features/Info/infoSlice";
 import { useHistory } from "react-router";
+import { Box, Typography } from "@material-ui/core";
 export default function Google({ location }) {
 	const status = useSelector((state) => state.social.pendingSocial.status);
 	const isAuthed = useSelector((state) => state.auth.isLoggedIn);
@@ -27,11 +28,15 @@ export default function Google({ location }) {
 		}
 	}, [dispatch, location.search, isAuthed]);
 	return (
-		<div>
-			{/* <div> {location.search}</div> */}
+		<Box mt={10}>
 			{(isAuthed && readyToRedirect) && <BackToPrevious />}
-			{status === "existed" && <ExistSocialAccount />}
-			{status === "new" && <NewSocialAccount />}
-		</div>
+			{status === "existed" ? <ExistSocialAccount /> :
+				status === "new" ? <NewSocialAccount /> :
+					status === "fail" ?
+						<Typography variant="body1" color="error">Có lỗi xảy ra</Typography>
+						:
+						<Typography variant="body1" color="primary">Đang kiểm tra thông tin ... </Typography>
+			}
+		</Box>
 	);
 }

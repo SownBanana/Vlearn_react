@@ -53,7 +53,7 @@ export default function LessonInput({
 		setReload((state) => state = false);
 		setTimeout(() => {
 			setReload(state => state = true);
-		}, 100);
+		}, 200);
 	}
 	const history = useHistory();
 	const params = useParams();

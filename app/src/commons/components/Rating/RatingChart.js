@@ -46,6 +46,7 @@ export class RatingChart extends React.Component {
                             backgroundColor: colors[itemIndex] || '#f00',
                             width: (item / max) * 100 + '%',
                             height: 'auto',
+                            borderLeft: "2px solid #cecece",
                         }
 
                         return (
