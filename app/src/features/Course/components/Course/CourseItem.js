@@ -28,20 +28,35 @@ export default function CourseItem({ course }) {
 				/>
 				<Avatar variant="square" className={clsx(classes.avatar, "avatar--large avatar--center")} src={course.instructor.avatar_url} />
 				<CardContent className={classes.cardContent}>
+					<Box className={classes.instructorName}>
+						<Typography style={{ color: "white", fontWeight: "600", fontSize: 17 }} variant="body2">
+							{course.instructor.name}
+						</Typography>
+					</Box>
+					<Box className={classes.price}>
+						<Typography style={{ color: "white", fontWeight: "600", fontSize: 17 }} variant="body2">
+							{(course.price > 0 ? course.price : 'Miễn phí').toLocaleString('vi', {
+								style: 'currency',
+								currency: 'VND'
+							})}
+						</Typography>
+					</Box>
+
 					<Box
 						style={{
 							display: "flex",
+							color: "#717171"
 						}}>
 
-						<Rating value={course.rate_avg} readOnly={true} size="small" />
+						{
+							course.rate_avg ?
+								<Rating value={course.rate_avg} readOnly={true} size="small" />
+								: <span>Chưa có đánh giá</span>
+						}
 					</Box>
-					<Box
-						style={{
-							display: "flex",
-							alignItems: "center"
-						}}>
-						<Person style={{ fontSize: 14 }} color="action" fontSize="small" />
-						<span style={{ fontSize: 13, marginRight: 3, color: "#717171" }} >{course.total}</span>
+					<Box className={classes.rating}>
+						<Person style={{ fontSize: 14 }} fontSize="small" />
+						<span style={{ fontSize: 13, marginRight: 3 }} >{course.total}</span>
 					</Box>
 					<Box
 						mt={2}
@@ -75,16 +90,15 @@ const useStyle = makeStyles((theme) => ({
 		display: "flex",
 		flexDirection: "column",
 		'&:hover $cardContent': {
-			backgroundColor: "gray",
+			backgroundColor: "#505050",
 			color: "white",
 			opacity: "0.8",
 			height: "100%",
-			transition: "0.2s ease-in"
+			transition: "0.2s ease-in-out"
 		},
 		'&:hover $media': {
-
 			height: "100%",
-			transition: "0.2s ease-in"
+			transition: "0.3s ease-out"
 		},
 		'&:hover $cardContent $introduce': {
 			height: "unset",
@@ -93,6 +107,19 @@ const useStyle = makeStyles((theme) => ({
 		},
 		'&:hover $avatar': {
 			transform: "scale(0)",
+			transition: "0.3s ease-in",
+		},
+		'&:hover $price': {
+			marginTop: 0,
+			transition: "0.2s ease-in",
+		},
+		'&:hover $instructorName': {
+			marginTop: 0,
+			opacity: 1,
+			transition: "0.2s ease-in",
+		},
+		'&:hover $rating': {
+			color: "white",
 			transition: "0.3s ease-in",
 		}
 	},
@@ -126,14 +153,35 @@ const useStyle = makeStyles((theme) => ({
 	},
 	title: {
 		// color: "#424242",
+		fontWeight: 600
 	},
 	avatar: {
 		float: "right",
 		top: "40px",
 		right: "20px",
-		borderRadius: 5,
+		borderRadius: 3,
+		border: "3px solid #fffffff2",
 		opacity: 0.95,
 		transform: "scale(1)",
+		transition: "0.3s ease-out"
+	},
+	price: {
+		display: "flex",
+		marginTop: -30,
+		transition: "0.2s ease-out"
+	},
+	rating: {
+		display: "flex",
+		alignItems: "center",
+		color: "#717171",
+		transition: "0.3s ease-out"
+	},
+	instructorName: {
+		float: "right",
+		marginTop: -200,
+		color: "white",
+		opacity: 0,
+		alignItems: "center",
 		transition: "0.3s ease-out"
 	}
 }));

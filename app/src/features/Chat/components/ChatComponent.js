@@ -126,11 +126,6 @@ export default function ChatComponent() {
 								}
 							})
 						}
-						<Avatar src={""} style={{ marginBottom: 10 }} />
-						<Avatar src={""} style={{ marginBottom: 10 }} />
-						<Avatar src={""} style={{ marginBottom: 10 }} />
-						<Avatar src={""} style={{ marginBottom: 10 }} />
-						<Avatar src={""} style={{ marginBottom: 10 }} />
 					</Grid>
 				</Grow>
 

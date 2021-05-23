@@ -13,7 +13,8 @@ import {
 	Button,
 	Avatar,
 	Typography,
-	Divider
+	Divider,
+	Box
 } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
 import SearchIcon from "@material-ui/icons/Search";
@@ -26,11 +27,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import { checkPassport, logout } from "features/Authenticate/authSlices";
 import { UserRole } from "features/Authenticate/constance";
+import NotificationPane from "features/Notification/NotificationPane";
 
 export default function MyAppBar({ handle, open }) {
 	const dispatch = useDispatch();
 	const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
 	const user = useSelector(state => state.auth.user)
+	const unread = useSelector(state => state.notification.unread)
 	const classes = useStyles();
 	const keyPress = (e) => {
 		if (e.keyCode === 13) {
@@ -38,6 +41,9 @@ export default function MyAppBar({ handle, open }) {
 			// put the login here
 		}
 	};
+
+	const [notiEl, setNotiEl] = React.useState(null);
+
 	const isMobile = useMediaQuery("(max-width: 760px)");
 	const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -85,6 +91,7 @@ export default function MyAppBar({ handle, open }) {
 			transformOrigin={{ vertical: "top", horizontal: "right" }}
 			open={isMenuOpen}
 			onClose={handleMenuClose}
+			disableScrollLock={true}
 		>
 
 			<div>
@@ -98,6 +105,28 @@ export default function MyAppBar({ handle, open }) {
 				<Divider />
 				<MenuItem style={{ color: "red" }} onClick={handleLogout}>Đăng xuất</MenuItem>
 			</div>
+		</Menu >
+	);
+	const renderNoti = (
+		<Menu
+			anchorEl={notiEl}
+			anchorOrigin={{ vertical: "top", horizontal: "right" }}
+			keepMounted
+			transformOrigin={{ vertical: "top", horizontal: "right" }}
+			open={Boolean(notiEl)}
+			onClose={() => setNotiEl(null)}
+			disableScrollLock={true}
+			classes={{ paper: classes.notiPaper }}
+		>
+			<Box
+				id="notificationMenu"
+				style={{
+					overflowY: "scroll",
+					height: "48vh"
+				}}
+			>
+				<NotificationPane />
+			</Box>
 		</Menu >
 	);
 
@@ -146,8 +175,9 @@ export default function MyAppBar({ handle, open }) {
 								<IconButton
 									aria-label="show 17 new notifications"
 									color="inherit"
+									onClick={(e) => setNotiEl(notiEl ? null : e.currentTarget)}
 								>
-									<Badge badgeContent={17} color="secondary">
+									<Badge badgeContent={unread} color="secondary">
 										<NotificationsIcon />
 									</Badge>
 								</IconButton>
@@ -205,8 +235,9 @@ export default function MyAppBar({ handle, open }) {
 					</div>
 				</Toolbar>
 			</AppBar>
-			{isLoggedIn && renderMenu}
-		</div>
+			{ isLoggedIn && renderMenu}
+			{ isLoggedIn && renderNoti}
+		</div >
 	);
 }
 
@@ -293,4 +324,12 @@ const useStyles = makeStyles((theme) => ({
 	grow: {
 		flexGrow: 1,
 	},
+	notificationPane: {
+		zIndex: 1000
+	},
+	notiPaper: {
+		width: "35vw",
+		height: "50vh",
+		overflow: "unset"
+	}
 }));
