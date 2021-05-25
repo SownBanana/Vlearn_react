@@ -7,6 +7,7 @@ import { fetchCourses } from "features/Course/courseListSlice";
 import CourseItem from "features/Course/components/Course/CourseItem";
 import { Pagination, Skeleton } from "@material-ui/lab";
 import { CourseStatus } from "features/Course/constance";
+import SearchPane from "../../Instructor/CourseList/SearchPane";
 export default function CourseList() {
     console.log("course list");
     const courseList = useSelector((state) => state.courseList.data);
@@ -58,7 +59,11 @@ export default function CourseList() {
             <BreadCrumbs current="Khóa học">
 
             </BreadCrumbs>
-
+            <SearchPane
+                handleSearch={handleSearch}
+                handleFilter={setFilter}
+                filter={filter}
+            />
             <Box px={isMobile ? 2 : 5}>
                 <Grid
                     container

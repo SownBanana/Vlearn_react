@@ -4,7 +4,7 @@ import SectionInput from "./SectionInput";
 import { Box, Hidden, Grid, makeStyles, Button } from "@material-ui/core";
 import { List, arrayMove, arrayRemove } from "react-movable";
 import { cloneDeep } from "lodash";
-import uuidv4 from "commons/uuidv4";
+import uuidv4 from "commons/functions/uuidv4";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteSection as deleteAction } from "features/Course/editingCourseSlice";
 import {
@@ -17,7 +17,6 @@ function SectionList() {
 		dispatch(setStateSections(newSections));
 		dispatch(setCourseAction());
 	};
-
 	const [expanded, setExpanded] = useState(0);
 	const classes = useStyles();
 	const dispatch = useDispatch();

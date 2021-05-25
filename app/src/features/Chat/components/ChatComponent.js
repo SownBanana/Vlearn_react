@@ -26,7 +26,7 @@ import AttachFileRoundedIcon from '@material-ui/icons/AttachFileRounded';
 import Message from "./Message";
 import RemoveRoundedIcon from '@material-ui/icons/RemoveRounded';
 import ExpandLessRoundedIcon from '@material-ui/icons/ExpandLessRounded';
-import { sendChat, setCurrent, fetchChats } from 'features/Chat/chatSlice'
+import { sendChat, setCurrent, fetchChats, setForceOpenChat } from 'features/Chat/chatSlice'
 import { useLocation } from "react-router";
 import NavigationRoundedIcon from '@material-ui/icons/NavigationRounded';
 import clsx from "clsx";
@@ -37,7 +37,7 @@ export default function ChatComponent() {
 
 	const { pathname } = useLocation();
 	const inMessagePath = pathname.split("/")[1] === "message";
-
+	const ref = useRef(null);
 	const messageArea = useRef();
 
 	const [anchorEl, setAnchorEl] = useState(null);
@@ -61,6 +61,7 @@ export default function ChatComponent() {
 	const thisRoomId = currentChat.id;
 	const user = users.length === 0 ? {} : users[0].id !== id ? users[0] : users[1];
 	const chats = useSelector(state => state.chat.chats);
+	const forceOpenChat = useSelector(state => state.chat.forceOpenChat);
 
 	const openChat = (id) => {
 		dispatch(setCurrent(id))
@@ -94,13 +95,18 @@ export default function ChatComponent() {
 		if (messageArea.current)
 			messageArea.current.scrollTop = messageArea.current.scrollHeight;
 	}, [messages]);
-
+	useEffect(() => {
+		if (forceOpenChat) {
+			dispatch(setForceOpenChat(false));
+			setAnchorEl(ref.current);
+		}
+	}, [forceOpenChat])
 	return (id !== null && !inMessagePath) && (
 		<Hidden xsDown>
 
 			<div className={classes.chatBubble}>
 				<Badge color="primary" variant="dot" overlap="circle">
-					<Fab color="secondary" aria-label="add" onClick={handleClick}>
+					<Fab ref={ref} color="secondary" aria-label="add" onClick={handleClick}>
 						<ModeComment />
 					</Fab>
 					<NavigationRoundedIcon
@@ -120,7 +126,8 @@ export default function ChatComponent() {
 						{
 							Object.keys(chats).map(key => {
 								const chat = chats[key];
-								if (chat.users.length > 0) {
+								// debugger
+								if (chat.users && chat.users.length > 0) {
 									const chatUser = chat.users[0].id !== id ? chat.users[0] : chat.users[1];
 									return <Avatar onClick={() => openChat(key)} alt={chatUser.name} src={chatUser.avatar_url} style={{ marginBottom: 10 }} />
 								}

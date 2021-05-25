@@ -7,7 +7,7 @@ var waitTypeTimeout = 0;
 export const setCourse = () => async (dispatch, getState) => {
 	// dispatch(setStateCourse(params.course));
 	dispatch(setStatus("saving"));
-	const { course, deleteSections, deleteLessons, deleteQuestions, deleteAnswers } = getState().editingCourse;
+	const { course, deleteSections, deleteLessons, deleteQuestions, deleteAnswers, deleteLiveLessons } = getState().editingCourse;
 	try {
 		clearTimeout(waitTypeTimeout);
 		waitTypeTimeout = setTimeout(async () => {
@@ -16,7 +16,8 @@ export const setCourse = () => async (dispatch, getState) => {
 				deleteSections,
 				deleteLessons,
 				deleteQuestions,
-				deleteAnswers
+				deleteAnswers,
+				deleteLiveLessons
 			});
 			console.log("+=======> ", response);
 			if (response.status === "success") {
@@ -117,6 +118,7 @@ function clearCourse(state) {
 		introduce: "",
 		price: "",
 		sections: [],
+		type: 2,
 	};
 	state.status = "";
 	state.uploadStatus = "";
@@ -142,6 +144,7 @@ const initialState = {
 		thumbnail_url: "",
 		price: "",
 		sections: [],
+		type: 2,
 	},
 	contentEditMode: false,
 	isLiveLesson: false,
@@ -151,6 +154,12 @@ const editingCourse = createSlice({
 	name: "editingCourse",
 	initialState,
 	reducers: {
+		setCourseTitle: (state, action) => {
+			state.course.title = action.payload;
+		},
+		setCourseType: (state, action) => {
+			state.course.type = action.payload;
+		},
 		clearEditingCourse: (state) => {
 			clearCourse(state);
 		},
@@ -224,10 +233,10 @@ const editingCourse = createSlice({
 										}
 								}
 							}
-						if (fetchSection.liveLessons)
+						if (fetchSection.live_lessons)
 							for (let lli = 0; lli < section.live_lessons.length; lli++) {
 								const live_lesson = section.live_lessons[lli];
-								const fetchLiveLesson = fetchSection.liveLessons[lli];
+								const fetchLiveLesson = fetchSection.live_lessons[lli];
 								if (fetchLiveLesson && live_lesson) {
 									live_lesson.id = fetchLiveLesson.id;
 									live_lesson.section_id = fetchLiveLesson.section_id;
@@ -255,6 +264,8 @@ const editingCourse = createSlice({
 });
 
 export const {
+	setCourseTitle,
+	setCourseType,
 	clearEditingCourse,
 	setStateCourse,
 	setStateSections,

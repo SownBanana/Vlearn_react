@@ -6,6 +6,7 @@ import { PrivateRoute } from "./commons/routes/CustomRoute";
 import Home from "./features/Home";
 import { Suspense } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import MomentUtils from '@date-io/moment';
 import {
 	authSuccess,
 	checkPassport,
@@ -24,6 +25,7 @@ import "prismjs/themes/prism-okaidia.css";
 import globalStyle from "style/GlobalStyles";
 import WebSocket from 'commons/components/WebSocket'
 import { fetch as fetchTopics } from 'features/Topic/topicSlice'
+import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 
 const Authenticate = React.lazy(() => import("./features/Authenticate/"));
 const Course = React.lazy(() => import("./features/Course/"));
@@ -89,24 +91,27 @@ function App() {
 	return (
 		<div className="App">
 			<ThemeProvider theme={theme}>
-				{/* <Toast /> */}
-				<CssBaseline />
-				<ProgressBar isActive={isProgressActive} />
-				<Notifier />
-				<AppFrame />
-				<Suspense fallback={<div>Loading ...</div>}>
-					<Switch>
-						<Route path="/courses" component={Course} />
-						<Route path="/auth" component={Authenticate} />
-						<Route path="/message" component={Chat} />
-						<Route path="/info" component={Info} />
-						<PrivateRoute exact path="/" component={Home} />
-					</Switch>
-				</Suspense>
-				<Hidden xsDown>
-					{isLoggedIn && <ChatComponent />}
-				</Hidden>
-				{isLoggedIn && <WebSocket />}
+				<MuiPickersUtilsProvider utils={MomentUtils}>
+
+					{/* <Toast /> */}
+					<CssBaseline />
+					<ProgressBar isActive={isProgressActive} />
+					<Notifier />
+					<AppFrame />
+					<Suspense fallback={<div>Loading ...</div>}>
+						<Switch>
+							<Route path="/courses" component={Course} />
+							<Route path="/auth" component={Authenticate} />
+							<Route path="/message" component={Chat} />
+							<Route path="/info" component={Info} />
+							<PrivateRoute exact path="/" component={Home} />
+						</Switch>
+					</Suspense>
+					<Hidden xsDown>
+						{isLoggedIn && <ChatComponent />}
+					</Hidden>
+					{isLoggedIn && <WebSocket />}
+				</MuiPickersUtilsProvider>
 			</ThemeProvider>
 		</div>
 	);

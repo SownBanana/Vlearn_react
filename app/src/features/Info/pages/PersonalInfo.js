@@ -6,7 +6,7 @@ import { detachSocial, fetchMyData, setNewInfo, updateMyData } from 'features/In
 import ConfirmIconButton from "commons/components/Button/ConfirmIconButton";
 import uploadApi from "commons/api/upload/upload";
 import { UserRole } from 'features/Authenticate/constance'
-import { Add, Close, Edit } from '@material-ui/icons'
+import {  Close, Edit } from '@material-ui/icons'
 import SocialLoginButtonGroup from 'features/Authenticate/components/SocialLoginButtonGroup'
 import CKViewer from 'commons/components/CKEditor/CKViewer'
 import CKEditor from 'commons/components/CKEditor/CKEditor'

@@ -39,8 +39,14 @@ const chat = {
         });
         return response.data;
     },
-    lesson: async (live_lesson_id) => {
+    liveLesson: async (live_lesson_id) => {
         const response = await api.get(`api/comment/live-lesson/${live_lesson_id}`, {
+            headers: headersWithToken(),
+        });
+        return response.data;
+    },
+    getChatRoom: async (id) => {
+        const response = await api.get(`api/chat-room/${id}`, {
             headers: headersWithToken(),
         });
         return response.data;

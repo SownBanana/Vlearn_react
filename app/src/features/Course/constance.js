@@ -4,4 +4,9 @@ const CourseStatus = {
 	ALL: "vlearn_all_value",
 };
 
-export { CourseStatus };
+const CourseType = {
+	NORMAL: 2,
+	LIVE: 3,
+}
+
+export { CourseStatus, CourseType };

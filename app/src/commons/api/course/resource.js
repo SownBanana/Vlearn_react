@@ -1,7 +1,7 @@
 import api, { headersWithToken } from "commons/AxiosCommon";
 
 const courseResource = {
-	store: async ({ course, deleteSections, deleteLessons, deleteQuestions, deleteAnswers }) => {
+	store: async ({ course, deleteSections, deleteLessons, deleteQuestions, deleteAnswers, deleteLiveLessons }) => {
 		console.log(course);
 		const response = await api.post(
 			`/api/courses`,
@@ -11,6 +11,7 @@ const courseResource = {
 				deleteLessons,
 				deleteQuestions,
 				deleteAnswers,
+				deleteLiveLessons
 			},
 			{
 				headers: headersWithToken(),

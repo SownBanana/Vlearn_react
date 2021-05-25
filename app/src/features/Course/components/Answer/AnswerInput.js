@@ -20,7 +20,7 @@ import {
     setTitle,
 } from "commons/components/EditorModal/editorSlice";
 import { useDispatch } from "react-redux";
-import { getPureText } from "commons/getPureText";
+import { getPureText } from "commons/functions/getPureText";
 const CKViewer = lazy(() => import("commons/components/CKEditor/CKViewer"));
 
 export default function AnswerInput({

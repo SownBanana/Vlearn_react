@@ -29,7 +29,7 @@ export default function LessonView() {
                 }
             } else {
                 console.log("small", status.isFloat, window.scrollY)
-                if (window.scrollY < 500) {
+                if (window.scrollY < 400) {
                     // setFloat((state) => state = false);
                     setStatus({ isFloat: false });
                     status.isFloat = false;
@@ -50,18 +50,19 @@ export default function LessonView() {
     return (
         <div>
             <Box ref={bounder} ml={isMobile ? 0 : 5} py={1} style={{ backgroundColor: "white", border: "1px solid #cecece60", borderRadius: "5px" }}>
-                <div className={status.isFloat ? (isMobile ? classes.floatVideoMobile : classes.floatVideo) : ''} >
-
-                    {
-                        isMobile ? (
-                            !!lesson.video_url && <VideoPlayer width="inherit" videoHeight="200px" url={lesson.video_url} />
-                        ) : (
-                            !!lesson.video_url && <VideoPlayer width="inherit" videoHeight="500px" url={lesson.video_url} />
-                        )
-                    }
-                </div>
+                <Box height={isMobile ? "30vh" : "70vh"}>
+                    <div className={status.isFloat ? (isMobile ? classes.floatVideoMobile : classes.floatVideo) : ''} >
+                        {
+                            isMobile ? (
+                                !!lesson.video_url && <VideoPlayer width="inherit" videoHeight="30vh" url={lesson.video_url} />
+                            ) : (
+                                !!lesson.video_url && <VideoPlayer width="inherit" videoHeight="70vh" url={lesson.video_url} />
+                            )
+                        }
+                    </div>
+                </Box>
                 {!!lesson.content &&
-                    <Box mt={status.isFloat ? isMobile ? 30 : 60 : 2} px={isMobile ? 2 : 6}>
+                    <Box mt={2} px={isMobile ? 2 : 6}>
                         <CKViewer style={{ overflow: "hidden" }} content={lesson.content} />
                     </Box>
                 }

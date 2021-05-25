@@ -2,16 +2,20 @@ import React from 'react'
 import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
-import { getLesson, getQuestions } from 'features/Course/pages/Student/LearnCourse/learnSlice'
+import { getLesson, getLiveLesson, getQuestions } from 'features/Course/pages/Student/LearnCourse/learnSlice'
 import clsx from 'clsx'
 export default function CourseContent() {
     const classes = useStyles();
     const course = useSelector(state => state.learnCourse.course);
     const selectedLesson = useSelector(state => state.learnCourse.lesson);
+    const selectedLiveLesson = useSelector(state => state.learnCourse.liveLesson);
     const selectedQuestion = useSelector(state => state.learnCourse.question);
     const dispatch = useDispatch();
     const changeLesson = (id) => {
         dispatch(getLesson(id));
+    }
+    const changeLiveLesson = (id) => {
+        dispatch(getLiveLesson(id));
     }
     const changeQuestions = (id) => {
         dispatch(getQuestions(id));
@@ -26,14 +30,26 @@ export default function CourseContent() {
                             <li key={section.id}>
                                 <p className={classes.ulTitle}>{section.name}</p>
                                 <ul className={classes.ul}>
-                                    {section.lessons.map((lesson) => {
-                                        return (
-                                            <li key={lesson.id} className={clsx(classes.li, lesson.id === selectedLesson.id && classes.liSelected)}
-                                                onClick={() => changeLesson(lesson.id)}>
-                                                {lesson.name}
-                                            </li>
-                                        )
-                                    })}
+                                    {
+                                        section.live_lessons.map((liveLesson) => {
+                                            return (
+                                                <li key={liveLesson.id} className={clsx(classes.li, liveLesson.id === selectedLiveLesson.id && classes.liSelected)}
+                                                    onClick={() => changeLiveLesson(liveLesson.id)}>
+                                                    {liveLesson.name}
+                                                </li>
+                                            )
+                                        })
+                                    }
+                                    {
+                                        section.lessons.map((lesson) => {
+                                            return (
+                                                <li key={lesson.id} className={clsx(classes.li, lesson.id === selectedLesson.id && classes.liSelected)}
+                                                    onClick={() => changeLesson(lesson.id)}>
+                                                    {lesson.name}
+                                                </li>
+                                            )
+                                        })
+                                    }
                                     {
                                         (section.questions.length > 0) && (
                                             <li key={section.id + "qs"} className={clsx(classes.li,

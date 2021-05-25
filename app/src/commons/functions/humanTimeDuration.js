@@ -22,4 +22,16 @@ function humanDayDiff(duration) {
             'Bài test chỉ được làm 1 lần'
 }
 
-export { humanTimeDuration, humanDayDiff }
+function smallTime(duration) {
+    return (duration < 60000) ?
+        `${Math.floor(duration / 1000)} giây` :
+        (duration < HOUR) ?
+            moment(duration).format("m ") + "phút" :
+            (duration < DAY) ?
+                moment(duration).format("HH giờ mm phút") :
+                (duration < 365 * DAY) ?
+                    moment.duration(duration).asDays() :
+                    'Năm sau'
+}
+
+export { humanTimeDuration, humanDayDiff, smallTime }

@@ -6,6 +6,7 @@ import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import {
+	Box,
 	IconButton,
 	makeStyles,
 	useMediaQuery,
@@ -14,8 +15,10 @@ import { useHistory } from "react-router";
 import EditRoundedIcon from "@material-ui/icons/EditRounded";
 import GradeRoundedIcon from "@material-ui/icons/GradeRounded";
 import PostAddOutlinedIcon from "@material-ui/icons/PostAddOutlined";
-import { CourseStatus } from "features/Course/constance";
+import { CourseStatus, CourseType } from "features/Course/constance";
 import { useSelector } from "react-redux";
+import { COURSE_THUMBNAIL } from "commons/enums/ImageDefault";
+import { BlockRounded, Person } from "@material-ui/icons";
 export default function FlatCourseItem({ course }) {
 	const classes = useStyle();
 	const history = useHistory();
@@ -31,7 +34,7 @@ export default function FlatCourseItem({ course }) {
 			<CardActionArea>
 				<CardMedia
 					className={classes.media}
-					image={course.thumbnail_url}
+					image={course.thumbnail_url || COURSE_THUMBNAIL}
 					title={course.title}
 				/>
 				<CardContent className={classes.content}>
@@ -49,8 +52,20 @@ export default function FlatCourseItem({ course }) {
 				</CardContent>
 			</CardActionArea>
 			<CardActions style={{ padding: "5px 10px 5px 20px" }}>
-				{/* <span className={classes.actionButton}>5</span> */}
-				<GradeRoundedIcon className={classes.actionIcon} fontSize="default" />
+				{
+					course.type === CourseType.LIVE &&
+					<Box className={classes.actionIcon}>
+						<span className={classes.liveIcon}>LIVE</span>
+					</Box>
+				}
+				<Box className={classes.actionIcon}>
+					<Person fontSize="default" style={{ fontSize: 18 }} />
+					<span className={classes.actionButton}>{course.total}</span>
+				</Box>
+				<Box className={classes.actionIcon}>
+					<GradeRoundedIcon fontSize="default" style={{ fontSize: 18 }} />
+					<span className={classes.actionButton}>{course.rate_avg}</span>
+				</Box>
 				<IconButton
 					edge="start"
 					className={classes.actionButton}
@@ -91,7 +106,7 @@ const useStyle = makeStyles((theme) => ({
 		marginLeft: "auto",
 		zIndex: 3,
 		color: "white",
-		fontSize: 16,
+		fontSize: 13,
 	},
 	actionIcon: {
 		// color: theme.palette.rate.main,
@@ -100,6 +115,8 @@ const useStyle = makeStyles((theme) => ({
 		fontSize: 18,
 		color: "white",
 		margin: 0,
+		alignItems: "center",
+		display: "flex",
 	},
 	content: {
 		position: "absolute",
@@ -122,4 +139,11 @@ const useStyle = makeStyles((theme) => ({
 	draftColor: {
 		color: theme.palette.secondary.dark,
 	},
+	liveIcon: {
+		fontSize: 12,
+		fontWeight: "bold",
+		padding: "1px 3px",
+		backgroundColor: "red",
+		borderRadius: 3
+	}
 }));

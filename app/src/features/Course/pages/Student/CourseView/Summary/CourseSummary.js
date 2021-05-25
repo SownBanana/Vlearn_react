@@ -14,6 +14,8 @@ import CommentView from 'commons/components/Comment/CommentView';
 import { makeToast, ToastType } from 'features/Toast/toastSlices';
 import { Rating } from '@material-ui/lab';
 import useCheckMobile from 'commons/hooks/useCheckMobile';
+import { COURSE_THUMBNAIL } from 'commons/enums/ImageDefault';
+import { Person } from '@material-ui/icons';
 
 export default function CourseSummary() {
     const classes = useStyles();
@@ -64,7 +66,7 @@ export default function CourseSummary() {
     }, [course]);
     return (
         <div>
-            <Parallax bgImage={course.thumbnail_url} blur={{ min: 2, max: 10 }} strength={500}>
+            <Parallax bgImage={course.thumbnail_url || COURSE_THUMBNAIL} blur={{ min: 2, max: 10 }} strength={500}>
                 <Box mt={2}>
                     <div className={classes.header}>
                         <BreadCrumbs
@@ -101,16 +103,30 @@ export default function CourseSummary() {
                                 </Typography>
                             </Grid>
                             <Grid item xs={12} md={5}>
-                                <img className={classes.thumbnail} src={course.thumbnail_url} alt={course.title} />
+                                <img className={classes.thumbnail} src={course.thumbnail_url || COURSE_THUMBNAIL} alt={course.title} />
                             </Grid>
+                            <Box className={classes.totalGroup}>
+                                <Person fontSize={!isMobile ? "large" : "default"} />
+                                <span style={{ marginRight: 3 }} >{course.total}</span>
+                            </Box>
                             {!bought ?
-                                <Button onClick={() => buyCourse()} className={classes.button} variant="contained" color="default">
-                                    Mua khóa học
-                                </Button>
+                                <Box className={classes.buyGroup}>
+                                    <Box className={classes.price}>
+                                        {(course.price > 0 ? course.price : 'Miễn phí').toLocaleString('it', {
+                                            style: 'currency',
+                                            currency: 'VND'
+                                        })}
+                                    </Box>
+                                    <Button onClick={() => buyCourse()} className={classes.button} variant="contained" color="default">
+                                        Mua khóa học
+                                    </Button>
+                                </Box>
                                 :
-                                <Button onClick={() => learnCourse()} className={classes.button} variant="contained" color="default">
-                                    Vào học
+                                <Box className={classes.buyGroup}>
+                                    <Button onClick={() => learnCourse()} className={classes.button} variant="contained" color="default">
+                                        Vào học
                                 </Button>
+                                </Box>
                             }
                         </Grid>
                     </div>
@@ -118,7 +134,7 @@ export default function CourseSummary() {
             </Parallax>
             <Box className={classes.body}>
                 <Typography variant="h5" align="left" color="initial">Nội dung khóa học</Typography>
-                {course.sections.length > 0 && <SectionList sections={course.sections} instructor={course.instructor} />}
+                {course.instructor && <SectionList sections={course.sections} instructor={course.instructor} />}
             </Box>
             <Box mx={isMobile ? 1 : 5} mb={isMobile ? 1 : 5}>
                 <Grid container direction="row">
@@ -198,14 +214,36 @@ const useStyles = makeStyles((theme) => ({
         // backgroundColor: "white",
         padding: "40px"
     },
-    button: {
-        background: "white",
-        padding: "15px 20px",
+    totalGroup: {
+        display: "flex",
+        alignItems: "center",
+        color: "white",
+        bottom: "3%",
+        left: theme.spacing(4),
+        position: "absolute",
+        transform: "translate(-50%,-50%)",
+        [theme.breakpoints.up("md")]: {
+            left: theme.spacing(10),
+            bottom: "12%",
+            fontSize: 22
+        }
+    },
+    buyGroup: {
         bottom: "10%",
         right: 0,
         [theme.breakpoints.up("md")]: {
             position: "absolute",
             transform: "translate(-50%,-50%)",
         },
+    },
+
+    button: {
+        background: "white",
+        padding: "15px 20px",
+    },
+    price: {
+        color: "white",
+        fontSize: "1.5rem",
+        fontWeight: "bold",
     }
 }))

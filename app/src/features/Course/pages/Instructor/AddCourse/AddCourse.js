@@ -31,7 +31,6 @@ export default function AddCourse() {
 		}
 	};
 	useEffect(() => {
-		dispatch(clearEditingCourse());
 		return () => {
 			dispatch(clearEditingCourse());
 		};

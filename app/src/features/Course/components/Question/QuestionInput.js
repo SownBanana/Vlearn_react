@@ -25,8 +25,8 @@ import { cloneDeep } from "lodash";
 import AddIcon from '@material-ui/icons/Add';
 import AnswerList from "../Answer/AnswerList";
 import FilterFramesIcon from '@material-ui/icons/FilterFrames';
-import uuidv4 from "commons/uuidv4";
-import { getPureText } from "commons/getPureText";
+import uuidv4 from "commons/functions/uuidv4";
+import { getPureText } from "commons/functions/getPureText";
 // import CKViewer from "commons/components/CKEditor/CKViewer";
 const CKViewer = lazy(() => import("commons/components/CKEditor/CKViewer"));
 

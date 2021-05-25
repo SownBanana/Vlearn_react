@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { clearNotifications, fetchNotifications, NotificationType, readNotifications } from 'features/Notification/notificationSlice'
 import { Avatar, Badge, Box, Divider, ListItem, MenuItem, Typography } from '@material-ui/core';
-import { getTimePastText } from 'commons/timePast';
+import { getTimePastText } from 'commons/functions/timePast';
 import { Skeleton } from '@material-ui/lab';
 import { useHistory } from 'react-router';
 

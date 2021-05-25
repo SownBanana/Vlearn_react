@@ -27,6 +27,22 @@ export const sendChat = (params) => async (dispatch) => {
         dispatch(setStatus("failed"));
     }
 };
+export const chatWithUser = (id) => async (dispatch) => {
+    try {
+        const response = await api.getChatRoom(id);
+        if (response.status === "success") {
+            if (response.type === "new") {
+                await dispatch(appendMessages(response.data))
+                dispatch(setCurrent(response.id))
+            } else {
+                dispatch(setCurrent(response.id));
+            }
+        }
+        dispatch(setForceOpenChat(true));
+    } catch (e) {
+        console.log("Fail", e);
+    }
+};
 
 const initialState = {
     chats: {
@@ -37,13 +53,18 @@ const initialState = {
         ],
         messages: [
         ]
-    }
+    },
+    forceOpenChat: false,
+    newMess: false,
 };
 
 const chat = createSlice({
     name: "chat",
     initialState,
     reducers: {
+        setForceOpenChat: (state, action) => {
+            state.forceOpenChat = action.payload;
+        },
         setChats: (state, action) => {
             state.chats = action.payload;
         },
@@ -55,8 +76,7 @@ const chat = createSlice({
             state.status = action.payload;
         },
         appendMessage: (state, action) => {
-            // if (!action.payload.timestamp) action.payload.timestamp = Date.now() / 1000;
-            const { sender_id, room_id, content, files, timestamp, create_at, name, avatar_url, users } = action.payload;
+            const { sender_id, room_id, content, files, timestamp, create_at, users } = action.payload;
             console.log("Mess==>", action.payload);
             if (create_at) timestamp = Date.parse(create_at) / 1000;
             if (state.current.id === room_id) {
@@ -68,20 +88,22 @@ const chat = createSlice({
                 });
             }
             if (state.chats[room_id] === null || state.chats[room_id] === undefined) {
-                if (state.chat.length > 5) delete state.chats[Object.keys(state.chats)[0]];
+                if (state.chats.length > 5) delete state.chats[Object.keys(state.chats)[0]];
                 state.chats[room_id] = {
                     id: room_id,
                     users,
                     messages: []
                 }
             }
-            state.chats[room_id].messages.push({
-                sender_id: sender_id,
-                content,
-                files,
-                timestamp
-            });
-
+            if (content !== null && content !== undefined) {
+                state.chats[room_id].messages.push({
+                    sender_id: sender_id,
+                    content,
+                    files,
+                    timestamp
+                });
+            }
+            state.forceOpenChat = true;
         },
         appendMessages: (state, action) => {
             var rooms = action.payload;
@@ -126,6 +148,7 @@ export const {
     setCurrent,
     appendMessage,
     appendMyMessage,
-    appendMessages
+    appendMessages,
+    setForceOpenChat
 } = chat.actions;
 export default chat.reducer;

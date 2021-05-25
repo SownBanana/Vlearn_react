@@ -1,12 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
 import api from "commons/api/course/resource";
 import apiLesson from "commons/api/course/lesson";
+import apiLiveLesson from "commons/api/course/liveLesson";
 import apiQuestion from "commons/api/course/question";
 import { LESSON, LIVE_LESSON, QUESTION } from "commons/enums/LearnView";
-import shuffle from "commons/shuffer";
+import shuffle from "commons/functions/shuffer";
 import { makeToast, ToastType } from "features/Toast/toastSlices";
-import { humanDayDiff } from "commons/humanTimeDuration";
+import { humanDayDiff } from "commons/functions/humanTimeDuration";
 import moment from "moment";
+import { CourseType } from "features/Course/constance";
 
 export const fetchCourseSummary = (id) => async (dispatch) => {
     try {
@@ -14,11 +16,20 @@ export const fetchCourseSummary = (id) => async (dispatch) => {
         if (response.status === "success") {
             console.log("get course ", response);
             dispatch(setCourse(response));
-            if (response.lessonCheckpoint) {
-                dispatch(getLesson(response.lessonCheckpoint));
-            }
-            else {
-                dispatch(getLesson(response.data.sections[0].lessons[0].id));
+            if (response.data.type === CourseType.LIVE) {
+                if (response.lessonCheckpoint) {
+                    dispatch(getLiveLesson(response.lessonCheckpoint));
+                }
+                else {
+                    dispatch(getLiveLesson(response.data.sections[0].live_lessons[0].id));
+                }
+            } else {
+                if (response.lessonCheckpoint) {
+                    dispatch(getLesson(response.lessonCheckpoint));
+                }
+                else {
+                    dispatch(getLesson(response.data.sections[0].lessons[0].id));
+                }
             }
         }
     } catch (e) {
@@ -41,6 +52,17 @@ export const getLesson = (id) => async (dispatch) => {
         console.log("get lesson ", response);
         if (response.status === "success") {
             dispatch(setLesson(response.data));
+        }
+    } catch (e) {
+        console.log("Faillllllllllllllllllll", e);
+    }
+};
+export const getLiveLesson = (id) => async (dispatch) => {
+    try {
+        const response = await apiLiveLesson.get(id);
+        console.log("get live lesson ", response);
+        if (response.status === "success") {
+            dispatch(setLiveLesson(response.data));
         }
     } catch (e) {
         console.log("Faillllllllllllllllllll", e);

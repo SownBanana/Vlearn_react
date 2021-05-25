@@ -10,21 +10,21 @@ export default function CommentLog({ students }) {
             <List className={classes.chatBackground} component="nav" aria-label="main mailbox folders">
                 {students && students.map(student => {
                     const rating = student.pivot
-                    return (
-                        <div>
-
-                            <ListItem button>
-                                <Box my={2}>
-                                    <Grid container spacing={1} direction="column">
-                                        <Typography variant="subtitle2" style={{ fontWeight: "bold" }} color="textPrimary">{student.name}</Typography>
-                                        <Rating size="small" value={rating.rate} readOnly={true} />
-                                        <Typography variant="subtitle2" color="textSecondary">{rating.comment}</Typography>
-                                    </Grid>
-                                </Box>
-                            </ListItem>
-                            <Divider />
-                        </div>
-                    )
+                    if (rating.rate !== null)
+                        return (
+                            <div>
+                                <ListItem button>
+                                    <Box my={2}>
+                                        <Grid container spacing={1} direction="column">
+                                            <Typography variant="subtitle2" style={{ fontWeight: "bold" }} color="textPrimary">{student.name}</Typography>
+                                            <Rating size="small" value={rating.rate} readOnly={true} />
+                                            <Typography variant="subtitle2" color="textSecondary">{rating.comment}</Typography>
+                                        </Grid>
+                                    </Box>
+                                </ListItem>
+                                <Divider />
+                            </div>
+                        )
                 })}
             </List>
         </Grid>

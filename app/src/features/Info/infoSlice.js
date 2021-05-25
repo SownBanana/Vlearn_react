@@ -67,9 +67,22 @@ export const detachSocial = (params) => async (dispatch) => {
     }
 }
 
+export const getUser = (id) => async (dispatch) => {
+    try {
+        const response = await api.get(id);
+        console.log("+=======> ", response);
+        if (response.status === "success") {
+            dispatch(setUserInfo(response.data));
+        }
+    } catch (e) {
+        console.log("Fail", e);
+    }
+};
+
 const initialState = {
     myInfo: {},
     newInfo: {},
+    user: {}
 };
 
 const info = createSlice({
@@ -84,11 +97,15 @@ const info = createSlice({
             state.newInfo = action.payload;
             state.newInfo.id = state.myInfo.id;
         },
+        setUserInfo: (state, action) => {
+            state.user = action.payload;
+        },
     },
 });
 
 export const {
     setMyInfo,
-    setNewInfo
+    setNewInfo,
+    setUserInfo
 } = info.actions;
 export default info.reducer;

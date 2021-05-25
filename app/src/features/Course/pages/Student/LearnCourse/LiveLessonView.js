@@ -1,54 +1,61 @@
 import { Box, useMediaQuery } from '@material-ui/core';
 import CKViewer from 'commons/components/CKEditor/CKViewer';
-import VideoPlayer from 'commons/components/VideoPlayer/VideoPlayer';
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { Jutsu } from 'react-jutsu' // Component
 import { useJitsi } from 'react-jutsu' // Custom hook
 import { Skeleton } from '@material-ui/lab';
+import { UserRole } from 'features/Authenticate/constance';
+import { INSTRUCTOR_CONFIG, INSTRUCTOR_INTERFACE, STUDENT_CONFIG, STUDENT_INTERFACE } from 'commons/enums/JitsiConfig';
+import { fromTimeString } from 'commons/functions/humanTime';
+import { smallTime } from 'commons/functions/humanTimeDuration';
 
 export default function LiveLessonView() {
     const dispatch = useDispatch();
-    const lesson = useSelector(state => state.learnCourse.lesson);
+    const liveLesson = useSelector(state => state.learnCourse.liveLesson);
     const isMobile = useMediaQuery("(max-width: 760px)");
     const user = useSelector(state => state.auth.user);
+    const [leftTime, setLeftTime] = useState(false);
+    const startTime = new Date(liveLesson.start_time);
+    useEffect(() => {
+        const timeCheck = setInterval(() => {
+            setLeftTime(new Date(liveLesson.start_time) - Date.now());
+            if (leftTime != false && leftTime <= 0) {
+                clearInterval(timeCheck);
+            }
+        }, 1000);
+        return () => {
+            clearInterval(timeCheck);
+        }
+    }, [])
+
+
     return (
         <div>
-
             {
-                isMobile ? (
-                    <Jutsu
-                        subject={lesson.name}
-                        configOverwrite={{
-                            disableTileView: true,
-                        }}
-                        interfaceConfigOverwrite={{
-                            APP_NAME: "Vlearn",
-                            SHOW_JITSI_WATERMARK: false,
-                            SHOW_WATERMARK_FOR_GUESTS: false,
-                            SHOW_DEEP_LINKING_IMAGE: false,
-                            DISABLE_JOIN_LEAVE_NOTIFICATIONS: true,
-                            ENFORCE_NOTIFICATION_AUTO_DISMISS_TIMEOUT: 100,
-                            RECENT_LIST_ENABLED: false,
-                            GENERATE_ROOMNAMES_ON_WELCOME_PAGE: false,
-                            DISPLAY_WELCOME_PAGE_CONTENT: false,
-                            // DISABLE_FOCUS_INDICATOR: true,
-                            // DISABLE_DOMINANT_SPEAKER_INDICATOR: true,
-                            SET_FILMSTRIP_ENABLED: false,
-                            HIDE_KICK_BUTTON_FOR_GUESTS: true,
-                            filmStripOnly: true,
-                            DEFAULT_LOGO_URL: "",
-                            TOOLBAR_BUTTONS: ([
-                                'microphone', 'camera', 'desktop', 'fullscreen',
-                                'fodeviceselection', 'profile', 'info', 'chat', 'record', 'recording',
-                                'etherpad', 'settings', 'raisehand',
-                                'videoquality', 'filmstrip', 'stats', 'shortcuts',
-                                'videobackgroundblur', 'download', 'help'
-                            ]),
-                        }}
-                        containerStyles={{ width: '400px', height: '300px' }}
-                        roomName={"phamson"}
+                (leftTime <= 0 || new Date(liveLesson.start_time) <= Date.now())
+                    && (liveLesson.end_time === null || new Date(liveLesson.end_time) > Date.now())
+                    ?
+                    < Jutsu
+                        configOverwrite={
+                            user.role === UserRole.STUDENT ?
+                                STUDENT_CONFIG :
+                                INSTRUCTOR_CONFIG
+                        }
+                        interfaceConfigOverwrite={
+                            user.role === UserRole.STUDENT ?
+                                STUDENT_INTERFACE :
+                                INSTRUCTOR_INTERFACE
+                        }
+                        containerStyles={
+                            isMobile
+                                ? { width: '350px', height: '300px' }
+                                : { width: '900px', height: '500px' }
+                        }
+                        subject={liveLesson.name}
+                        roomName={liveLesson.uuid}
                         displayName={user.username}
+                        // domain={process.env.REACT_APP_LIVE_DOMAIN}
                         domain={"meet.vlearn.club"}
                         onJitsi={JitsiMeetAPI => {
                             console.info("Init Jitsi success ", JitsiMeetAPI)
@@ -57,51 +64,22 @@ export default function LiveLessonView() {
                         loadingComponent={<Skeleton variant="rect" width="900px" height="500px" />}
 
                     />
-                ) : (
-                    <Jutsu
-                        subject={lesson.name}
-                        configOverwrite={{
-                            disableTileView: true,
-                        }}
-                        interfaceConfigOverwrite={{
-                            APP_NAME: "Vlearn",
-                            SHOW_JITSI_WATERMARK: false,
-                            SHOW_WATERMARK_FOR_GUESTS: false,
-                            SHOW_DEEP_LINKING_IMAGE: false,
-                            DISABLE_JOIN_LEAVE_NOTIFICATIONS: true,
-                            ENFORCE_NOTIFICATION_AUTO_DISMISS_TIMEOUT: 100,
-                            RECENT_LIST_ENABLED: false,
-                            GENERATE_ROOMNAMES_ON_WELCOME_PAGE: false,
-                            DISPLAY_WELCOME_PAGE_CONTENT: false,
-                            // DISABLE_FOCUS_INDICATOR: true,
-                            // DISABLE_DOMINANT_SPEAKER_INDICATOR: true,
-                            SET_FILMSTRIP_ENABLED: false,
-                            HIDE_KICK_BUTTON_FOR_GUESTS: true,
-                            filmStripOnly: true,
-                            DEFAULT_LOGO_URL: "",
-                            TOOLBAR_BUTTONS: ([
-                                'microphone', 'camera', 'desktop', 'fullscreen',
-                                'fodeviceselection', 'profile', 'info', 'chat', 'record', 'recording',
-                                'etherpad', 'settings', 'raisehand',
-                                'videoquality', 'filmstrip', 'stats', 'shortcuts',
-                                'videobackgroundblur', 'download', 'help'
-                            ]),
-                        }}
-                        containerStyles={{ width: '900px', height: '500px' }}
-                        roomName={"phamson"}
-                        displayName={user.username}
-                        domain={"meet.vlearn.club"}
-                        onJitsi={JitsiMeetAPI => {
-                            console.info("===================>Hello ", JitsiMeetAPI)
-                            JitsiMeetAPI.executeCommand('toggleFilmStrip')
-                        }}
-                        loadingComponent={<Skeleton variant="rect" width="900px" height="500px" />}
-
-                    />
-                )
+                    : new Date(liveLesson.start_time) <= Date.now()
+                        ?
+                        <Box>
+                            Chưa đến giờ học, khóa học bắt đầu lúc {fromTimeString(liveLesson.start_time)}
+                            <Box>
+                                Khóa học bắt đầu sau <span style={{ fontWeight: "bold" }}>{smallTime(leftTime)}</span>
+                            </Box>
+                        </Box>
+                        :
+                        <Box>
+                            Khóa học đã kết thúc vào {fromTimeString(liveLesson.end_time)}
+                        </Box>
             }
+
             <Box mx={isMobile ? 0 : 5} mt={2} p={2} style={{ backgroundColor: "white", border: "1px solid #cecece60", borderRadius: "5px" }}>
-                {!!lesson.content && <CKViewer content={lesson.content} />}
+                {!!liveLesson.content && <CKViewer content={liveLesson.content} />}
             </Box>
         </div>
 

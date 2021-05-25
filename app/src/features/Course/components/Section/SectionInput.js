@@ -20,12 +20,16 @@ import AddCircleRoundedIcon from "@material-ui/icons/AddCircleRounded";
 import HelpRoundedIcon from "@material-ui/icons/HelpRounded";
 import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 import LessonList from "../Lesson/LessonList";
-import uuidv4 from "commons/uuidv4";
+import uuidv4 from "commons/functions/uuidv4";
 import { cloneDeep } from "lodash";
 import ConfirmIconButton from "commons/components/Button/ConfirmIconButton";
 import QuestionList from "../Question/QuestionList";
 import SettingsIcon from '@material-ui/icons/Settings';
 import SectionSettingDialog from './SectionSettingDialog'
+import { CourseType } from "features/Course/constance";
+import LiveLessonList from "../LiveLesson/LiveLessonList";
+import { useSelector } from "react-redux";
+import { fromTimeString } from "commons/functions/humanTime";
 export default function SectionInput({
 	section,
 	handleChange,
@@ -35,9 +39,12 @@ export default function SectionInput({
 	setSection,
 }) {
 	const classes = useStyles();
-
+	const type = useSelector((state) => state.editingCourse.course.type);
 	const setLessons = (lessons) => {
 		setSection({ ...section, lessons: lessons });
+	};
+	const setLiveLessons = (lessons) => {
+		setSection({ ...section, live_lessons: lessons });
 	};
 	const deleteSection = () => {
 		handleDelete(section);
@@ -46,10 +53,15 @@ export default function SectionInput({
 		e.stopPropagation();
 		console.log(e);
 		console.log("Add Lesson");
-		var newLessons = cloneDeep(section.lessons);
-		newLessons.push({ uuid: uuidv4(), order: newLessons.length > 0 ? newLessons[newLessons.length - 1].order + 1 : 0 });
-		setLessons(newLessons);
-		// setSection({ section, lessons: [...section.lessons, { uuid: uuidv4() }] });
+		if (type === CourseType.LIVE) {
+			var newLiveLessons = cloneDeep(section.live_lessons);
+			newLiveLessons.push({ uuid: uuidv4(), order: newLiveLessons.length > 0 ? newLiveLessons[newLiveLessons.length - 1].order + 1 : 0 });
+			setLiveLessons(newLiveLessons);
+		} else {
+			var newLessons = cloneDeep(section.lessons);
+			newLessons.push({ uuid: uuidv4(), order: newLessons.length > 0 ? newLessons[newLessons.length - 1].order + 1 : 0 });
+			setLessons(newLessons);
+		}
 	};
 	const setQuestions = (questions) => {
 		setSection({ ...section, questions: questions });
@@ -157,7 +169,12 @@ export default function SectionInput({
 						/>
 					</div>
 					<div className={classes.column}>
-						<Typography className={classes.secondaryHeading}>Select</Typography>
+						<Typography className={classes.secondaryHeading}>{
+							fromTimeString(section.start_time)
+						}</Typography>
+						<Typography className={classes.secondaryHeading}>{
+							fromTimeString(section.end_time)
+						}</Typography>
 					</div>
 					<IconButton onClick={openSetting}>
 						<SettingsIcon color="action" />
@@ -166,6 +183,7 @@ export default function SectionInput({
 				</AccordionSummary>
 				<Divider />
 				<AccordionDetails className={classes.details}>
+					<LiveLessonList lessons={section.live_lessons} setLessons={setLiveLessons} />
 					<LessonList lessons={section.lessons} setLessons={setLessons} />
 					<Divider />
 					<QuestionList questions={section.questions} setQuestions={setQuestions} />
@@ -208,7 +226,7 @@ const useStyles = makeStyles((theme) => ({
 		height: "auto",
 	},
 	secondaryHeading: {
-		fontSize: theme.typography.pxToRem(15),
+		fontSize: theme.typography.pxToRem(13),
 		color: theme.palette.text.secondary,
 	},
 	icon: {

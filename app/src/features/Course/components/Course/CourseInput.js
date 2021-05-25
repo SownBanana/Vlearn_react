@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useEffect } from "react";
+import React, { lazy, Suspense, useEffect, useState } from "react";
 import {
 	TextField,
 	Grid,
@@ -8,6 +8,7 @@ import {
 	MuiThemeProvider,
 	Box,
 	Chip,
+	IconButton,
 } from "@material-ui/core";
 import EditorModal from "commons/components/EditorModal/EditorModal";
 import SectionList from "../Section/SectionList";
@@ -19,7 +20,7 @@ import dropZoneTheme from "theme/fullImageDropzone";
 import { useDispatch, useSelector } from "react-redux";
 import ContentEdit from "features/Course/components/ContentEdit";
 import { Autocomplete, Skeleton } from "@material-ui/lab";
-import { Code } from "@material-ui/icons";
+import { Code, Edit } from "@material-ui/icons";
 import { attachTopic, detachTopic, setContentEditMode } from "features/Course/editingCourseSlice";
 
 const CKEditor = lazy(() => {
@@ -39,6 +40,8 @@ export default function CourseInput({ course, setCourse }) {
 	const contentEditMode = useSelector((state) => state.editingCourse.contentEditMode);
 	const dispatch = useDispatch();
 	const topics = useSelector(state => state.topic.topics);
+	const [editTitle, setEditTitle] = useState(false);
+	const [courseTitle, setTitle] = useState("");
 	const introHandler = (data) => {
 		setCourse({ ...course, introduce: data });
 	};
@@ -48,6 +51,9 @@ export default function CourseInput({ course, setCourse }) {
 			dispatch(setContentEditMode(false));
 		}
 	}, [])
+	useEffect(() => {
+		setTitle(course.title);
+	}, [course.title])
 
 	return (
 
@@ -78,17 +84,29 @@ export default function CourseInput({ course, setCourse }) {
 									className={classes.panel}
 								>
 									<Grid container item md={12} xs={10}>
-										<Typography className={classes.headerText} variant="h6" color="textSecondary">
-											Tên khóa học
-										</Typography>
+										<Box display="flex">
+											<Typography className={classes.headerText} variant="h6" color="textSecondary">
+												Tên khóa học
+											</Typography>
+											<IconButton size="small" onClick={() => {
+												if (editTitle) {
+													setCourse({ ...course, title: courseTitle });
+												}
+												setEditTitle(!editTitle)
+											}}>
+												<Edit fontSize="small" />
+											</IconButton>
+										</Box>
 										<TextField
 											className={classes.textField}
 											id="name"
 											variant="outlined"
 											fullWidth
-											value={course.title}
+											disabled={!editTitle}
+											value={courseTitle}
 											onChange={(e) =>
-												setCourse({ ...course, title: e.target.value })
+												// setCourse({ ...course, title: e.target.value })
+												setTitle(e.target.value)
 											}
 										/>
 									</Grid>

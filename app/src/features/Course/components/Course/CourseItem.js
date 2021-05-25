@@ -10,6 +10,8 @@ import clsx from "clsx";
 import CKViewer from "commons/components/CKEditor/CKViewer";
 import { Rating } from "@material-ui/lab";
 import { Person } from "@material-ui/icons";
+import { COURSE_THUMBNAIL } from "commons/enums/ImageDefault";
+import { CourseType } from "features/Course/constance";
 export default function CourseItem({ course }) {
 	const classes = useStyle();
 	const history = useHistory();
@@ -23,11 +25,17 @@ export default function CourseItem({ course }) {
 			<CardActionArea onClick={handleClick} className={classes.cardArea}>
 				<CardMedia
 					className={classes.media}
-					image={course.thumbnail_url ? course.thumbnail_url : "https://i1.sndcdn.com/artworks-000351240072-kbcgdg-t500x500.jpg"}
+					image={course.thumbnail_url || COURSE_THUMBNAIL}
 					title={course.title}
 				/>
 				<Avatar variant="square" className={clsx(classes.avatar, "avatar--large avatar--center")} src={course.instructor.avatar_url} />
 				<CardContent className={classes.cardContent}>
+					{
+						course.type === CourseType.LIVE &&
+						<Box className={classes.liveIcon}>
+							<span>LIVE</span>
+						</Box>
+					}
 					<Box className={classes.instructorName}>
 						<Typography style={{ color: "white", fontWeight: "600", fontSize: 17 }} variant="body2">
 							{course.instructor.name}
@@ -47,7 +55,6 @@ export default function CourseItem({ course }) {
 							display: "flex",
 							color: "#717171"
 						}}>
-
 						{
 							course.rate_avg ?
 								<Rating value={course.rate_avg} readOnly={true} size="small" />
@@ -183,5 +190,17 @@ const useStyle = makeStyles((theme) => ({
 		opacity: 0,
 		alignItems: "center",
 		transition: "0.3s ease-out"
+	},
+	liveIcon: {
+		float: "right",
+		top: 0,
+		fontSize: 13,
+		color: "white",
+		fontWeight: "bold",
+		padding: "2px 4px",
+		backgroundColor: "red",
+		borderRadius: 3,
+		marginTop: -190,
+		marginRight: 5,
 	}
 }));
