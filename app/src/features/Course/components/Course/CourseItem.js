@@ -101,33 +101,33 @@ const useStyle = makeStyles((theme) => ({
 			color: "white",
 			opacity: "0.8",
 			height: "100%",
-			transition: "0.2s ease-in-out"
+			transition: "0.2s ease"
 		},
 		'&:hover $media': {
 			height: "100%",
-			transition: "0.3s ease-out"
+			transition: "0.3s ease"
 		},
 		'&:hover $cardContent $introduce': {
 			height: "unset",
 			opacity: "1",
-			transition: "0.3s ease-in"
+			transition: "0.3s ease"
 		},
 		'&:hover $avatar': {
 			transform: "scale(0)",
-			transition: "0.3s ease-in",
+			transition: "0.3s ease",
 		},
 		'&:hover $price': {
 			marginTop: 0,
-			transition: "0.2s ease-in",
+			transition: "0.2s ease",
 		},
 		'&:hover $instructorName': {
 			marginTop: 0,
 			opacity: 1,
-			transition: "0.2s ease-in",
+			transition: "0.2s ease",
 		},
 		'&:hover $rating': {
 			color: "white",
-			transition: "0.3s ease-in",
+			transition: "0.3s ease",
 		}
 	},
 	cardArea: {
@@ -137,14 +137,14 @@ const useStyle = makeStyles((theme) => ({
 		height: "65%",
 		width: "-webkit-fill-available",
 		position: "absolute",
-		transition: "0.4s ease-out",
+		transition: "0.4s ease",
 		top: 0,
 	},
 	cardContent: {
 		height: "35%",
 		padding: 5,
 
-		transition: "0.4s ease-out",
+		transition: "0.4s ease",
 		position: "absolute",
 		bottom: 0,
 		width: "100%",
@@ -156,7 +156,7 @@ const useStyle = makeStyles((theme) => ({
 		color: "white",
 		height: 0,
 		opacity: "0",
-		transition: "0.3s ease-out"
+		transition: "0.3s ease"
 	},
 	title: {
 		// color: "#424242",
@@ -170,18 +170,18 @@ const useStyle = makeStyles((theme) => ({
 		border: "3px solid #fffffff2",
 		opacity: 0.95,
 		transform: "scale(1)",
-		transition: "0.3s ease-out"
+		transition: "0.3s ease"
 	},
 	price: {
 		display: "flex",
 		marginTop: -30,
-		transition: "0.2s ease-out"
+		transition: "0.2s ease"
 	},
 	rating: {
 		display: "flex",
 		alignItems: "center",
 		color: "#717171",
-		transition: "0.3s ease-out"
+		transition: "0.3s ease"
 	},
 	instructorName: {
 		float: "right",
@@ -189,7 +189,7 @@ const useStyle = makeStyles((theme) => ({
 		color: "white",
 		opacity: 0,
 		alignItems: "center",
-		transition: "0.3s ease-out"
+		transition: "0.3s ease"
 	},
 	liveIcon: {
 		float: "right",
