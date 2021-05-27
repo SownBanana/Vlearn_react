@@ -22,7 +22,7 @@ const options = (access_token) => {
 				Authorization: "Bearer " + access_token,
 				Accept: "application/json",
 				// "Content-Type": "application/json",
-				"Access-Control-Allow-Origin": `http://localhost:80`,
+				"Access-Control-Allow-Origin": `${process.env.REACT_APP_URL}`,
 				"Access-Control-Allow-Credentials": "true",
 			},
 		},

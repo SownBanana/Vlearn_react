@@ -20,6 +20,7 @@
     "clsx": "^1.1.1",
     "debounce": "^1.2.1",
     "laravel-echo": "^1.10.0",
+    "material-ui-color": "^1.2.0",
     "material-ui-dropzone": "^3.5.0",
     "moment": "^2.29.1",
     "node-sass": "^5.0.0",
