@@ -210,14 +210,25 @@ export default function MyAppBar({ handle, open }) {
 							isLoggedIn
 								?
 								(
-									<IconButton
-										aria-label="show more"
-										aria-haspopup="true"
-										onClick={handleProfileMenuOpen}
-										color="inherit"
-									>
-										<Avatar style={{ width: 24, height: 24 }} alt={user.name} src={user.avatar_url} />
-									</IconButton>
+									<Box display="flex">
+										<IconButton
+											aria-label="show 17 new notifications"
+											color="inherit"
+											onClick={(e) => setNotiEl(notiEl ? null : e.currentTarget)}
+										>
+											<Badge badgeContent={unread} color="secondary">
+												<NotificationsIcon />
+											</Badge>
+										</IconButton>
+										<IconButton
+											aria-label="show more"
+											aria-haspopup="true"
+											onClick={handleProfileMenuOpen}
+											color="inherit"
+										>
+											<Avatar style={{ width: 24, height: 24 }} alt={user.name} src={user.avatar_url} />
+										</IconButton>
+									</Box>
 								)
 								:
 								(
@@ -328,8 +339,11 @@ const useStyles = makeStyles((theme) => ({
 		zIndex: 1000
 	},
 	notiPaper: {
-		width: "35vw",
+		width: "100vw",
 		height: "50vh",
-		overflow: "unset"
+		overflow: "unset",
+		[theme.breakpoints.up("sm")]: {
+			width: "35vw",
+		},
 	}
 }));

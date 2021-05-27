@@ -19,7 +19,7 @@ export default function LessonView() {
         try {
 
             if (!status.isFloat) {
-                console.log(status.isFloat, window.scrollY);
+                // console.log(status.isFloat, window.scrollY);
                 // const video = bounder.current.children[0]
                 // if (video.getBoundingClientRect().top < -100) {
                 if (window.scrollY > 500) {

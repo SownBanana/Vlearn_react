@@ -1,39 +1,57 @@
-import { Box, Paper, IconButton, Slider } from '@material-ui/core';
+import { Box, Paper, IconButton, Slider, Select, MenuItem, makeStyles } from '@material-ui/core';
 import React, { useEffect, useRef, useState } from 'react'
 import { ColorPalette, ColorPicker } from 'material-ui-color';
 import { Delete } from '@material-ui/icons';
 
-export default function WhiteBoard({ dataHandle = null, data = null }) {
+export default function WhiteBoard({ dataHandle = null, data = null, clearTrigger = false, setClearTrigger = null }) {
+    const PenStyle = {
+        FREE: 0,
+        LINE: 1,
+        RECTANGLE: 2,
+        CIRCLE: 3,
+
+    }
     const palette = {
         red: '#ff0000',
         blue: '#0000ff',
         green: 'green',
         yellow: 'yellow',
-        cyan: 'cyan',
-        lime: 'lime',
-        gray: 'gray',
         orange: 'orange',
         purple: 'purple',
+        gray: 'gray',
         black: 'black',
         pink: 'pink',
-        darkblue: 'darkblue',
         white: 'white',
     };
-
+    const classes = useStyles();
     var timeOut = null;
     const [draw, setDraw] = useState({
         lineWidth: 5,
         lineJoin: 'round',
         lineCap: 'round',
         strokeStyle: 'blue',
+        pen: PenStyle.FREE
     });
     const [ctx, setCtx] = useState(null);
     const [ready, setReady] = useState(false);
     const clearBoard = () => {
+        if (timeOut) clearTimeout(timeOut);
         var canvas = document.querySelector('#board');
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+        timeOut = setTimeout(() => {
+            if (dataHandle) dataHandle('');
+        }, 700)
     }
     const [isDrawing, setIsDrawing] = useState(false);
+
+    useEffect(() => {
+        if (clearTrigger) {
+            var canvas = document.querySelector('#board');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            setClearTrigger(false);
+        }
+    }, [clearTrigger])
+
     useEffect(() => {
         var canvas = document.querySelector('#board');
         setCtx(canvas.getContext('2d'));
@@ -54,11 +72,21 @@ export default function WhiteBoard({ dataHandle = null, data = null }) {
             var canvas = document.querySelector('#board');
             // setCtx(canvas.getContext('2d'));
 
-            var sketch = document.querySelector('#sketch');
+            // var sketch = document.querySelector('#sketch');
             var sketch = document.querySelector('#sketch');
             var sketch_style = getComputedStyle(sketch);
             canvas.width = parseInt(sketch_style.getPropertyValue('width'));
             canvas.height = parseInt(sketch_style.getPropertyValue('height'));
+        }
+    }, [ready]);
+
+    var index = 0;
+    useEffect(() => {
+        if (ready) {
+
+            index += 1;
+            console.log("New Event", index)
+            var canvas = document.querySelector('#board');
 
             var mouse = { x: 0, y: 0 };
             var last_mouse = { x: 0, y: 0 };
@@ -79,29 +107,76 @@ export default function WhiteBoard({ dataHandle = null, data = null }) {
             ctx.lineCap = draw.lineCap;
             ctx.strokeStyle = draw.strokeStyle;
 
-            canvas.addEventListener('mousedown', function (e) {
+            var start = {};
+            var mouseDownFunction = () => {
                 canvas.addEventListener('mousemove', onPaint, false);
-            }, false);
+                start.x = last_mouse.x;
+                start.y = last_mouse.y;
+                if (draw.pen === PenStyle.LINE || draw.pen === PenStyle.RECTANGLE) {
+                    ctx.beginPath();
+                    ctx.moveTo(start.x, start.y);
+                    ctx.lineTo(mouse.x, mouse.y);
+                    ctx.stroke();
+                }
+                // console.log("from: ", start.x, start.y);
+            }
+            canvas.addEventListener('mousedown', mouseDownFunction, false);
 
-            canvas.addEventListener('mouseup', function () {
+            var mouseUpFunction = () => {
                 canvas.removeEventListener('mousemove', onPaint, false);
-            }, false);
+                // console.log("to  : ", mouse.x, mouse.y);
+                if (draw.pen === PenStyle.CIRCLE) {
+                    ctx.beginPath();
+                    ctx.arc(start.x, start.y, Math.sqrt((start.x - mouse.x) * (start.x - mouse.x) + (start.y - mouse.y) * (start.y - mouse.y)), 0, 2 * Math.PI);
+                    ctx.stroke();
+                    timeOut = setTimeout(() => {
+                        if (dataHandle) dataHandle(canvas.toDataURL('img/png'));
+                    }, 500)
+                } else if (draw.pen === PenStyle.LINE) {
+                    ctx.beginPath();
+                    ctx.moveTo(start.x, start.y);
+                    ctx.lineTo(mouse.x, mouse.y);
+                    ctx.stroke();
+                    timeOut = setTimeout(() => {
+                        if (dataHandle) dataHandle(canvas.toDataURL('img/png'));
+                    }, 500)
+                } else if (draw.pen === PenStyle.RECTANGLE) {
+                    ctx.beginPath();
+                    ctx.rect(start.x, start.y, mouse.x - start.x, mouse.y - start.y);
+                    ctx.stroke();
+                    timeOut = setTimeout(() => {
+                        if (dataHandle) dataHandle(canvas.toDataURL('img/png'));
+                    }, 500)
+                }
+            }
+
+            canvas.addEventListener('mouseup', mouseUpFunction, false);
+
             var onPaint = function () {
                 if (timeOut) clearTimeout(timeOut);
+                if (draw.pen === PenStyle.FREE) {
+                    ctx.beginPath();
+                    ctx.moveTo(last_mouse.x, last_mouse.y);
+                    ctx.lineTo(mouse.x, mouse.y);
+                    ctx.closePath();
+                    ctx.stroke();
 
-                ctx.beginPath();
-                ctx.moveTo(last_mouse.x, last_mouse.y);
-                ctx.lineTo(mouse.x, mouse.y);
-                ctx.closePath();
-                ctx.stroke();
-
-                timeOut = setTimeout(() => {
-                    if (dataHandle) dataHandle(canvas.toDataURL('img/png'));
-                }, 700)
-
+                    timeOut = setTimeout(() => {
+                        if (dataHandle) dataHandle(canvas.toDataURL('img/png'));
+                    }, 700)
+                }
             };
         }
-    }, [ready]);
+        return () => {
+            try {
+                var canvas = document.querySelector('#board');
+                canvas.removeEventListener('mousedown', mouseDownFunction, false);
+                canvas.removeEventListener('mouseup', mouseUpFunction, false);
+            } catch (e) {
+
+            }
+        }
+    }, [draw.pen, ready]);
 
     useEffect(() => {
         if (data) {
@@ -144,6 +219,24 @@ export default function WhiteBoard({ dataHandle = null, data = null }) {
 
                         />
                     </div>
+                    <Select
+                        style={{ marginLeft: "10px" }}
+                        classes={{
+                            root: classes.selectRoot
+                        }}
+                        value={draw.pen}
+                        variant="outlined"
+                        size="small"
+                        onChange={(e) => {
+                            setDraw({ ...draw, pen: e.target.value })
+                        }}
+                        displayEmpty
+                    >
+                        <MenuItem value={PenStyle.FREE}>Bút</MenuItem>
+                        <MenuItem value={PenStyle.LINE}>Đường</MenuItem>
+                        <MenuItem value={PenStyle.CIRCLE}>Tròn</MenuItem>
+                        <MenuItem value={PenStyle.RECTANGLE}>Chữ nhật</MenuItem>
+                    </Select>
                     <Slider
                         value={draw.lineWidth}
                         getAriaValueText={(value) => value}
@@ -154,8 +247,9 @@ export default function WhiteBoard({ dataHandle = null, data = null }) {
                         step={1}
                         min={1}
                         max={50}
-                        style={{ width: "26%", marginLeft: "10px" }}
+                        style={{ width: "20%", marginLeft: "10px" }}
                     />
+
                 </Box>
                 <IconButton onClick={clearBoard} size="small">
                     <Delete />
@@ -168,3 +262,9 @@ export default function WhiteBoard({ dataHandle = null, data = null }) {
         </Paper>
     )
 }
+
+const useStyles = makeStyles((theme) => ({
+    selectRoot: {
+        padding: "5px 30px 5px 5px"
+    }
+}))

@@ -5,6 +5,8 @@ import {
 	Person as PersonIcon,
 	ImportContacts as ImportContactsIcon,
 	Home as HomeIcon,
+	Edit,
+	Dashboard,
 } from "@material-ui/icons";
 
 import { makeStyles, Paper, Tab, Tabs } from "@material-ui/core";
@@ -42,8 +44,14 @@ export default function InstructorDrawer() {
 						link: "/",
 					},
 					{
+						name: "Dashboard",
+						key: "dashboard",
+						icon: <Dashboard />,
+						link: "/dashboard",
+					},
+					{
 						key: "courses",
-						icon: <ImportContactsIcon />,
+						icon: <Edit />,
 						link: `/courses/i/${username}`,
 					},
 					{
@@ -51,11 +59,11 @@ export default function InstructorDrawer() {
 						icon: <ChatIcon />,
 						link: "/message",
 					},
-					{
-						key: "notification",
-						icon: <NotificationsIcon />,
-						link: "/notification",
-					},
+					// {
+					// 	key: "notification",
+					// 	icon: <NotificationsIcon />,
+					// 	link: "/notification",
+					// },
 					{
 						key: "info",
 						icon: <PersonIcon />,

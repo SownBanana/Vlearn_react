@@ -31,6 +31,7 @@ const Authenticate = React.lazy(() => import("./features/Authenticate/"));
 const Course = React.lazy(() => import("./features/Course/"));
 const Chat = React.lazy(() => import("./features/Chat/"));
 const Info = React.lazy(() => import("./features/Info/"));
+const Dashboard = React.lazy(() => import("./features/Dashboard/"));
 
 function App() {
 	globalStyle();
@@ -104,6 +105,7 @@ function App() {
 							<Route path="/auth" component={Authenticate} />
 							<Route path="/message" component={Chat} />
 							<Route path="/info" component={Info} />
+							<Route path="/dashboard" component={Dashboard} />
 							<PrivateRoute exact path="/" component={Home} />
 						</Switch>
 					</Suspense>

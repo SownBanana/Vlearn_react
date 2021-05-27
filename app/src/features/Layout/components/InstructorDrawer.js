@@ -4,7 +4,8 @@ import {
 	Notifications as NotificationsIcon,
 	ImportContacts as ImportContactsIcon,
 	Home as HomeIcon,
-	Person as PersonIcon
+	Person as PersonIcon,
+	Edit
 } from "@material-ui/icons";
 
 import ListItemLink from "commons/components/ListItemLink";
@@ -35,7 +36,7 @@ export default function InstructorDrawer({ handle }) {
 				{
 					name: "Khóa học của tôi",
 					key: "browser",
-					icon: <ImportContactsIcon />,
+					icon: <Edit />,
 					link: `/courses/i/${username}`,
 				},
 				{
@@ -44,12 +45,12 @@ export default function InstructorDrawer({ handle }) {
 					icon: <ChatIcon />,
 					link: "/message",
 				},
-				{
-					name: "Thông báo",
-					key: "notification",
-					icon: <NotificationsIcon />,
-					link: "/notification",
-				},
+				// {
+				// 	name: "Thông báo",
+				// 	key: "notification",
+				// 	icon: <NotificationsIcon />,
+				// 	link: "/notification",
+				// },
 				{
 					name: "Cá nhân",
 					key: "info",

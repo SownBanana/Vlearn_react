@@ -7,6 +7,14 @@ const liveLessonResource = {
         });
         return response.data;
     },
+    drawBoard: async (id, data) => {
+        const response = await api.post(`api/draw-board/${id}`,
+            { data }
+            , {
+                headers: headersWithToken(),
+            });
+        return response.data;
+    },
 };
 
 export default liveLessonResource;

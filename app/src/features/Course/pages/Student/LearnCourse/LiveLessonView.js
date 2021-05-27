@@ -20,6 +20,7 @@ import { smallTime } from 'commons/functions/humanTimeDuration';
 import usePurePusher from 'commons/PurePusher';
 import WhiteBoard from './components/WhiteBoard';
 import { chunkString } from 'commons/functions/chunkString';
+import api from 'commons/api/course/liveLesson';
 
 export default function LiveLessonView() {
     const classes = useStyles();
@@ -35,26 +36,23 @@ export default function LiveLessonView() {
     const [boardData, setBoardData] = useState(null);
     const [showBoardData, setShowBoardData] = useState(null);
     var receiveBoardData = { id: 0 };
+    const [clearBoard, setClearBoard] = useState(false);
 
-
-    // const setReceiveBoardDataAsync = (state) => {
-    //     return new Promise((resolve) => {
-    //         setReceiveBoardData(state, resolve)
-    //     });
-    // }
-
-    const handleReceiveBoardData = async (dataPackage) => {
-        console.log(dataPackage.id, receiveBoardData.id, dataPackage.id === receiveBoardData.id)
-        if (dataPackage.id === receiveBoardData.id) {
+    const handleReceiveBoardData = (dataPackage) => {
+        // console.log(dataPackage.id, receiveBoardData.id, dataPackage.id === receiveBoardData.id)
+        if (dataPackage.status === 'clear') {
+            setClearBoard(true);
+        }
+        else if (dataPackage.id === receiveBoardData.id) {
             // debugger
             receiveBoardData = { ...receiveBoardData, data: receiveBoardData.data + dataPackage.data };
             if (dataPackage.index === dataPackage.last) setShowBoardData(receiveBoardData.data);
-            console.log("concated===", receiveBoardData);
+            // console.log("concated===", receiveBoardData);
         } else if (dataPackage.id > receiveBoardData.id) {
             // debugger
             receiveBoardData = { id: dataPackage.id, data: dataPackage.data };
             if (dataPackage.index === dataPackage.last) setShowBoardData(receiveBoardData.data);
-            console.log("original===", receiveBoardData);
+            // console.log("original===", receiveBoardData);
         }
     }
 
@@ -72,6 +70,12 @@ export default function LiveLessonView() {
             'aria-controls': `lesson-tabpanel-${index}`,
         };
     }
+
+    useEffect(() => {
+        if (liveLesson.board) {
+            setShowBoardData(liveLesson.board)
+        }
+    }, [liveLesson.board])
 
     useEffect(() => {
         const timeCheck = setInterval(() => {
@@ -108,11 +112,14 @@ export default function LiveLessonView() {
     useEffect(() => {
         // console.log("==", channel);
         if (boardData) {
+            console.log("Data length: ", boardData.length)
             const chunkId = Date.now();
             if (boardData.length < 10000)
                 channel.trigger('client-board-data', {
                     sender: user.id,
                     id: chunkId,
+                    index: 0,
+                    last: 0,
                     status: "whole",
                     data: boardData
                 })
@@ -129,6 +136,16 @@ export default function LiveLessonView() {
                     })
                 }
             }
+            api.drawBoard(liveLesson.id, boardData);
+        } else if (boardData === '') {
+            console.log('Clear board')
+            const chunkId = Date.now();
+            channel.trigger('client-board-data', {
+                sender: user.id,
+                id: chunkId,
+                status: "clear",
+            })
+            api.drawBoard(liveLesson.id, boardData);
         }
     }, [boardData])
 
@@ -204,7 +221,7 @@ export default function LiveLessonView() {
                 style={{ width: "100%" }}
             >
                 {/* <Board /> */}
-                <WhiteBoard dataHandle={boardHandle} data={showBoardData} />
+                <WhiteBoard dataHandle={boardHandle} data={showBoardData} clearTrigger={clearBoard} setClearTrigger={setClearBoard} />
             </div>
             <Box mx={isMobile ? 0 : 5} mt={2} p={2} style={{ backgroundColor: "white", border: "1px solid #cecece60", borderRadius: "5px" }}>
                 {!!liveLesson.content && <CKViewer content={liveLesson.content} />}
