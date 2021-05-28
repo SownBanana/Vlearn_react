@@ -1,25 +1,24 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import CourseContent from './CourseContent'
-import LessonView from './LessonView'
 import QuestionView from './QuestionView'
 import { fetchCourseSummary } from 'features/Course/pages/Student/LearnCourse/learnSlice'
 import { useParams } from 'react-router';
 import { Box, Grid } from '@material-ui/core';
 import BreadCrumbs from 'commons/components/BreadCrumbs';
 import { LESSON, LIVE_LESSON, QUESTION } from 'commons/enums/LearnView';
-import LiveLessonView from './LiveLessonView';
+import LiveLessonView from '../LiveLessonView';
+import LessonView from '../LessonView';
+import CourseContent from '../CourseContent';
 export default function LearnCourse() {
     const dispatch = useDispatch();
     const { id } = useParams();
     const learnView = useSelector(state => state.learnCourse.learnView)
-    const course = useSelector(state => state.learnCourse.course)
     useEffect(() => {
         dispatch(fetchCourseSummary(id))
     }, [dispatch, id])
     return (
         <Box mt={2}>
-            <BreadCrumbs mb={2} current={`${course.title}`}>
+            <BreadCrumbs mb={2} current="Khóa học">
             </BreadCrumbs>
             <Box mx={2}>
                 <Grid container direction="row" spacing={1}>

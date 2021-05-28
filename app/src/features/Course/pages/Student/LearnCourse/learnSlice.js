@@ -68,6 +68,16 @@ export const getLiveLesson = (id) => async (dispatch) => {
         console.log("Faillllllllllllllllllll", e);
     }
 };
+export const getQuestionsStatistic = (section_id) => async (dispatch) => {
+    try {
+        const response = await apiQuestion.statistic(section_id);
+        if (response.status === "success") {
+            dispatch(setQuestions(response));
+        }
+    } catch (e) {
+        console.log("Faillllllllllllllllllll", e);
+    }
+};
 export const getQuestions = (section_id) => async (dispatch) => {
     try {
         const response = await apiQuestion.getInSection(section_id);
@@ -127,6 +137,7 @@ function clear(state) {
         introduce: "",
         price: "",
         sections: [],
+        students: [],
     };
     state.status = "";
     state.lesson = {};
@@ -155,6 +166,7 @@ const initialState = {
         thumbnail_url: "",
         price: "",
         sections: [],
+        students: [],
     },
     lesson: {
     },
@@ -173,6 +185,26 @@ const learnCourse = createSlice({
     name: "course",
     initialState,
     reducers: {
+        drawAllPermission: (state) => {
+            state.course.students = state.course.students.map(student => {
+                student.permission = false;
+                return student
+            })
+        },
+        setPermission: (state, action) => {
+            const { id, permission } = action.payload;
+            state.course.students = state.course.students.map(student => {
+                if (student.id === id) student.permission = permission;
+                return student
+            })
+        },
+        setRaisehand: (state, action) => {
+            const { id, raise } = action.payload;
+            state.course.students = state.course.students.map(student => {
+                if (student.id === id) student.raise = raise;
+                return student
+            })
+        },
         clearCourse: (state) => {
             clear(state);
         },
@@ -240,6 +272,9 @@ export const {
     setLearnView,
     checkAnswer,
     checkSingleAnswer,
-    setResult
+    setResult,
+    setPermission,
+    setRaisehand,
+    drawAllPermission
 } = learnCourse.actions;
 export default learnCourse.reducer;

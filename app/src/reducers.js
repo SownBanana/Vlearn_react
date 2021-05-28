@@ -13,6 +13,7 @@ import info from "./features/Info/infoSlice";
 import learnCourse from "./features/Course/pages/Student/LearnCourse/learnSlice";
 import topic from "./features/Topic/topicSlice";
 import notification from "./features/Notification/notificationSlice";
+import lessonChat from "./features/Course/pages/Student/LearnCourse/lessonChatSlice";
 
 export default combineReducers({
 	auth,
@@ -28,5 +29,6 @@ export default combineReducers({
 	info,
 	learnCourse,
 	topic,
-	notification
+	notification,
+	lessonChat,
 });

@@ -16,8 +16,9 @@ export const INSTRUCTOR_INTERFACE = {
     DEFAULT_LOGO_URL: "",
     TOOLBAR_BUTTONS: ([
         'microphone', 'camera', 'desktop', 'fullscreen',
-        'fodeviceselection', 'profile', 'info', 'chat', 'record', 'recording',
-        'etherpad', 'settings', 'raisehand',
+        'fodeviceselection', 'profile', 'info', 'record', 'recording',
+        // 'chat',
+        'etherpad', 'settings',
         'videoquality', 'filmstrip', 'stats', 'shortcuts',
         'videobackgroundblur', 'download', 'help',
         'mute-everyone', 'mute-video-everyone'
@@ -39,7 +40,8 @@ export const STUDENT_INTERFACE = {
     DEFAULT_LOGO_URL: "",
     TOOLBAR_BUTTONS: ([
         'fullscreen',
-        'profile', 'info', 'chat',
+        'profile', 'info',
+        // 'chat',
         'raisehand',
         'videoquality', 'filmstrip', 'shortcuts',
         'download'

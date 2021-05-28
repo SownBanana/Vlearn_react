@@ -3,7 +3,6 @@ import moment from "moment";
 const HOUR = 3600000;
 const DAY = 86400000;
 export const getTimePastText = (timestamp) => {
-
     const timePast = moment(Date.now()).diff(moment(timestamp));
     const timeString =
         (timePast < 60000) ?

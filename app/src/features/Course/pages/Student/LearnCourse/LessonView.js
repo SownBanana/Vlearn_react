@@ -1,39 +1,52 @@
 import { Box, makeStyles, useMediaQuery } from '@material-ui/core';
 import CKViewer from 'commons/components/CKEditor/CKViewer';
 import VideoPlayer from 'commons/components/VideoPlayer/VideoPlayer';
+import usePusher from 'commons/PusherCommon';
 import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
+import { appendMessage } from './lessonChatSlice';
 
 export default function LessonView() {
     const classes = useStyles();
-    const dispatch = useDispatch();
     const lesson = useSelector(state => state.learnCourse.lesson);
     const isMobile = useMediaQuery("(max-width: 660px)");
-    const user = useSelector(state => state.auth.user);
     const bounder = useRef();
-    const mobileVideo = useRef();
+    // const mobileVideo = useRef();
     const [status, setStatus] = useState({ isFloat: false });
-    // const [isFloat, setFloat] = useState();
-    // var isFloat = false;
+
+
+    const id = useSelector((state) => state.auth.user.id);
+    const pusher = usePusher(id);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        // dispatch(fetchChats());
+        if (id && pusher && lesson.id) {
+            pusher.leave("App.Lesson." + lesson.id);
+            pusher
+                .private("App.Lesson." + lesson.id)
+                .listen(`LessonCommentEvent`, (data) => {
+                    console.log(data)
+                    dispatch(appendMessage(data.data))
+                });
+        }
+
+    }, [pusher, id, lesson]);
+
     const trackScrolling = () => {
         try {
 
             if (!status.isFloat) {
-                // console.log(status.isFloat, window.scrollY);
-                // const video = bounder.current.children[0]
-                // if (video.getBoundingClientRect().top < -100) {
+
                 if (window.scrollY > 500) {
                     setStatus({ isFloat: true });
                     status.isFloat = true;
-                    // isFloat = true;
                 }
             } else {
-                console.log("small", status.isFloat, window.scrollY)
+                // console.log("small", status.isFloat, window.scrollY)
                 if (window.scrollY < 400) {
-                    // setFloat((state) => state = false);
                     setStatus({ isFloat: false });
                     status.isFloat = false;
-                    // isFloat = false;
                 }
             }
         } catch (e) {

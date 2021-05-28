@@ -25,6 +25,7 @@ export default function CourseSummary() {
     const course = useSelector(state => state.course.course)
     const bought = useSelector(state => state.course.bought)
     const status = useSelector(state => state.course.status)
+    const user = useSelector(state => state.auth.user)
     const role = useSelector(state => state.auth.user.role)
     const history = useHistory();
     const isMobile = useCheckMobile();
@@ -109,24 +110,25 @@ export default function CourseSummary() {
                                 <Person fontSize={!isMobile ? "large" : "default"} />
                                 <span style={{ marginRight: 3 }} >{course.total}</span>
                             </Box>
-                            {!bought ?
-                                <Box className={classes.buyGroup}>
-                                    <Box className={classes.price}>
-                                        {(course.price > 0 ? course.price : 'Miễn phí').toLocaleString('it', {
-                                            style: 'currency',
-                                            currency: 'VND'
-                                        })}
+                            {
+                                bought || course.instructor_id === user.id ?
+                                    <Box className={classes.buyGroup}>
+                                        <Button onClick={() => learnCourse()} className={classes.button} variant="contained" color="default">
+                                            Vào học
+                                        </Button>
                                     </Box>
-                                    <Button onClick={() => buyCourse()} className={classes.button} variant="contained" color="default">
-                                        Mua khóa học
-                                    </Button>
-                                </Box>
-                                :
-                                <Box className={classes.buyGroup}>
-                                    <Button onClick={() => learnCourse()} className={classes.button} variant="contained" color="default">
-                                        Vào học
-                                </Button>
-                                </Box>
+                                    :
+                                    <Box className={classes.buyGroup}>
+                                        <Box className={classes.price}>
+                                            {(course.price > 0 ? course.price : 'Miễn phí').toLocaleString('it', {
+                                                style: 'currency',
+                                                currency: 'VND'
+                                            })}
+                                        </Box>
+                                        <Button onClick={() => buyCourse()} className={classes.button} variant="contained" color="default">
+                                            Mua khóa học
+                                        </Button>
+                                    </Box>
                             }
                         </Grid>
                     </div>

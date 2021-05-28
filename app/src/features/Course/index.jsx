@@ -16,7 +16,7 @@ import LearnCourse from "features/Course/pages/Student/LearnCourse/LearnCourse";
 export default function Course() {
     return (
         <Switch>
-            <StudentRoute path="/courses/learn/:id" component={LearnCourse} />
+            <PrivateRoute path="/courses/learn/:id" component={LearnCourse} />
             <InstructorRoute
                 path="/courses/i/:username/add"
                 component={AddCourse}

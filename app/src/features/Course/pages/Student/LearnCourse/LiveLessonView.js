@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import {
     Box,
+    IconButton,
     makeStyles,
     Paper,
     Tab,
@@ -11,7 +12,6 @@ import {
 import CKViewer from 'commons/components/CKEditor/CKViewer';
 import { useDispatch, useSelector } from 'react-redux';
 import { Jutsu } from 'react-jutsu' // Component
-import { useJitsi } from 'react-jutsu' // Custom hook
 import { Skeleton, TabPanel } from '@material-ui/lab';
 import { UserRole } from 'features/Authenticate/constance';
 import { INSTRUCTOR_CONFIG, INSTRUCTOR_INTERFACE, STUDENT_CONFIG, STUDENT_INTERFACE } from 'commons/enums/JitsiConfig';
@@ -21,6 +21,11 @@ import usePurePusher from 'commons/PurePusher';
 import WhiteBoard from './components/WhiteBoard';
 import { chunkString } from 'commons/functions/chunkString';
 import api from 'commons/api/course/liveLesson';
+import uuidv4 from 'commons/functions/uuidv4';
+import { appendMessage } from './lessonChatSlice';
+import { Mic, MicNone, MicOff, ScreenShare, StopScreenShare, Videocam, VideocamOff } from '@material-ui/icons';
+import StudentList from './components/StudentList';
+import { makeToast, ToastType } from 'features/Toast/toastSlices';
 
 export default function LiveLessonView() {
     const classes = useStyles();
@@ -37,6 +42,14 @@ export default function LiveLessonView() {
     const [showBoardData, setShowBoardData] = useState(null);
     var receiveBoardData = { id: 0 };
     const [clearBoard, setClearBoard] = useState(false);
+    const uuid = uuidv4();
+    const [reloadVideo, setReloadVideo] = useState(0);
+    const [jitsiApi, setJitsiApi] = useState(null);
+
+    const [permission, setPermission] = useState(false);
+    const [audio, setAudio] = useState(false);
+    const [video, setVideo] = useState(false);
+    const [screen, setScreen] = useState(false);
 
     const handleReceiveBoardData = (dataPackage) => {
         // console.log(dataPackage.id, receiveBoardData.id, dataPackage.id === receiveBoardData.id)
@@ -64,16 +77,27 @@ export default function LiveLessonView() {
         setBoardData(data);
     };
 
-    function a11yProps(index) {
-        return {
-            id: `lesson-tab-${index}`,
-            'aria-controls': `lesson-tabpanel-${index}`,
-        };
-    }
 
     useEffect(() => {
+        if (!permission) {
+            if (audio) jitsiApi.executeCommand('toggleAudio');
+            if (video) jitsiApi.executeCommand('toggleVideo');
+            if (screen) jitsiApi.executeCommand('toggleShareScreen');
+        }
+    }, [permission])
+
+    useEffect(() => {
+        // reloadLiveVideo()
+        setReloadVideo(reloadVideo + 1)
+        console.log("reload")
         if (liveLesson.board) {
+            // console.log("set board")
+            setClearBoard(true);
             setShowBoardData(liveLesson.board)
+        } else {
+            // console.log("clear board")
+            setShowBoardData(null);
+            setClearBoard(true);
         }
     }, [liveLesson.board])
 
@@ -89,19 +113,28 @@ export default function LiveLessonView() {
         }
     }, [])
 
-
     useEffect(() => {
         if (user.id && pusher) {
             pusher.unsubscribe("private-App.LiveLesson." + liveLesson.id);
             const inChannel = pusher.subscribe("private-App.LiveLesson." + liveLesson.id);
             setChannel(inChannel);
             console.info("SOCKET===========>connect whiteboard, channel: ", inChannel);
-            inChannel.trigger('client-board-data', { message: 'Hello world!' })
+            // inChannel.trigger('client-board-data', { message: 'Hello world!' })
+            inChannel.bind('client-board-data', (data) => {
+                if (data.uuid !== uuid) {
+                    // console.log("Board data incoming ====>: ", data);
+                    handleReceiveBoardData(data);
+                }
+            })
+            inChannel.bind('App\\Events\\LiveLessonCommentEvent', (data) => {
+                console.log(data)
+                dispatch(appendMessage(data.data))
+            })
             if (user.role === UserRole.STUDENT) {
-                inChannel.bind('client-board-data', (data) => {
-                    if (data.sender !== user.id) {
-                        // console.log("Board data incoming ====>: ", data);
-                        handleReceiveBoardData(data);
+                inChannel.bind('client-live-permission', (data) => {
+                    if (data.id === user.id || data.id === 0) {
+                        dispatch(makeToast(`Bạn vừa ${data.permission ? 'được cấp' : 'bị thu hồi'} quyền thuyết trình`, ToastType.INFO));
+                        setPermission(data.permission);
                     }
                 })
             }
@@ -117,6 +150,7 @@ export default function LiveLessonView() {
             if (boardData.length < 10000)
                 channel.trigger('client-board-data', {
                     sender: user.id,
+                    uuid: uuid,
                     id: chunkId,
                     index: 0,
                     last: 0,
@@ -128,6 +162,7 @@ export default function LiveLessonView() {
                 for (let i = 0; i < data.length; i++) {
                     channel.trigger('client-board-data', {
                         sender: user.id,
+                        uuid: uuid,
                         id: chunkId,
                         status: "chunk",
                         last: data.length - 1,
@@ -152,7 +187,7 @@ export default function LiveLessonView() {
     return (
         <div>
             {
-                new Date(liveLesson.start_time) > Date.now()
+                liveLesson.start_time && new Date(liveLesson.start_time) > Date.now()
                     ?
                     <Box>
                         Chưa đến giờ học, khóa học bắt đầu lúc {fromTimeString(liveLesson.start_time)}
@@ -160,23 +195,74 @@ export default function LiveLessonView() {
                             Khóa học bắt đầu sau <span style={{ fontWeight: "bold" }}>{smallTime(leftTime)}</span>
                         </Box>
                     </Box>
-                    : new Date(liveLesson.end_time) < Date.now() ?
+                    : liveLesson.end_time && new Date(liveLesson.end_time) < Date.now() ?
                         <Box>
                             Khóa học đã kết thúc vào {fromTimeString(liveLesson.end_time)}
                         </Box>
                         : <span></span>
             }
             <Paper>
-                <Tabs
-                    value={tab}
-                    onChange={handleChangeTab}
-                    indicatorColor="primary"
-                    textColor="primary"
-                    centered
-                >
-                    <Tab label="Lớp học" {...a11yProps(0)} />
-                    <Tab label="Bảng" {...a11yProps(1)} />
-                </Tabs>
+                <Box display={{ sm: "flex" }} justifyContent="space-between" width="100%">
+                    <Tabs
+                        value={tab}
+                        onChange={handleChangeTab}
+                        indicatorColor="primary"
+                        textColor="primary"
+                        centered
+                    >
+                        <Tab label="Lớp học" />
+                        <Tab label="Bảng" />
+                        <Tab label="Thành viên" />
+                    </Tabs>
+                    {
+                        user.role === UserRole.STUDENT ?
+                            <Box>
+                                <IconButton disabled={!permission} color="primary" onClick={
+                                    (e) => {
+                                        jitsiApi.executeCommand('toggleAudio')
+                                    }
+                                }>
+                                    {
+                                        audio ?
+                                            <Mic /> :
+                                            <MicOff />
+                                    }
+                                </IconButton>
+                                <IconButton disabled={!permission} color="primary" onClick={
+                                    (e) => {
+                                        jitsiApi.executeCommand('toggleVideo')
+                                    }
+                                }>
+                                    {
+                                        video ?
+                                            <Videocam /> :
+                                            <VideocamOff />
+                                    }
+                                </IconButton>
+                                <IconButton disabled={!permission} color="primary" onClick={
+                                    (e) => {
+                                        jitsiApi.executeCommand('toggleShareScreen')
+                                    }
+                                }>
+                                    {
+                                        screen ?
+                                            <ScreenShare /> :
+                                            <StopScreenShare />
+                                    }
+                                </IconButton>
+                            </Box>
+                            :
+                            <Box>
+                                <IconButton onClick={
+                                    (e) => {
+                                        jitsiApi.executeCommand('muteEveryone');
+                                    }
+                                }>
+                                    <MicNone />
+                                </IconButton>
+                            </Box>
+                    }
+                </Box>
             </Paper>
             {
                 (leftTime <= 0 || new Date(liveLesson.start_time) <= Date.now())
@@ -184,9 +270,9 @@ export default function LiveLessonView() {
                 &&
                 <div
                     className={tab !== 0 && classes.hide}
+                    key={reloadVideo}
                 >
                     < Jutsu
-
                         configOverwrite={
                             user.role === UserRole.STUDENT ?
                                 STUDENT_CONFIG :
@@ -210,6 +296,18 @@ export default function LiveLessonView() {
                         onJitsi={JitsiMeetAPI => {
                             console.info("Init Jitsi success ", JitsiMeetAPI)
                             JitsiMeetAPI.executeCommand('toggleFilmStrip')
+                            setJitsiApi(JitsiMeetAPI);
+                            if (user.role === UserRole.STUDENT) {
+                                JitsiMeetAPI.addListener('audioMuteStatusChanged', (e) => {
+                                    setAudio(!e.muted)
+                                })
+                                JitsiMeetAPI.addListener('videoMuteStatusChanged', (e) => {
+                                    setVideo(!e.muted)
+                                })
+                                JitsiMeetAPI.addListener('screenSharingStatusChanged', (e) => {
+                                    setScreen(e.on)
+                                })
+                            }
                         }}
                         loadingComponent={<Skeleton variant="rect" width="900px" height="500px" />}
 
@@ -222,6 +320,12 @@ export default function LiveLessonView() {
             >
                 {/* <Board /> */}
                 <WhiteBoard dataHandle={boardHandle} data={showBoardData} clearTrigger={clearBoard} setClearTrigger={setClearBoard} />
+            </div>
+            <div
+                className={tab !== 2 && classes.hide}
+                style={{ width: "100%" }}
+            >
+                <StudentList channel={channel} />
             </div>
             <Box mx={isMobile ? 0 : 5} mt={2} p={2} style={{ backgroundColor: "white", border: "1px solid #cecece60", borderRadius: "5px" }}>
                 {!!liveLesson.content && <CKViewer content={liveLesson.content} />}
@@ -245,5 +349,6 @@ const useStyles = makeStyles((theme) => ({
         padding: 5,
         opacity: 0,
         height: 0,
+        overflow: "hidden"
     }
 }));

@@ -32,8 +32,8 @@ export default function WebSocket() {
             pusher
                 .private("App.PrivateMessage." + id)
                 .listen(`PrivateMessageSend`, (data) => {
-                    console.log(pusher.socketId());
-                    console.log(data);
+                    // console.log(pusher.socketId());
+                    // console.log(data);
                     dispatch(appendMessage(data.data));
                 });
         }

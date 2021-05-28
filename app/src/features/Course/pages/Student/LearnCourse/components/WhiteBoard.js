@@ -112,7 +112,7 @@ export default function WhiteBoard({ dataHandle = null, data = null, clearTrigge
                 canvas.addEventListener('mousemove', onPaint, false);
                 start.x = last_mouse.x;
                 start.y = last_mouse.y;
-                if (draw.pen === PenStyle.LINE || draw.pen === PenStyle.RECTANGLE) {
+                if (draw.pen !== PenStyle.FREE) {
                     ctx.beginPath();
                     ctx.moveTo(start.x, start.y);
                     ctx.lineTo(mouse.x, mouse.y);
@@ -127,7 +127,7 @@ export default function WhiteBoard({ dataHandle = null, data = null, clearTrigge
                 // console.log("to  : ", mouse.x, mouse.y);
                 if (draw.pen === PenStyle.CIRCLE) {
                     ctx.beginPath();
-                    ctx.arc(start.x, start.y, Math.sqrt((start.x - mouse.x) * (start.x - mouse.x) + (start.y - mouse.y) * (start.y - mouse.y)), 0, 2 * Math.PI);
+                    ctx.arc(Math.floor((mouse.x + start.x) / 2), Math.floor((mouse.y + start.y) / 2), Math.floor(Math.sqrt((start.x - mouse.x) * (start.x - mouse.x) + (start.y - mouse.y) * (start.y - mouse.y)) / 2), 0, 2 * Math.PI);
                     ctx.stroke();
                     timeOut = setTimeout(() => {
                         if (dataHandle) dataHandle(canvas.toDataURL('img/png'));
@@ -179,7 +179,9 @@ export default function WhiteBoard({ dataHandle = null, data = null, clearTrigge
     }, [draw.pen, ready]);
 
     useEffect(() => {
+        console.log("cal this ========")
         if (data) {
+            console.log(data.length)
             var interval = setInterval(() => {
                 if (isDrawing) return;
                 setIsDrawing(true);
