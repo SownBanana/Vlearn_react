@@ -1,6 +1,6 @@
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
-import { Avatar, makeStyles, Paper, Tooltip, Typography } from '@material-ui/core'
+import { Avatar, Box, makeStyles, Paper, Tooltip, Typography } from '@material-ui/core'
 import { useSelector } from 'react-redux';
 import moment from 'moment'
 import 'moment/locale/vi'  // without this line it didn't work
@@ -54,6 +54,47 @@ function Message({
                 <div className={classes.timestamp}>
                     {timeString}
                 </div>
+                <Box display="flex" flexDirection="column" alignItems="flex-start">
+                    {
+                        assets &&
+                        assets.map(asset => {
+                            if (asset.type) {
+                                if (asset.type.includes('image')) {
+                                    return (
+                                        <img style={{ maxWidth: "100%", marginBottom: 10 }} src={asset.url} />
+                                    )
+                                } else if (asset.type.includes('video')) {
+                                    return (
+                                        <video style={{ maxWidth: "100%", marginBottom: 10 }} controls>
+                                            <source src={asset.url} type={asset.type} />
+                                        </video>
+                                    )
+                                } else {
+                                    return (
+                                        <Tooltip title={asset.name} placement="top">
+                                            <a href={asset.url} target="_blank">
+                                                <Paper onClick={e => console.log(asset.url)} style={{ overflow: "hidden", padding: "5px", marginBottom: 10 }}>
+                                                    <AttachFile fontSize="small" color="secondary" />
+                                                </Paper>
+                                            </a>
+                                        </Tooltip>
+                                    )
+                                }
+                            }
+                            else {
+                                return (
+                                    <Tooltip title={asset.name} placement="top">
+                                        <a href={asset.url} target="_blank">
+                                            <Paper style={{ width: "100%", overflow: "hidden", padding: "5px", marginBottom: 10 }}>
+                                                <AttachFile fontSize="small" color="secondary" />
+                                            </Paper>
+                                        </a>
+                                    </Tooltip>
+                                )
+                            }
+                        })
+                    }
+                </Box>
                 <div dangerouslySetInnerHTML={{ __html: getURL(content) }}>
                 </div>
             </Paper>
@@ -69,49 +110,51 @@ function Message({
         >
             <Grid item md={9} className={classes.myMessageBounder}>
                 <Paper className={classes.message} elevation={3}>
-                    <div className={classes.timestamp}>
+                    <div style={{ textAlign: "right" }} className={classes.timestamp}>
                         {timeString}
                     </div>
-                    {
-                        assets &&
-                        assets.map(asset => {
-                            if (asset.type) {
-                                if (asset.type.includes('image')) {
-                                    return (
-                                        <img style={{ maxWidth: "90%" }} src={asset.url} />
-                                    )
-                                } else if (asset.type.includes('video')) {
-                                    return (
-                                        <video style={{ maxWidth: "90%" }} controls>
-                                            <source src={asset.url} type={asset.type} />
-                                        </video>
-                                    )
-                                } else {
+                    <Box display="flex" flexDirection="column" alignItems="flex-end">
+                        {
+                            assets &&
+                            assets.map(asset => {
+                                if (asset.type) {
+                                    if (asset.type.includes('image')) {
+                                        return (
+                                            <img style={{ maxWidth: "100%", marginBottom: 10 }} src={asset.url} />
+                                        )
+                                    } else if (asset.type.includes('video')) {
+                                        return (
+                                            <video style={{ maxWidth: "100%", marginBottom: 10 }} controls>
+                                                <source src={asset.url} type={asset.type} />
+                                            </video>
+                                        )
+                                    } else {
+                                        return (
+                                            <Tooltip title={asset.name} placement="top">
+                                                <a href={asset.url} target="_blank">
+                                                    <Paper onClick={e => console.log(asset.url)} style={{ overflow: "hidden", padding: "5px", marginBottom: 10 }}>
+                                                        <AttachFile fontSize="small" color="secondary" />
+                                                    </Paper>
+                                                </a>
+                                            </Tooltip>
+                                        )
+                                    }
+                                }
+                                else {
                                     return (
                                         <Tooltip title={asset.name} placement="top">
                                             <a href={asset.url} target="_blank">
-                                                <Paper onClick={e => console.log(asset.url)} style={{ width: "100%", overflow: "hidden", padding: "5px" }}>
+                                                <Paper style={{ width: "100%", overflow: "hidden", padding: "5px", marginBottom: 10 }}>
                                                     <AttachFile fontSize="small" color="secondary" />
                                                 </Paper>
                                             </a>
                                         </Tooltip>
                                     )
                                 }
-                            }
-                            else {
-                                return (
-                                    <Tooltip title={asset.name} placement="top">
-                                        <a href={asset.url} target="_blank">
-                                            <Paper style={{ width: "100%", overflow: "hidden", padding: "5px" }}>
-                                                <AttachFile fontSize="small" color="secondary" />
-                                            </Paper>
-                                        </a>
-                                    </Tooltip>
-                                )
-                            }
-                        })
-                    }
-                    <div dangerouslySetInnerHTML={{ __html: getURL(content) }}>
+                            })
+                        }
+                    </Box>
+                    <div style={{ textAlign: "right" }} dangerouslySetInnerHTML={{ __html: getURL(content) }}>
                     </div>
                 </Paper>
             </Grid>

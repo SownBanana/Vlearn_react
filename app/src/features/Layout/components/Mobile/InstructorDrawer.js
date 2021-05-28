@@ -1,11 +1,9 @@
 import React from "react";
 import {
 	Chat as ChatIcon,
-	Notifications as NotificationsIcon,
 	Person as PersonIcon,
 	ImportContacts as ImportContactsIcon,
 	Home as HomeIcon,
-	Edit,
 	Dashboard,
 } from "@material-ui/icons";
 
@@ -51,7 +49,7 @@ export default function InstructorDrawer() {
 					},
 					{
 						key: "courses",
-						icon: <Edit />,
+						icon: <ImportContactsIcon />,
 						link: `/courses/i/${username}`,
 					},
 					{

@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import CourseContent from './CourseContent'
 import LessonView from './LessonView'
 import QuestionView from './QuestionView'
-import { fetchCourseSummary } from 'features/Course/pages/Student/LearnCourse/learnSlice'
+import { clearCourse, fetchCourseSummary } from 'features/Course/pages/Student/LearnCourse/learnSlice'
 import { useParams } from 'react-router';
 import { Box, Grid } from '@material-ui/core';
 import BreadCrumbs from 'commons/components/BreadCrumbs';
@@ -16,6 +16,9 @@ export default function LearnCourse() {
     const course = useSelector(state => state.learnCourse.course)
     useEffect(() => {
         dispatch(fetchCourseSummary(id))
+        return () => {
+            dispatch(clearCourse());
+        }
     }, [dispatch, id])
     return (
         <Box mt={2}>

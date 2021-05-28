@@ -9,6 +9,7 @@ import {
 	Box,
 	IconButton,
 	makeStyles,
+	Tooltip,
 	useMediaQuery,
 } from "@material-ui/core";
 import { useHistory } from "react-router";
@@ -18,7 +19,7 @@ import PostAddOutlinedIcon from "@material-ui/icons/PostAddOutlined";
 import { CourseStatus, CourseType } from "features/Course/constance";
 import { useSelector } from "react-redux";
 import { COURSE_THUMBNAIL } from "commons/enums/ImageDefault";
-import { BlockRounded, Person } from "@material-ui/icons";
+import { BlockRounded, LocalLibrary, Person } from "@material-ui/icons";
 export default function FlatCourseItem({ course }) {
 	const classes = useStyle();
 	const history = useHistory();
@@ -27,6 +28,9 @@ export default function FlatCourseItem({ course }) {
 	const editCourse = () => {
 		let path = `/courses/i/${username}/edit/${course.id}`;
 		history.push(path);
+	};
+	const goToCourse = (id) => {
+		history.push(`/courses/learn/${id}`)
 	};
 	const isMobile = useMediaQuery("(max-width: 760px)");
 	return (
@@ -66,13 +70,24 @@ export default function FlatCourseItem({ course }) {
 					<GradeRoundedIcon fontSize="default" style={{ fontSize: 18 }} />
 					<span className={classes.actionButton}>{course.rate_avg}</span>
 				</Box>
-				<IconButton
-					edge="start"
-					className={classes.actionButton}
-					onClick={editCourse}
-				>
-					<EditRoundedIcon />
-				</IconButton>
+				<Tooltip title="Vào lớp" placement="top">
+					<IconButton
+						edge="start"
+						className={classes.actionButton}
+						onClick={() => goToCourse(course.id)}
+					>
+						<LocalLibrary />
+					</IconButton>
+				</Tooltip>
+				<Tooltip title="Chỉnh sửa" placement="top">
+					<IconButton
+						edge="start"
+						className={classes.actionButton}
+						onClick={editCourse}
+					>
+						<EditRoundedIcon />
+					</IconButton>
+				</Tooltip>
 			</CardActions>
 		</Card>
 	);

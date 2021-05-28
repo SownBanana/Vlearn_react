@@ -14,7 +14,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import SendRoundedIcon from '@material-ui/icons/SendRounded';
 import AttachFileRoundedIcon from '@material-ui/icons/AttachFileRounded';
-import { sendChat, fetchLessonChats, fetchLiveLessonChats } from './lessonChatSlice'
+import { sendChat, fetchLessonChats, fetchLiveLessonChats, clearChat } from './lessonChatSlice'
 import Message from "features/Chat/components/Message";
 import { LESSON, LIVE_LESSON } from "commons/enums/LearnView";
 import upload from 'commons/api/upload/upload'
@@ -88,6 +88,9 @@ export default function ChatRoom() {
             dispatch(fetchLessonChats(lesson.id))
         } else if (learnView === LIVE_LESSON && liveLesson.id) {
             dispatch(fetchLiveLessonChats(liveLesson.id))
+        }
+        return () => {
+            dispatch(clearChat())
         }
     }, [token, learnView, lesson, liveLesson])
 
@@ -179,7 +182,7 @@ export default function ChatRoom() {
                 <input
                     accept="*/*"
                     style={{ display: "none" }}
-                    id={"icon-button-file"}
+                    id={"icon-button-file-chat-room"}
                     type="file"
                     onChange={handleFileUpload}
                     multiple />

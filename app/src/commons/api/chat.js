@@ -1,16 +1,10 @@
 import api, { headersWithToken } from "commons/AxiosCommon";
 
 const chat = {
-    send: async ({ id, room_id, content, files, timestamp }) => {
+    send: async (params) => {
         const response = await api.post(
             `/api/chats/private`,
-            {
-                id,
-                content,
-                files,
-                timestamp,
-                room_id
-            },
+            params,
             {
                 headers: headersWithToken(),
             }

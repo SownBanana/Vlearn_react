@@ -48,14 +48,21 @@ const initialState = {
         messages: [
         ]
     },
-    forceOpenChat: false,
-    newMess: false,
 };
 
 const lessonChat = createSlice({
     name: "lessonChat",
     initialState,
     reducers: {
+        clearChat: (state) => {
+            state.current = {
+                id: 0,
+                users: [
+                ],
+                messages: [
+                ]
+            }
+        },
         setStatus: (state, action) => {
             state.status = action.payload;
         },
@@ -89,6 +96,7 @@ const lessonChat = createSlice({
 });
 
 export const {
+    clearChat,
     setStatus,
     appendMessage,
     appendMyMessage,

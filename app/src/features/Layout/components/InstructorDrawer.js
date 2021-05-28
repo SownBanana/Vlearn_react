@@ -1,11 +1,9 @@
 import React from "react";
 import {
 	Chat as ChatIcon,
-	Notifications as NotificationsIcon,
 	ImportContacts as ImportContactsIcon,
 	Home as HomeIcon,
 	Person as PersonIcon,
-	Edit
 } from "@material-ui/icons";
 
 import ListItemLink from "commons/components/ListItemLink";
@@ -36,7 +34,7 @@ export default function InstructorDrawer({ handle }) {
 				{
 					name: "Khóa học của tôi",
 					key: "browser",
-					icon: <Edit />,
+					icon: <ImportContactsIcon />,
 					link: `/courses/i/${username}`,
 				},
 				{

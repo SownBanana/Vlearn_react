@@ -76,15 +76,15 @@ const chat = createSlice({
             state.status = action.payload;
         },
         appendMessage: (state, action) => {
-            const { sender_id, room_id, content, files, timestamp, create_at, users } = action.payload;
+            const { sender_id, room_id, content, assets, timestamp, create_at, users } = action.payload;
             console.log("Mess==>", action.payload);
             if (create_at) timestamp = Date.parse(create_at) / 1000;
             if (state.current.id === room_id) {
                 state.current.messages.push({
                     sender_id: sender_id,
                     content,
-                    files,
-                    timestamp
+                    timestamp,
+                    assets
                 });
             }
             if (state.chats[room_id] === null || state.chats[room_id] === undefined) {
@@ -99,8 +99,8 @@ const chat = createSlice({
                 state.chats[room_id].messages.push({
                     sender_id: sender_id,
                     content,
-                    files,
-                    timestamp
+                    timestamp,
+                    assets
                 });
             }
             state.forceOpenChat = true;
@@ -136,7 +136,8 @@ const chat = createSlice({
             state.current.messages.push({
                 sender_id: actions.payload.sender_id,
                 content: actions.payload.content,
-                timestamp: actions.payload.timestamp
+                timestamp: actions.payload.timestamp,
+                assets: actions.payload.files,
             })
         }
     },

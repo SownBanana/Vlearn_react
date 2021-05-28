@@ -49,7 +49,6 @@ export default function CourseSummary() {
         }
     }
     const learnCourse = () => {
-        console.log("Learn ", id);
         history.push(`/courses/learn/${id}`)
     }
 

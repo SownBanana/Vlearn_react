@@ -17,7 +17,8 @@ import {
 	Avatar,
 	Badge,
 	Zoom,
-	Grow
+	Grow,
+	Tooltip
 } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
 import { ModeComment } from "@material-ui/icons";
@@ -30,6 +31,8 @@ import { sendChat, setCurrent, fetchChats, setForceOpenChat } from 'features/Cha
 import { useLocation } from "react-router";
 import NavigationRoundedIcon from '@material-ui/icons/NavigationRounded';
 import clsx from "clsx";
+import upload from 'commons/api/upload/upload'
+import { makeToast } from "features/Toast/toastSlices";
 
 export default function ChatComponent() {
 	const classes = useStyles();
@@ -49,11 +52,10 @@ export default function ChatComponent() {
 
 	const [isMiniumChatBox, setMiniumChatBox] = useState(false);
 
-	const [files, setFiles] = useState([]);
-	const isFile = files.length > 0;
-	const handleFileUpload = (e) => {
-		console.log(e.target.files)
-	}
+	const [assets, setAssets] = useState([]);
+	const [uploadFiles, setUploadFiles] = useState([]);
+	const isFile = assets.length > 0;
+
 	const token = useSelector(state => state.auth.refresh_token);
 	const id = useSelector((state) => state.auth.user.id);
 	const currentChat = useSelector(state => state.chat.current)
@@ -67,13 +69,54 @@ export default function ChatComponent() {
 		dispatch(setCurrent(id))
 		setMiniumChatBox(false)
 	}
-
 	const [typingMessage, setTypingMessage] = useState("");
+
+
+	const TEN_GB = 10737418240;
+	const handleFileUpload = async (e) => {
+		console.log(e.target.files)
+		const files = e.target.files;
+		if (files.length > 100) {
+			dispatch(makeToast("Vượt quá số file cho phép"));
+		} else {
+			for (let i = 0; i < files.length; i++) {
+				const file = files[i];
+				console.log(file)
+				if (file.size > TEN_GB) {
+					dispatch(makeToast("File vượt quá 10GB"));
+				} else {
+					const response = await upload.uploadDirect({ file: file });
+					if (response) {
+						setAssets((assets) => assets = [...assets, response.asset.id]);
+						setUploadFiles((uploadFiles) => uploadFiles = [...uploadFiles, { file: file, url: response.url }]);
+					}
+
+				}
+			}
+		}
+	}
+
 	const sendMessage = () => {
 		if (typingMessage) {
-			dispatch(sendChat({ sender_id: id, id: user.id, room_id: thisRoomId, content: typingMessage }));
+			dispatch(
+				sendChat({
+					sender_id: id,
+					sender: user,
+					id: user.id,
+					room_id: thisRoomId,
+					content: typingMessage,
+					assets: assets,
+					files: uploadFiles.map(f => {
+						var asset = {};
+						asset.url = f.url;
+						asset.type = f.file.type;
+						asset.name = f.file.name;
+						return asset;
+					})
+				}));
+			setAssets([]);
+			setUploadFiles([]);
 			setTypingMessage("");
-			console.log(messageArea);
 		}
 	}
 
@@ -164,18 +207,71 @@ export default function ChatComponent() {
 								<List className={classes.chatBackground} component="nav" aria-label="main mailbox folders">
 									{messages.map(mess => {
 										return <ListItem>
-											<Message user={mess.sender_id !== id ? user : null}
+											<Message
+												user={mess.sender_id !== id ? user : null}
 												content={mess.content}
-												files={mess.file}
+												assets={mess.assets}
 												timestamp={mess.timestamp}
 											/>
 										</ListItem>
 									})}
 								</List>
 							</DialogContent>
-							{isFile && <DialogContent dividers>
+							{
+								isFile &&
+								<DialogContent
+									style={{
+										padding: 4,
+										display: "flex",
+										overflow: "auto"
+									}}
 
-							</DialogContent>}
+									dividers>
+									{
+										uploadFiles.map((fileData, index) => {
+											// debugger
+											const { file, url } = fileData;
+											// type: "image/png"
+											return (
+												<Box
+													key={url}
+													border={1}
+													borderColor="grey.200"
+													width="30px"
+													height="30px"
+													display="flex"
+													justifyContent="center"
+													alignItems="center"
+													ml="10px"
+													onClick={
+														(e) => {
+															var index = -1;
+															setUploadFiles(
+																uploadFiles.filter((u, i) => {
+																	index = i
+																	return u.url !== url
+																})
+															)
+															setAssets(
+																assets.filter((a, i) => i !== index)
+															)
+														}
+													}
+												>
+													{
+														(file.type.includes('image')) ?
+															< img width="30px" height="30px" src={url} /> :
+															<Tooltip title={file.name} placement="top">
+																<Paper style={{ width: "100%", overflow: "hidden", padding: "2px" }}>
+																	<AttachFileRoundedIcon style={{ fontSize: 14 }} color="secondary" />
+																</Paper>
+															</Tooltip>
+													}
+												</Box>
+											)
+										})
+									}
+								</DialogContent>}
 							<DialogActions className={classes.chatBoxAction}>
 								<input
 									accept="*/*"
@@ -183,6 +279,7 @@ export default function ChatComponent() {
 									id={"icon-button-file"}
 									type="file"
 									onChange={handleFileUpload}
+									multiple
 								/>
 								<IconButton color="primary" size="small" style={{ margin: 0 }}>
 									<label htmlFor={"icon-button-file"}>
