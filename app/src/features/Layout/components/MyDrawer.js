@@ -10,6 +10,8 @@ import InstructorDrawerMobile from "./Mobile/InstructorDrawer";
 import StudentDrawer from "./StudentDrawer";
 import StudentDrawerMobile from "./Mobile/StudentDrawer";
 import { useSelector } from "react-redux";
+import AdminDrawer from "./AdminDrawer";
+import AdminDrawerMobile from "./Mobile/AdminDrawer";
 export default function MyDrawer({ handle, open }) {
 	const classes = useStyles();
 	globalStyle();
@@ -37,19 +39,34 @@ export default function MyDrawer({ handle, open }) {
 						</IconButton>
 					</div>
 					<Divider />
-					{role === UserRole.INSTRUCTOR ? (
-						<InstructorDrawer handle={handle} />
-					) : (
-						<StudentDrawer handle={handle} />
-					)}
+					{
+						role === UserRole.INSTRUCTOR ?
+							(
+								<InstructorDrawer handle={handle} />
+							) :
+							role === UserRole.STUDENT ?
+								(
+									<StudentDrawer handle={handle} />
+								) :
+								(
+									<AdminDrawer handle={handle} />
+								)
+					}
 				</Drawer>
 			</Hidden>
 			<Hidden smUp>
-				{role === UserRole.INSTRUCTOR ? (
-					<InstructorDrawerMobile />
-				) : (
-					<StudentDrawerMobile />
-				)}
+				{
+					role === UserRole.INSTRUCTOR ? (
+						<InstructorDrawerMobile />
+					) :
+						role === UserRole.STUDENT ?
+							(
+								<StudentDrawerMobile />
+							) :
+							(
+								<AdminDrawerMobile />
+							)
+				}
 			</Hidden>
 		</div>
 	);

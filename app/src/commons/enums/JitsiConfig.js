@@ -56,4 +56,8 @@ export const STUDENT_CONFIG = {
     disableTileView: true,
     startWithVideoMuted: true,
     startWithAudioMuted: true,
+    remoteVideoMenu:
+    {
+        disableKick: true,
+    }
 }

@@ -8,19 +8,17 @@ import CourseSummary from "features/Course/pages/Student/CourseView/Summary/Cour
 import {
     PrivateRoute,
     Route,
-    StudentRoute,
     InstructorRoute,
+    AdminRoute,
 } from "commons/routes/CustomRoute";
 import LearnCourse from "features/Course/pages/Student/LearnCourse/LearnCourse";
+import ManageCourse from "features/Course/pages/Admin/ManageCourse";
 
 export default function Course() {
     return (
         <Switch>
+            <AdminRoute path="/courses/a/manage" component={ManageCourse} />
             <PrivateRoute path="/courses/learn/:id" component={LearnCourse} />
-            <InstructorRoute
-                path="/courses/i/:username/add"
-                component={AddCourse}
-            />
             <InstructorRoute
                 path="/courses/i/:username/add"
                 component={AddCourse}

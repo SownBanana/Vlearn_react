@@ -32,6 +32,7 @@ const Course = React.lazy(() => import("./features/Course/"));
 const Chat = React.lazy(() => import("./features/Chat/"));
 const Info = React.lazy(() => import("./features/Info/"));
 const Dashboard = React.lazy(() => import("./features/Dashboard/"));
+const User = React.lazy(() => import("./features/User/"));
 
 function App() {
 	globalStyle();
@@ -106,6 +107,7 @@ function App() {
 							<Route path="/message" component={Chat} />
 							<Route path="/info" component={Info} />
 							<Route path="/dashboard" component={Dashboard} />
+							<Route path="/users" component={User} />
 							<PrivateRoute exact path="/" component={Home} />
 						</Switch>
 					</Suspense>

@@ -23,12 +23,13 @@ function ConfirmIconButton({
 		setOpen(true);
 	};
 
-	const handleClose = () => {
+	const handleClose = (e) => {
 		setOpen(false);
 	};
 
-	const handleAction = () => {
-		onClick();
+	const handleAction = (e) => {
+		e.stopPropagation();
+		onClick(e);
 		setOpen(false);
 	};
 	return (

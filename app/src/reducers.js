@@ -12,6 +12,7 @@ import chat from "./features/Chat/chatSlice";
 import info from "./features/Info/infoSlice";
 import learnCourse from "./features/Course/pages/Student/LearnCourse/learnSlice";
 import topic from "./features/Topic/topicSlice";
+import user from "./features/User/userSlice";
 import notification from "./features/Notification/notificationSlice";
 import lessonChat from "./features/Course/pages/Student/LearnCourse/lessonChatSlice";
 
@@ -29,6 +30,7 @@ export default combineReducers({
 	info,
 	learnCourse,
 	topic,
+	user,
 	notification,
 	lessonChat,
 });

@@ -112,7 +112,7 @@ export default function ChatRoom() {
             <DialogContent ref={messageArea} dividers className={classes.chatBoxContent}>
                 <List className={classes.chatBackground} component="nav" aria-label="main mailbox folders">
                     {messages?.map(mess => {
-                        return <ListItem>
+                        return <ListItem key={`m-${Math.random()}`}>
                             <Message
                                 user={mess.sender}
                                 content={mess.content}
@@ -163,6 +163,7 @@ export default function ChatRoom() {
                                             )
                                         }
                                     }
+                                    className={classes.fileContainer}
                                 >
                                     {
                                         (file.type.includes('image')) ?
@@ -173,6 +174,7 @@ export default function ChatRoom() {
                                                 </Paper>
                                             </Tooltip>
                                     }
+                                    <div className={classes.hiddenButton}>x</div>
                                 </Box>
                             )
                         })
@@ -187,7 +189,7 @@ export default function ChatRoom() {
                     onChange={handleFileUpload}
                     multiple />
                 <IconButton color="primary" size="small" style={{ margin: 0 }}>
-                    <label htmlFor={"icon-button-file"}>
+                    <label htmlFor={"icon-button-file-chat-room"}>
                         <AttachFileRoundedIcon fontSize="small" />
                     </label>
                 </IconButton>
@@ -258,5 +260,24 @@ const useStyles = makeStyles((theme) => ({
     },
     chatInput: {
         fontSize: 14
-    }
+    },
+    fileContainer: {
+        position: "relative",
+        "&:hover $hiddenButton": {
+            opacity: 1,
+        }
+    },
+    hiddenButton: {
+        position: "absolute",
+        bottom: 0,
+        left: 0,
+        backgroundColor: "#00000085",
+        color: "white",
+        textAlign: "center",
+        width: "100%",
+        height: "100%",
+        cursor: "pointer",
+        opacity: 0,
+        transition: "0.3s"
+    },
 }));

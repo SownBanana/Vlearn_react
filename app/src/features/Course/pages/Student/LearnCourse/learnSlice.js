@@ -3,6 +3,8 @@ import api from "commons/api/course/resource";
 import apiLesson from "commons/api/course/lesson";
 import apiLiveLesson from "commons/api/course/liveLesson";
 import apiQuestion from "commons/api/course/question";
+import uploadApi from "commons/api/upload/upload";
+import assetApi from "commons/api/asset";
 import { LESSON, LIVE_LESSON, QUESTION } from "commons/enums/LearnView";
 import shuffle from "commons/functions/shuffer";
 import { makeToast, ToastType } from "features/Toast/toastSlices";
@@ -128,6 +130,52 @@ export const getNextSection = (current_section_id) => async (dispatch, getState)
         }
     }
     if (!notLast) dispatch(makeToast("Đây là chương cuối cùng", ToastType.INFO))
+}
+export const deleteResource = ({ id, type, lesson_id }) => async (dispatch) => {
+    const res = await assetApi.delete(id);
+    if (res.status === "success") {
+        if (type === LIVE_LESSON) {
+            dispatch(getLiveLesson(lesson_id));
+        } else {
+            dispatch(getLesson(lesson_id));
+        }
+    }
+
+}
+export const uploadResource = (params) => async (dispatch) => {
+    const { files, type, lesson_id } = params;
+    var assets = [];
+    const TEN_GB = 10737418240;
+    if (files.length > 100) {
+        dispatch(makeToast("Vượt quá số file cho phép"));
+    } else {
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            console.log(file)
+            if (file.size > TEN_GB) {
+                dispatch(makeToast("File vượt quá 10GB"));
+            } else {
+                const response = await uploadApi.uploadDirect({ file: file });
+                if (response) {
+                    assets = [...assets, response.asset.id];
+                }
+            }
+        }
+        const lessonData = await uploadApi.uploadResourceToLesson({
+            assets,
+            type,
+            lesson_id
+        })
+        if (lessonData.status === "success") {
+            if (type === LIVE_LESSON) {
+                dispatch(setLiveLesson(lessonData.data));
+            } else {
+                dispatch(setLesson(lessonData.data));
+            }
+        } else {
+            dispatch(makeToast("Có lỗi xảy ra"));
+        }
+    }
 }
 
 function clear(state) {

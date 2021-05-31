@@ -42,12 +42,6 @@ export default function StudentDrawer({ handle }) {
 					link: "/message",
 				},
 				{
-					name: "Thông báo",
-					key: "notification",
-					icon: <NotificationsIcon />,
-					link: "/notification",
-				},
-				{
 					name: "Cá nhân",
 					key: "info",
 					icon: <PersonIcon />,

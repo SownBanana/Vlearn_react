@@ -7,7 +7,7 @@ import 'moment/locale/vi'  // without this line it didn't work
 import { AttachFile } from '@material-ui/icons';
 
 function Message({
-    user, content, assets, timestamp
+    user, content, assets, timestamp, isLargeScreen = false
 }) {
     const HOUR = 3600000;
     const DAY = 86400000;
@@ -20,14 +20,17 @@ function Message({
     }
     const timePast = moment(Date.now()).diff(moment(timestamp * 1000));
     const getURL = (text) => {
-        var urlRegex = /((http:\/\/|https:\/\/|ftp:\/\/|)(www.|)[a-zA-Z0-9]+(\.[a-zA-Z]+)+[^ ]+)/g;
-        return text.replace(urlRegex, function (url) {
-            var hrefUrl = url;
-            if (!(url.substring(0, 4) == 'http' || url.substring(0, 3) == 'ftp')) {
-                hrefUrl = 'https://' + url
-            }
-            return '<a href="' + hrefUrl + '" target="_blank">' + url + '</a>';
-        })
+        if (text) {
+            var urlRegex = /((http:\/\/|https:\/\/|ftp:\/\/|)(www.|)[a-zA-Z0-9]+(\.[a-zA-Z]+)+[^ ]+)/g;
+            return text.replace(urlRegex, function (url) {
+                var hrefUrl = url;
+                if (!(url.substring(0, 4) == 'http' || url.substring(0, 3) == 'ftp')) {
+                    hrefUrl = 'https://' + url
+                }
+                return '<a href="' + hrefUrl + '" target="_blank">' + url + '</a>';
+            })
+        }
+        return null;
     }
     // console.log("Time past: ", timePast)
     const timeString =
@@ -50,7 +53,7 @@ function Message({
             <Tooltip title={`${user.name} @${user.username}`} placement="top">
                 <Avatar alt={user.name} src={user.avatar_url} className={classes.smallAvatar} />
             </Tooltip>
-            <Paper className={classes.message} elevation={3}>
+            <Paper style={{ maxWidth: isLargeScreen ? "65%" : "unset" }} className={classes.message} elevation={3}>
                 <div className={classes.timestamp}>
                     {timeString}
                 </div>

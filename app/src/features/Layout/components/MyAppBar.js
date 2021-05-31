@@ -138,6 +138,7 @@ export default function MyAppBar({ handle, open }) {
 				className={clsx(classes.appBar, {
 					[classes.appBarShift]: open,
 				})}
+				color={user.role === UserRole.ADMIN ? "secondary" : "primary"}
 			>
 				<Toolbar variant="dense">
 					{isLoggedIn && !isMobile && (

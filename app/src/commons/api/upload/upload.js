@@ -17,9 +17,14 @@ const uploadApi = {
 	getPresignedUrl: async ({ file }) => {
 		let file_extension = file.name.split('.').pop();
 		let type = file.type;
-		const response = await api.get(`/api/upload/presigned?file_extension=${file_extension}&type=${type}`, {
-			headers: headersWithToken(),
-		});
+		const response = await api.get(`/api/upload/
+			presigned?name=${file.name}
+			&file_extension=${file_extension}
+			&size=${file.size}
+			&type=${type}`,
+			{
+				headers: headersWithToken(),
+			});
 		return response.data;
 	},
 	uploadPresigned: async ({ presigned_url, file }) => {
@@ -37,6 +42,12 @@ const uploadApi = {
 			}
 		}
 		return false;
+	},
+	uploadResourceToLesson: async (params) => {
+		const response = await api.post(`/api/upload-resource`, params, {
+			headers: headersWithToken(),
+		});
+		return response.data;
 	}
 };
 

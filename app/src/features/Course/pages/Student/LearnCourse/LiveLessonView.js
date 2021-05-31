@@ -26,6 +26,8 @@ import { appendMessage } from './lessonChatSlice';
 import { Mic, MicNone, MicOff, ScreenShare, StopScreenShare, Videocam, VideocamOff } from '@material-ui/icons';
 import StudentList from './components/StudentList';
 import { makeToast, ToastType } from 'features/Toast/toastSlices';
+import ClassResource from './components/ClassResource';
+import { LIVE_LESSON } from 'commons/enums/LearnView';
 
 export default function LiveLessonView() {
     const classes = useStyles();
@@ -212,6 +214,7 @@ export default function LiveLessonView() {
                     >
                         <Tab label="Lớp học" />
                         <Tab label="Bảng" />
+                        <Tab label="Tài liệu" />
                         <Tab label="Thành viên" />
                     </Tabs>
                     {
@@ -323,6 +326,12 @@ export default function LiveLessonView() {
             </div>
             <div
                 className={tab !== 2 && classes.hide}
+                style={{ width: "100%" }}
+            >
+                <ClassResource lesson={liveLesson} type={LIVE_LESSON} />
+            </div>
+            <div
+                className={tab !== 3 && classes.hide}
                 style={{ width: "100%" }}
             >
                 <StudentList channel={channel} />

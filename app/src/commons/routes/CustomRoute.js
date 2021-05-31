@@ -120,5 +120,35 @@ const InstructorRoute = function ({
 		/>
 	);
 };
+const AdminRoute = function ({
+	component: Component,
+	maxWidth = false,
+	...rest
+}) {
+	const classes = useStyles();
 
-export { Route, PrivateRoute, StudentRoute, InstructorRoute };
+	const isAuthed = useSelector((state) => state.auth.access_token);
+	const role = useSelector((state) => state.auth.user.role);
+	return (
+		<DefaultRoute
+			{...rest}
+			exact
+			render={(props) =>
+				isAuthed && role === UserRole.ADMIN ? (
+					<Container maxWidth={maxWidth} className={classes.boundary}>
+						{React.createElement(Component, props)}
+					</Container>
+				) : (
+					<Redirect
+						to={{
+							pathname: "/auth/login",
+							state: { from: props.location },
+						}}
+					/>
+				)
+			}
+		/>
+	);
+};
+
+export { Route, PrivateRoute, StudentRoute, InstructorRoute, AdminRoute };

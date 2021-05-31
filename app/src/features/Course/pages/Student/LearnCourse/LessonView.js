@@ -1,9 +1,11 @@
-import { Box, makeStyles, useMediaQuery } from '@material-ui/core';
+import { Box, makeStyles, Paper, Tab, Tabs, useMediaQuery } from '@material-ui/core';
 import CKViewer from 'commons/components/CKEditor/CKViewer';
 import VideoPlayer from 'commons/components/VideoPlayer/VideoPlayer';
+import { LESSON } from 'commons/enums/LearnView';
 import usePusher from 'commons/PusherCommon';
 import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
+import ClassResource from './components/ClassResource';
 import { appendMessage } from './lessonChatSlice';
 
 export default function LessonView() {
@@ -13,11 +15,14 @@ export default function LessonView() {
     const bounder = useRef();
     // const mobileVideo = useRef();
     const [status, setStatus] = useState({ isFloat: false });
-
-
+    const [tab, setTab] = React.useState(0);
     const id = useSelector((state) => state.auth.user.id);
     const pusher = usePusher(id);
     const dispatch = useDispatch();
+
+    const handleChangeTab = (event, newValue) => {
+        setTab(newValue);
+    };
 
     useEffect(() => {
         // dispatch(fetchChats());
@@ -62,18 +67,47 @@ export default function LessonView() {
     }, [])
     return (
         <div>
-            <Box ref={bounder} ml={isMobile ? 0 : 5} py={1} style={{ backgroundColor: "white", border: "1px solid #cecece60", borderRadius: "5px" }}>
-                <Box height={isMobile ? "30vh" : "70vh"}>
-                    <div className={status.isFloat ? (isMobile ? classes.floatVideoMobile : classes.floatVideo) : ''} >
-                        {
-                            isMobile ? (
-                                !!lesson.video_url && <VideoPlayer width="inherit" videoHeight="30vh" url={lesson.video_url} />
-                            ) : (
-                                !!lesson.video_url && <VideoPlayer width="inherit" videoHeight="70vh" url={lesson.video_url} />
-                            )
-                        }
-                    </div>
-                </Box>
+            <Paper>
+                <Tabs
+                    value={tab}
+                    onChange={handleChangeTab}
+                    indicatorColor="primary"
+                    textColor="primary"
+                    centered
+                >
+                    <Tab label="Bài học" />
+                    <Tab label="Tài liệu" />
+                </Tabs>
+            </Paper>
+            <Box ref={bounder} mt={2} ml={isMobile ? 0 : 5} py={1} style={{ backgroundColor: "white", border: "1px solid #cecece60", borderRadius: "5px" }}>
+                <div
+                    className={tab !== 0 && classes.hide}
+                    style={{ width: "100%" }}
+                >
+                    {
+                        !!lesson.video_url &&
+                        <Box height={isMobile ? "30vh" : "70vh"}>
+                            <div className={status.isFloat ? (isMobile ? classes.floatVideoMobile : classes.floatVideo) : ''} >
+                                {
+                                    isMobile ? (
+                                        <VideoPlayer width="inherit" videoHeight="30vh" url={lesson.video_url} />
+                                    ) : (
+                                        <VideoPlayer width="inherit" videoHeight="70vh" url={lesson.video_url} />
+                                    )
+                                }
+                            </div>
+                        </Box>
+                    }
+                </div>
+                <div
+                    className={tab !== 1 && classes.hide}
+                    style={{ width: "100%" }}
+                >
+                    {
+                        lesson.assets &&
+                        <ClassResource lesson={lesson} type={LESSON} />
+                    }
+                </div>
                 {!!lesson.content &&
                     <Box mt={2} px={isMobile ? 2 : 6}>
                         <CKViewer style={{ overflow: "hidden" }} content={lesson.content} />
@@ -97,6 +131,10 @@ const useStyles = makeStyles(theme => ({
         position: "fixed",
         top: theme.spacing(5),
         left: 0
-    }
+    },
+    hide: {
+        display: "none",
+        padding: 5,
+    },
 }))
 
