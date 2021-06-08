@@ -22,6 +22,7 @@ import ContentEdit from "features/Course/components/ContentEdit";
 import { Autocomplete, Skeleton } from "@material-ui/lab";
 import { Code, Edit } from "@material-ui/icons";
 import { attachTopic, detachTopic, setContentEditMode } from "features/Course/editingCourseSlice";
+import { KeyboardDateTimePicker } from "@material-ui/pickers";
 
 const CKEditor = lazy(() => {
 	const editor = new Promise((resolve) => {
@@ -126,6 +127,37 @@ export default function CourseInput({ course, setCourse }) {
 													/>
 												)}
 											</Suspense>
+										</Grid>
+									</Grid>
+									<Grid container alignItems="stretch" item md={12} xs={10}>
+										<Typography className={classes.headerText} variant="h6" color="textSecondary">
+											Thời gian
+										</Typography>
+										<Grid item md={12} xs={12}>
+											<Box display="flex" mb={2}>
+												<KeyboardDateTimePicker
+													style={{ marginRight: 10 }}
+													label="Bắt đầu"
+													variant="inline"
+													ampm={false}
+													style={{ width: "100%" }}
+													format="HH:mm DD/MM/yyy"
+													value={new Date(course.start_time)}
+													onChange={
+														(date) => setCourse({ ...course, start_time: date.format("yyyy-MM-DD HH:mm") })
+													} />
+
+												<KeyboardDateTimePicker
+													label="Kết thúc"
+													variant="inline"
+													ampm={false}
+													style={{ width: "100%" }}
+													format="HH:mm DD/MM/yyy"
+													value={new Date(course.end_time)}
+													onChange={
+														(date) => setCourse({ ...course, end_time: date.format("yyyy-MM-DD HH:mm") })
+													} />
+											</Box>
 										</Grid>
 									</Grid>
 									<Grid

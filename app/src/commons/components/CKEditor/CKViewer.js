@@ -1,7 +1,9 @@
 import React, { useEffect, useRef } from "react";
 import Prism from "prismjs";
-import "prismjs/components/prism-markup-templating.js";
-import "prismjs/components/prism-php.js";
+import "prismjs/components/prism-markup-templating.min.js";
+import "prismjs/components/prism-php.min.js";
+import "prismjs/components/prism-xml-doc.min.js";
+import "prismjs/components/prism-bash.min.js";
 
 export default function CKViewer({ content, highlightTrigger = true, reHighlight = true, ...props }) {
 	// const createMarkup = () => {

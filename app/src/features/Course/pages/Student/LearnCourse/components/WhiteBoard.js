@@ -40,7 +40,7 @@ export default function WhiteBoard({ dataHandle = null, data = null, clearTrigge
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         timeOut = setTimeout(() => {
             if (dataHandle) dataHandle('');
-        }, 700)
+        }, 40)
     }
     const [isDrawing, setIsDrawing] = useState(false);
 
@@ -131,7 +131,7 @@ export default function WhiteBoard({ dataHandle = null, data = null, clearTrigge
                     ctx.stroke();
                     timeOut = setTimeout(() => {
                         if (dataHandle) dataHandle(canvas.toDataURL('img/png'));
-                    }, 500)
+                    }, 40)
                 } else if (draw.pen === PenStyle.LINE) {
                     ctx.beginPath();
                     ctx.moveTo(start.x, start.y);
@@ -139,14 +139,14 @@ export default function WhiteBoard({ dataHandle = null, data = null, clearTrigge
                     ctx.stroke();
                     timeOut = setTimeout(() => {
                         if (dataHandle) dataHandle(canvas.toDataURL('img/png'));
-                    }, 500)
+                    }, 40)
                 } else if (draw.pen === PenStyle.RECTANGLE) {
                     ctx.beginPath();
                     ctx.rect(start.x, start.y, mouse.x - start.x, mouse.y - start.y);
                     ctx.stroke();
                     timeOut = setTimeout(() => {
                         if (dataHandle) dataHandle(canvas.toDataURL('img/png'));
-                    }, 500)
+                    }, 40)
                 }
             }
 
@@ -163,7 +163,7 @@ export default function WhiteBoard({ dataHandle = null, data = null, clearTrigge
 
                     timeOut = setTimeout(() => {
                         if (dataHandle) dataHandle(canvas.toDataURL('img/png'));
-                    }, 700)
+                    }, 40)
                 }
             };
         }

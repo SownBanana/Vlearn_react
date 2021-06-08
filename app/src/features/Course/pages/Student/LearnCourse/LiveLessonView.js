@@ -113,7 +113,7 @@ export default function LiveLessonView() {
         return () => {
             clearInterval(timeCheck);
         }
-    }, [])
+    }, [liveLesson.id])
 
     useEffect(() => {
         if (user.id && pusher) {

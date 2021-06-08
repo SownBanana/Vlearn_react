@@ -26,11 +26,11 @@ function smallTime(duration) {
     return (duration < 60000) ?
         `${Math.floor(duration / 1000)} giây` :
         (duration < HOUR) ?
-            moment(duration).format("m ") + "phút" :
+            Math.ceil(moment.duration(duration).asMinutes()) + " phút" :
             (duration < DAY) ?
-                moment(duration).format("HH giờ mm phút") :
+                Math.ceil(moment.duration(duration).asHours()) + " giờ" :
                 (duration < 365 * DAY) ?
-                    moment.duration(duration).asDays() :
+                    Math.ceil(moment.duration(duration).asDays()) + " ngày" :
                     'Năm sau'
 }
 

@@ -152,6 +152,7 @@ const useStyle = makeStyles((theme) => ({
 	},
 	introduce: {
 		// visibility: "hidden",
+		textAlign: "initial",
 		padding: "0 5px 0 5px",
 		color: "white",
 		height: 0,

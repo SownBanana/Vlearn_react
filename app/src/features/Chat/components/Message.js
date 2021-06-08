@@ -18,7 +18,6 @@ function Message({
     if (typeof timestamp === "string") {
         timestamp = new Date(timestamp) / 1000
     }
-    const timePast = moment(Date.now()).diff(moment(timestamp * 1000));
     const getURL = (text) => {
         if (text) {
             var urlRegex = /((http:\/\/|https:\/\/|ftp:\/\/|)(www.|)[a-zA-Z0-9]+(\.[a-zA-Z]+)+[^ ]+)/g;
@@ -32,12 +31,13 @@ function Message({
         }
         return null;
     }
+    const timePast = moment(Date.now()).diff(moment(timestamp * 1000));
     // console.log("Time past: ", timePast)
     const timeString =
         (timePast < 60000) ?
             "vừa xong" :
             (timePast < HOUR) ?
-                moment(timePast).format("m ") + "phút trước" :
+                Math.floor(moment.duration(timePast).asMinutes()) + " phút trước" :
                 (timePast < DAY) ?
                     moment(timestamp * 1000).format("HH:mm") :
                     moment(timestamp * 1000).format("DD MMMM HH:mm")
