@@ -1,10 +1,11 @@
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
-import { Avatar, Box, makeStyles, Paper, Tooltip, Typography } from '@material-ui/core'
+import { Avatar, Box, makeStyles, Paper, Tooltip } from '@material-ui/core'
 import { useSelector } from 'react-redux';
 import moment from 'moment'
 import 'moment/locale/vi'  // without this line it didn't work
 import { AttachFile } from '@material-ui/icons';
+import { useHistory } from 'react-router-dom';
 
 function Message({
     user, content, assets, timestamp, isLargeScreen = false
@@ -14,6 +15,10 @@ function Message({
     const classes = useStyles();
     const id = useSelector(state => state.auth.user.id);
     const isMe = user === null || user.id === id;
+    const history = useHistory()
+    const goToInfoPage = () => {
+        history.push(`/info/${user.username}`)
+    }
     // console.log("Message: ", content);
     if (typeof timestamp === "string") {
         timestamp = new Date(timestamp) / 1000
@@ -23,10 +28,10 @@ function Message({
             var urlRegex = /((http:\/\/|https:\/\/|ftp:\/\/|)(www.|)[a-zA-Z0-9]+(\.[a-zA-Z]+)+[^ ]+)/g;
             return text.replace(urlRegex, function (url) {
                 var hrefUrl = url;
-                if (!(url.substring(0, 4) == 'http' || url.substring(0, 3) == 'ftp')) {
+                if (!(url.substring(0, 4) === 'http' || url.substring(0, 3) === 'ftp')) {
                     hrefUrl = 'https://' + url
                 }
-                return '<a href="' + hrefUrl + '" target="_blank">' + url + '</a>';
+                return '<a href="' + hrefUrl + '" target="_blank" rel="noreferrer">' + url + '</a>';
             })
         }
         return null;
@@ -51,7 +56,7 @@ function Message({
             wrap="nowrap"
         >
             <Tooltip title={`${user.name} @${user.username}`} placement="top">
-                <Avatar alt={user.name} src={user.avatar_url} className={classes.smallAvatar} />
+                <Avatar alt={user.name} src={user.avatar_url} className={classes.smallAvatar} onClick={goToInfoPage} />
             </Tooltip>
             <Paper style={{ maxWidth: isLargeScreen ? "65%" : "unset" }} className={classes.message} elevation={3}>
                 <div className={classes.timestamp}>
@@ -75,7 +80,7 @@ function Message({
                                 } else {
                                     return (
                                         <Tooltip title={asset.name} placement="top">
-                                            <a href={asset.url} target="_blank">
+                                            <a href={asset.url} target="_blank" rel="noreferrer" >
                                                 <Paper onClick={e => console.log(asset.url)} style={{ overflow: "hidden", padding: "5px", marginBottom: 10 }}>
                                                     <AttachFile fontSize="small" color="secondary" />
                                                 </Paper>
@@ -87,7 +92,7 @@ function Message({
                             else {
                                 return (
                                     <Tooltip title={asset.name} placement="top">
-                                        <a href={asset.url} target="_blank">
+                                        <a href={asset.url} target="_blank" rel="noreferrer">
                                             <Paper style={{ width: "100%", overflow: "hidden", padding: "5px", marginBottom: 10 }}>
                                                 <AttachFile fontSize="small" color="secondary" />
                                             </Paper>
@@ -134,7 +139,7 @@ function Message({
                                     } else {
                                         return (
                                             <Tooltip title={asset.name} placement="top">
-                                                <a href={asset.url} target="_blank">
+                                                <a href={asset.url} target="_blank" rel="noreferrer">
                                                     <Paper onClick={e => console.log(asset.url)} style={{ overflow: "hidden", padding: "5px", marginBottom: 10 }}>
                                                         <AttachFile fontSize="small" color="secondary" />
                                                     </Paper>
@@ -146,7 +151,7 @@ function Message({
                                 else {
                                     return (
                                         <Tooltip title={asset.name} placement="top">
-                                            <a href={asset.url} target="_blank">
+                                            <a href={asset.url} target="_blank" rel="noreferrer">
                                                 <Paper style={{ width: "100%", overflow: "hidden", padding: "5px", marginBottom: 10 }}>
                                                     <AttachFile fontSize="small" color="secondary" />
                                                 </Paper>
@@ -171,9 +176,16 @@ const useStyles = makeStyles((theme) => ({
         width: "100%"
     },
     smallAvatar: {
+        cursor: "pointer",
         width: theme.spacing(4),
         height: theme.spacing(4),
-        marginRight: "5px"
+        marginRight: "5px",
+        transition: "0.4s",
+        "&:hover": {
+            opacity: '0.8',
+            borderRadius: "35%",
+            transition: "0.25s",
+        },
     },
     message: {
         width: "fit-content",

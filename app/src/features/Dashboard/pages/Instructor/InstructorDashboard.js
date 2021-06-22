@@ -1,35 +1,18 @@
 import React, { useEffect, useState } from 'react'
-import Paper from '@material-ui/core/Paper';
-import { ViewState } from '@devexpress/dx-react-scheduler';
-import {
-    Scheduler,
-    WeekView,
-    Appointments,
-    AppointmentTooltip,
-    DateNavigator,
-    TodayButton,
-    Toolbar,
-    Resources,
-    ViewSwitcher,
-    MonthView,
-    DayView
-} from '@devexpress/dx-react-scheduler-material-ui';
-import moment from 'moment';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchSchedules } from './instructorDashSlice';
-import { Box, MenuItem, Select, Typography, Button, withStyles, Grid, IconButton, FormControl } from '@material-ui/core';
+
+import Schedule from 'features/Dashboard/components/Schedule';
+import { Box, FormControl, MenuItem, Select, Typography, Grid } from '@material-ui/core';
+import AreaChart from 'features/Dashboard/components/AreaChart';
 import BreadCrumbs from 'commons/components/BreadCrumbs';
-import { ImportContacts, Visibility } from '@material-ui/icons';
-import { useHistory } from 'react-router';
+import moment from 'moment';
 
 export default function InstructorDashboard() {
 
-    const [currentDate, setCurrentDate] = useState(moment())
     const schedules = useSelector(state => state.dashInstructor.schedules)
     const courseResources = useSelector(state => state.dashInstructor.courseResources)
     const sectionResources = useSelector(state => state.dashInstructor.sectionResources)
-    const dispatch = useDispatch()
-    const id = useSelector(state => state.auth.user.id)
     const [mainResourceName, setMainResourceName] = useState("section")
 
     const [resources, setResources] = useState([
@@ -44,43 +27,24 @@ export default function InstructorDashboard() {
             instances: courseResources,
         },
     ])
-
-    const history = useHistory();
-
-    const currentDateChange = (currentDate) => { setCurrentDate(currentDate); };
+    const dispatch = useDispatch()
+    const id = useSelector(state => state.auth.user.id)
 
 
-    const style = ({ palette }) => ({
-        commandButton: {
-            backgroundColor: 'rgba(255,255,255,0.65)',
-        },
-    });
-
-    const Header = withStyles(style, { name: 'Header' })(({
-        children, appointmentData, classes, ...restProps
-    }) => (
-        <AppointmentTooltip.Header
-            {...restProps}
-            appointmentData={appointmentData}
-        >
-            <IconButton
-                /* eslint-disable-next-line no-alert */
-                onClick={() => history.push(`/courses/learn/${appointmentData.course}`)}
-                className={classes.commandButton}
-            >
-                <Visibility />
-            </IconButton>
-        </AppointmentTooltip.Header>
-    ));
-    const Today = withStyles(style, { name: 'Today' })(({
-        children, classes, ...restProps
-    }) => (
-        <TodayButton.Button
-            getMessage={(mss) => "hôm nay"}
-            setCurrentDate={(nextDate) => setCurrentDate(nextDate)}
-            color="primary"
-        />
-    ));
+    const generateData = (n) => {
+        const ret = [];
+        let rating = 0;
+        let sold = 0;
+        const dt = new Date(moment());
+        for (let i = 0; i < n; i += 1) {
+            dt.setDate(dt.getDate() + 1);
+            rating = Math.round((Math.random() * 5) * 10) / 10;
+            sold = Math.round(Math.random() * 100 + Math.round(Math.random() * 90 + 10));
+            ret.push({ time: new Date(dt), sold, rating });
+        }
+        return ret;
+    };
+    const chartData = generateData(100);
 
     useEffect(() => {
         console.log("reset rs")
@@ -127,48 +91,37 @@ export default function InstructorDashboard() {
                 </Box>
             </BreadCrumbs>
             <Box mx={{ xs: 0, md: 2 }} >
-                <Paper>
-                    <Scheduler
-                        data={schedules}
-                        height={520}
-                        locale={'vi-VI'}
-                    >
-                        <ViewState
-                            currentDate={currentDate}
-                            onCurrentDateChange={currentDateChange}
-                            defaultCurrentViewName="Week"
+                <Grid container spacing={0} direction="row" justify="flex-end">
+                    <Box mb={2} mr={2}>
+                        <AreaChart
+                            width={400}
+                            height={200}
+                            data={chartData}
+                            valueField={"rating"}
+                            argumentField={"time"}
+                            title={"Trung bình rating hàng tháng"}
+                            titleSize={18}
+                            color={"orange"}
                         />
-                        <DayView
-                            displayName="Ngày"
-                            startDayHour={1}
-                            endDayHour={24}
+                    </Box>
+                    <Box mb={2} mr={2}>
+                        <AreaChart
+                            width={400}
+                            height={200}
+                            data={chartData}
+                            valueField={"sold"}
+                            argumentField={"time"}
+                            title={"Số lượng mua khóa học hàng tháng"}
+                            titleSize={18}
                         />
-                        <WeekView
-                            displayName="Tuần"
-                            startDayHour={1}
-                            endDayHour={24}
-                        />
-                        <MonthView
-                            displayName="Tháng"
-                        />
-                        <Toolbar />
-                        <ViewSwitcher />
-                        <DateNavigator />
-                        <TodayButton buttonComponent={Today} />
-                        <Appointments />
-                        <AppointmentTooltip
-                            showCloseButton
-                            headerComponent={Header}
-                        />
-                        <Resources
-                            data={resources}
-                            mainResourceName={mainResourceName}
-                        />
-                    </Scheduler>
-                </Paper>
+                    </Box>
+                </Grid>
+                <Schedule
+                    schedules={schedules}
+                    resources={resources}
+                    mainResourceName={mainResourceName}
+                />
             </Box>
-
         </Box>
-
     );
 }

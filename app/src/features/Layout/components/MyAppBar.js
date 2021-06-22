@@ -28,19 +28,12 @@ import { useHistory } from "react-router";
 import { checkPassport, logout } from "features/Authenticate/authSlices";
 import { UserRole } from "features/Authenticate/constance";
 import NotificationPane from "features/Notification/NotificationPane";
-
 export default function MyAppBar({ handle, open }) {
 	const dispatch = useDispatch();
 	const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
 	const user = useSelector(state => state.auth.user)
 	const unread = useSelector(state => state.notification.unread)
 	const classes = useStyles();
-	const keyPress = (e) => {
-		if (e.keyCode === 13) {
-			console.log("Search ", e.target.value);
-			// put the login here
-		}
-	};
 
 	const [notiEl, setNotiEl] = React.useState(null);
 
@@ -50,6 +43,13 @@ export default function MyAppBar({ handle, open }) {
 	const isMenuOpen = Boolean(anchorEl);
 
 	const history = useHistory();
+
+	const keyPress = (e) => {
+		if (e.keyCode === 13) {
+			history.push(`/search/?q=${e.target.value}`);
+		}
+	};
+
 	const handleProfileMenuOpen = (event) => {
 		setAnchorEl(event.currentTarget);
 	};
@@ -247,8 +247,8 @@ export default function MyAppBar({ handle, open }) {
 					</div>
 				</Toolbar>
 			</AppBar>
-			{ isLoggedIn && renderMenu}
-			{ isLoggedIn && renderNoti}
+			{isLoggedIn && renderMenu}
+			{isLoggedIn && renderNoti}
 		</div >
 	);
 }

@@ -108,7 +108,7 @@ function App() {
 							<Route path="/info" component={Info} />
 							<Route path="/dashboard" component={Dashboard} />
 							<Route path="/users" component={User} />
-							<PrivateRoute exact path="/" component={Home} />
+							<Route path="/" component={Home} />
 						</Switch>
 					</Suspense>
 					<Hidden xsDown>

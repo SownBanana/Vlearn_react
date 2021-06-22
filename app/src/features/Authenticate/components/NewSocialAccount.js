@@ -4,7 +4,6 @@ import {
 	Button,
 	Checkbox,
 	Collapse,
-	Container,
 	FormControlLabel,
 	Grid,
 	makeStyles,
@@ -17,7 +16,6 @@ import { useDispatch, useSelector } from "react-redux";
 import globalStyles from "../../../style/GlobalStyles";
 import checkPassword from "./CheckPassword";
 import { createSocial } from "../authSlices";
-import { palette, spacing, typography } from '@material-ui/system';
 import useCheckMobile from "commons/hooks/useCheckMobile";
 
 export default function NewSocialAccount() {

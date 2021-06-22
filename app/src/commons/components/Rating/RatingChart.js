@@ -2,7 +2,6 @@ import React from 'react'
 import PropTypes from 'prop-types'
 // import { withStyles } from 'material-ui/styles'
 import { grey } from "@material-ui/core/colors";
-import StarIcon from '@material-ui/icons/Star';
 
 import _ from 'lodash'
 import { withStyles } from '@material-ui/core';

@@ -1,4 +1,4 @@
-import api, { headersWithToken } from "commons/AxiosCommon";
+import api from "commons/AxiosCommon";
 
 const topic = {
 

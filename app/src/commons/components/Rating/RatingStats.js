@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import StarIcon from '@material-ui/icons/Star';
 import PersonIcon from '@material-ui/icons/Person';
 import {

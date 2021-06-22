@@ -1,5 +1,4 @@
 import { Box, Divider, Grid, List, ListItem, makeStyles, Typography } from '@material-ui/core'
-import { Message } from '@material-ui/icons'
 import { Rating } from '@material-ui/lab';
 import React from 'react'
 
@@ -25,6 +24,7 @@ export default function CommentLog({ students }) {
                                 <Divider />
                             </div>
                         )
+                    else return <span></span>
                 })}
             </List>
         </Grid>

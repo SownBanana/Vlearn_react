@@ -9,6 +9,13 @@ const schedule = {
         );
         return response.data;
     },
+
+    fetchBoughtCourses: async (page = 1) => {
+        const response = await api.get(`api/boughtCourses?page=${page}`, {
+            headers: headersWithToken()
+        });
+        return response.data;
+    }
 };
 
 export default schedule;

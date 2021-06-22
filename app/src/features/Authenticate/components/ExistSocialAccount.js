@@ -1,29 +1,23 @@
 import {
 	Avatar,
 	Button,
-	Checkbox,
-	Collapse,
 	Container,
-	FormControlLabel,
 	Grid,
 	makeStyles,
-	TextField,
 	Typography,
 } from "@material-ui/core";
-import React, { useState } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import globalStyles from "../../../style/GlobalStyles";
-import checkPassword from "./CheckPassword";
 import { attachSocial } from "../authSlices";
 
 export default function ExistSocialAccount() {
 	const dispatch = useDispatch();
 	const pendingSocial = useSelector((state) => state.social.pendingSocial);
-	const { register, handleSubmit, errors, getValues } = useForm();
+	const { handleSubmit } = useForm();
 	const classes = useStyles();
 	globalStyles();
-	const [role, setRole] = useState(3);
 
 	const onSubmit = () => {
 		const social = pendingSocial.social_provider;

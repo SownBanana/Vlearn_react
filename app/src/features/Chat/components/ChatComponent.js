@@ -33,6 +33,8 @@ import NavigationRoundedIcon from '@material-ui/icons/NavigationRounded';
 import clsx from "clsx";
 import upload from 'commons/api/upload/upload'
 import { makeToast } from "features/Toast/toastSlices";
+import { useHistory } from "react-router-dom";
+import { UserRole } from "features/Authenticate/constance";
 
 export default function ChatComponent() {
 	const classes = useStyles();
@@ -65,6 +67,10 @@ export default function ChatComponent() {
 	const chats = useSelector(state => state.chat.chats);
 	const forceOpenChat = useSelector(state => state.chat.forceOpenChat);
 
+	const history = useHistory()
+	const goToInfoPage = (username) => {
+		history.push(`/info/${username}`)
+	}
 	const openChat = (id) => {
 		dispatch(setCurrent(id))
 		setMiniumChatBox(false)
@@ -192,8 +198,18 @@ export default function ChatComponent() {
 						<Paper className={classes.chatBoxRoot}>
 							<DialogTitle className={classes.chatBoxTitle} disableTypography>
 								<Grid container spacing={0} direction="row">
-									<Grid md={10} xs={10} item container direction="row" alignItems="center">
-										<Avatar alt={user.name} src={user.avatar_url} style={{ marginRight: 4 }} />
+									<Grid md={10} xs={10}
+										item container direction="row" alignItems="center"
+										onClick={() => goToInfoPage(user.username)}
+										className={classes.textLink}
+									>
+										<Avatar alt={user.name} src={user.avatar_url}
+											style={{
+												border: user.role === UserRole.INSTRUCTOR ? '3px solid #b3eaff' : '0px',
+												marginRight: 4
+											}}
+											className={classes.avatarLink}
+										/>
 										{user.name}
 									</Grid>
 									<Grid item md={2} xs={2}>
@@ -391,4 +407,17 @@ const useStyles = makeStyles((theme) => ({
 		opacity: 0,
 		transition: "0.3s"
 	},
+	avatarLink: {
+		opacity: '1',
+		"&:hover": {
+			opacity: '0.7',
+			filter: 'hue-rotate(90deg)',
+		},
+	},
+	textLink: {
+		cursor: "pointer",
+		"&:hover": {
+			textDecoration: "underline",
+		},
+	}
 }));

@@ -1,13 +1,11 @@
 import usePusher from 'commons/PusherCommon';
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { appendMessage, fetchChats } from 'features/Chat/chatSlice'
-import { UserRole } from 'features/Authenticate/constance';
+import { appendMessage } from 'features/Chat/chatSlice'
 import { pushNotification } from 'features/Notification/notificationSlice';
 
 export default function WebSocket() {
     const id = useSelector((state) => state.auth.user.id);
-    const role = useSelector((state) => state.auth.user.role);
     const pusher = usePusher(id);
     const dispatch = useDispatch();
 
@@ -38,7 +36,7 @@ export default function WebSocket() {
                 });
         }
 
-    }, [pusher, id]);
+    }, [pusher, id, dispatch]);
 
     return (<span></span>)
 }

@@ -171,7 +171,7 @@ export default function VideoPlayer({ handlePrevious, handleNext, videoHeight = 
 				onMouseMoveInFullScreen
 			);
 		}
-	}, [screenfull.isFullscreen]);
+	}, [screenfull.isFullscreen, onMouseMoveInFullScreen]);
 	var intentTimeOut;
 	return (
 		<div

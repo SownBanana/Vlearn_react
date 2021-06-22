@@ -12,7 +12,7 @@ export default function CommentBox({ content = null, sendComment }) {
     const [typingMessage, setTypingMessage] = useState("");
     useEffect(() => {
         if (content) setTypingMessage(content);
-    }, [])
+    }, [content])
     return (
         <Grid container direction="row" wrap="nowrap" alignItems="center"
             alignContent="center" item md={12} spacing={2} className={classes.chatAction}>

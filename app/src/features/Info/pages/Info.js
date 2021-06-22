@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Avatar, Box, Grid, makeStyles, Typography, IconButton, Divider, useMediaQuery, FormControlLabel, Checkbox, TextField, Tooltip } from '@material-ui/core'
+import { Avatar, Box, Grid, makeStyles, Typography, IconButton, Divider, Tooltip } from '@material-ui/core'
 import BreadCrumbs from 'commons/components/BreadCrumbs'
 import { useDispatch, useSelector } from 'react-redux'
 import { UserRole } from 'features/Authenticate/constance'
@@ -11,7 +11,7 @@ import GroupAddIcon from '@material-ui/icons/GroupAdd';
 import ChatIcon from '@material-ui/icons/Chat';
 import { chatWithUser } from 'features/Chat/chatSlice'
 
-export default function Info() {
+export default function  Info() {
     const classes = useStyles();
     const { id } = useParams();
     const dispatch = useDispatch();

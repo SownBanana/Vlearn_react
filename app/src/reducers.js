@@ -16,6 +16,8 @@ import user from "./features/User/userSlice";
 import notification from "./features/Notification/notificationSlice";
 import lessonChat from "./features/Course/pages/Student/LearnCourse/lessonChatSlice";
 import dashInstructor from "./features/Dashboard/pages/Instructor/instructorDashSlice";
+import dashStudent from "./features/Dashboard/pages/Student/studentDashSlice";
+import search from "./features/Home/pages/Search/searchSlice";
 
 export default combineReducers({
 	auth,
@@ -34,5 +36,7 @@ export default combineReducers({
 	user,
 	notification,
 	lessonChat,
-	dashInstructor
+	dashInstructor,
+	dashStudent,
+	search
 });
