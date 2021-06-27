@@ -5,7 +5,9 @@ import { Avatar, Badge, Box, Divider, ListItem, MenuItem, Typography } from '@ma
 import { getTimePastText } from 'commons/functions/timePast';
 import { Skeleton } from '@material-ui/lab';
 import { useHistory } from 'react-router';
-
+import CourseStatusNotification from './components/CourseStatusNotification';
+import BuyCourseNotification from './components/BuyCourseNotification';
+import RateCourseNotification from './components/RateCourseNotification';
 export default function NotificationPane() {
     const dispatch = useDispatch();
     const id = useSelector(state => state.auth.user.id);
@@ -80,59 +82,26 @@ export default function NotificationPane() {
                                             horizontal: 'left',
                                         }}
                                     >
-                                        <Avatar src={notification.user.avatar_url} size="small" />
+                                        < Avatar src={notification.user?.avatar_url} size="small" />
                                     </Badge>
                                 </Box>
                                 {
                                     type === NotificationType.RATE_COURSE ?
-                                        <Box onClick={(e) => {
-                                            history.push(`/courses/${notification.course.id}`)
-                                        }}>
-                                            <Box display="flex" flexWrap="wrap">
-                                                <Box fontWeight="bold">
-                                                    {notification.user.name}
-                                                </Box>
-                                                <Box>
-                                                    {`\xa0đã đánh giá khóa học\xa0`}
-                                                </Box>
-                                                <Box fontWeight="bold">
-                                                    {notification.course.title}
-                                                </Box>
-                                                <Box>
-                                                    {`\xa0của bạn\xa0`}
-                                                </Box>
-                                                <Box fontWeight="bold">
-                                                    {`${notification.course.rate} sao`}
-                                                </Box>
-                                            </Box>
-                                            <Typography color="textSecondary" variant="caption">
-                                                {getTimePastText(new Date(notification.timestamp))}
-                                            </Typography>
-                                        </Box>
+                                        <RateCourseNotification
+                                            notification={notification}
+                                            history={history}
+                                        />
                                         : type === NotificationType.BUY_COURSE ?
-                                            <Box onClick={(e) => {
-                                                history.push(`/courses/${notification.course.id}`)
-                                            }}>
-                                                <Box display="flex" flexWrap="wrap">
-                                                    <Box fontWeight="bold">
-                                                        {notification.user.name}
-                                                    </Box>
-                                                    <Box>
-                                                        {`\xa0đã mua khóa học\xa0`}
-                                                    </Box>
-                                                    <Box fontWeight="bold">
-                                                        {notification.course.title}
-                                                    </Box>
-                                                    <Box>
-                                                        {`\xa0của bạn\xa0`}
-                                                    </Box>
-                                                </Box>
-                                                <Typography color="textSecondary" variant="caption">
-                                                    {getTimePastText(new Date(notification.timestamp))}
-                                                </Typography>
-                                            </Box> : ''
+                                            <BuyCourseNotification
+                                                notification={notification}
+                                                history={history}
+                                            />
+                                            : type === NotificationType.COURSE_STATUS ?
+                                                <CourseStatusNotification
+                                                    notification={notification}
+                                                    history={history}
+                                                /> : ''
                                 }
-
                             </Box>
                         </ListItem>
 

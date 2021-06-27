@@ -19,7 +19,7 @@ import PostAddOutlinedIcon from "@material-ui/icons/PostAddOutlined";
 import { CourseStatus, CourseType } from "features/Course/constance";
 import { useSelector } from "react-redux";
 import { COURSE_THUMBNAIL } from "commons/enums/ImageDefault";
-import { BlockRounded, LocalLibrary, Person } from "@material-ui/icons";
+import { LocalLibrary, Person } from "@material-ui/icons";
 export default function FlatCourseItem({ course }) {
 	const classes = useStyle();
 	const history = useHistory();
@@ -34,7 +34,14 @@ export default function FlatCourseItem({ course }) {
 	};
 	const isMobile = useMediaQuery("(max-width: 760px)");
 	return (
-		<Card className={isDraft && classes.root}>
+		<Card className={
+			course.status === CourseStatus.DRAFT
+				? classes.rootDraft
+				: course.status === CourseStatus.REVIEWING ?
+					classes.rootReviewing
+					: course.status === CourseStatus.REJECTED ?
+						classes.rootRejected
+						: classes.rootPublish}>
 			<CardActionArea>
 				<CardMedia
 					className={classes.media}
@@ -42,7 +49,11 @@ export default function FlatCourseItem({ course }) {
 					title={course.title}
 				/>
 				<CardContent className={classes.content}>
-					{isDraft && <PostAddOutlinedIcon className={classes.draftColor} />}
+					{course.status === CourseStatus.DRAFT
+						? <PostAddOutlinedIcon className={classes.draftColor} />
+						: course.status === CourseStatus.REVIEWING ?
+							<PostAddOutlinedIcon className={classes.reviewingColor} /> : null
+					}
 
 					{isMobile ? (
 						<Typography className={classes.title} variant="subtitle2">
@@ -94,8 +105,8 @@ export default function FlatCourseItem({ course }) {
 }
 
 const useStyle = makeStyles((theme) => ({
-	root: {
-		borderRight: `2px solid ${theme.palette.secondary.dark}`,
+	rootDraft: {
+		borderRight: `2px solid ${theme.palette.warning.main}`,
 		// minHeight: 64,
 		// borderColor: theme.palette.secondary.dark,
 		'&:before': {
@@ -103,12 +114,42 @@ const useStyle = makeStyles((theme) => ({
 			zIndex: 3,
 			content: '"Nháp"',
 			display: "block",
+			border: "1px solid #f57f17a1",
+			background: "#f57f17",
+			padding: "2px 10px",
+			color: "white",
+			borderRadius: "5px 0 19px 0"
+		}
+	},
+	rootReviewing: {
+		borderRight: `2px solid ${theme.palette.success.main}`,
+		'&:before': {
+			position: "absolute",
+			zIndex: 3,
+			content: '"Đang duyệt"',
+			display: "block",
+			border: "1px solid #27822ba1",
+			background: "#27822b",
+			padding: "2px 10px",
+			color: "white",
+			borderRadius: "5px 0 19px 0"
+		}
+	},
+	rootRejected: {
+		borderRight: `2px solid ${theme.palette.secondary.dark}`,
+		'&:before': {
+			position: "absolute",
+			zIndex: 3,
+			content: '"Từ chối"',
+			display: "block",
 			border: "1px solid #7f1313c9",
 			background: "#b0002ab0",
 			padding: "2px 10px",
 			color: "white",
 			borderRadius: "5px 0 19px 0"
 		}
+	},
+	rootPublish: {
 	},
 	media: {
 		minHeight: 60,
@@ -153,6 +194,9 @@ const useStyle = makeStyles((theme) => ({
 	},
 	draftColor: {
 		color: theme.palette.secondary.dark,
+	},
+	reviewingColor: {
+		color: theme.palette.success.main,
 	},
 	liveIcon: {
 		fontSize: 12,

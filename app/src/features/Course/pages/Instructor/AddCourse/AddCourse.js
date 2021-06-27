@@ -24,10 +24,10 @@ export default function AddCourse() {
 		dispatch(setCourseAction());
 	};
 	const handleStatusSwitch = () => {
-		if (course.status === CourseStatus.PUBLISH) {
+		if (course.status !== CourseStatus.DRAFT) {
 			setCourse({ ...course, status: CourseStatus.DRAFT });
 		} else {
-			setCourse({ ...course, status: CourseStatus.PUBLISH });
+			setCourse({ ...course, status: CourseStatus.REVIEWING });
 		}
 	};
 	useEffect(() => {
@@ -71,35 +71,27 @@ export default function AddCourse() {
 
 				<Switch
 					checked={
-						course.status ? course.status === CourseStatus.PUBLISH : false
+						course.status ? course.status !== CourseStatus.DRAFT : false
 					}
 					onChange={handleStatusSwitch}
 					name="checkedB"
 					color="primary"
 				/>
 				{!course.status ? (
-					<Typography
-						style={{ marginRight: "10px" }}
-						variant="subtitle2"
-						color="secondary"
-					>
+					<Typography variant="subtitle2" color="secondary">
 						Bản nháp
 					</Typography>
 				) : course.status === CourseStatus.PUBLISH ? (
-					<Typography
-						style={{ marginRight: "10px" }}
-						variant="subtitle2"
-						color="secondary"
-					>
+					<Typography variant="subtitle2" color="primary">
 						Công khai
 					</Typography>
+				) : course.status === CourseStatus.REVIEWING ? (
+					<Typography variant="subtitle2" color="primary">
+						Đang duyệt
+					</Typography>
 				) : (
-					<Typography
-						style={{ marginRight: "10px" }}
-						variant="subtitle2"
-						color="secondary"
-					>
-						Bản nháp
+					<Typography variant="subtitle2" color="secondary">
+						Từ chối
 					</Typography>
 				)}
 			</BreadCrumbs>

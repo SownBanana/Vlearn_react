@@ -68,6 +68,12 @@ const courseResource = {
 			headers: headersWithToken()
 		})
 		return response.data;
+	},
+	setStatus: async (params) => {
+		const response = await api.post('api/course-status', params, {
+			headers: headersWithToken()
+		})
+		return response.data;
 	}
 };
 

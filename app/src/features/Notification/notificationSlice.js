@@ -4,6 +4,7 @@ import api from "commons/api/notification";
 export const NotificationType = {
     RATE_COURSE: "App\\Notifications\\RateCourse",
     BUY_COURSE: "App\\Notifications\\BuyCourse",
+    COURSE_STATUS: "App\\Notifications\\ChangeCourseStatus",
 }
 
 export const fetchNotifications = () => async (dispatch, getState) => {

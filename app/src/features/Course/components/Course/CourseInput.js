@@ -12,7 +12,7 @@ import {
 } from "@material-ui/core";
 import EditorModal from "commons/components/EditorModal/EditorModal";
 import SectionList from "../Section/SectionList";
-// import CKEditor from "commons/components/CKEditor/CKEditor";
+import CKViewer from "commons/components/CKEditor/CKViewer";
 // import Lazy from "react-lazyload";
 import { DropzoneArea } from "material-ui-dropzone";
 import uploadApi from "commons/api/upload/upload";
@@ -23,6 +23,7 @@ import { Autocomplete, Skeleton } from "@material-ui/lab";
 import { Code, Edit } from "@material-ui/icons";
 import { attachTopic, detachTopic, setContentEditMode } from "features/Course/editingCourseSlice";
 import { KeyboardDateTimePicker } from "@material-ui/pickers";
+import { CourseStatus } from "features/Course/constance";
 
 const CKEditor = lazy(() => {
 	const editor = new Promise((resolve) => {
@@ -256,7 +257,6 @@ export default function CourseInput({ course, setCourse }) {
 								))
 							}
 						</Grid>
-
 						<Typography align="left" className={classes.headerText} variant="h6" color="textSecondary">
 							Giá
 						</Typography>
@@ -272,6 +272,17 @@ export default function CourseInput({ course, setCourse }) {
 							}
 							size="small"
 						/>
+						{
+							course.status === CourseStatus.REJECTED &&
+							<Box my={2} >
+								<Box color="secondary.main">
+									<Typography align="left" className={classes.headerText} variant="h6" >
+										Lý do từ chối
+									</Typography>
+								</Box>
+								<CKViewer content={course.reject_reason} />
+							</Box>
+						}
 					</Grid>
 				</Grid>
 			</form>

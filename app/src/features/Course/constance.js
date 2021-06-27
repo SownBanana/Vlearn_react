@@ -1,6 +1,8 @@
 const CourseStatus = {
 	DRAFT: 0,
 	PUBLISH: 1,
+	REVIEWING: 2,
+	REJECTED: 3,
 	ALL: "vlearn_all_value",
 };
 

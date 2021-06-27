@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, TextField, useMediaQuery } from "@material-ui/core";
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField } from "@material-ui/core";
 import BreadCrumbs from "commons/components/BreadCrumbs";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCourses } from "features/Course/courseListSlice";
@@ -75,7 +75,7 @@ export default function CourseList() {
             <BreadCrumbs current="Khóa học của tôi">
                 <Button variant="contained" color="primary" onClick={handleClickOpen}>
                     Thêm khóa học
-				</Button>
+                </Button>
                 <Dialog
                     open={open}
                     onClose={handleClose}
@@ -127,7 +127,7 @@ export default function CourseList() {
                                 }}
                             >
                                 Khóa học trực tuyến
-						</Button>
+                            </Button>
                         </Box>
                     </DialogActions>
                 </Dialog>

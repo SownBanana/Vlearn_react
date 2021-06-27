@@ -32,6 +32,22 @@ export const setCourse = () => async (dispatch, getState) => {
 		dispatch(setStatus("failed"));
 	}
 };
+export const setCourseStatus = (course_id, status) => async (dispatch) => {
+	dispatch(setStatus("saving"));
+	try {
+		const response = await api.setStatus({ course_id, status });
+		console.log("+=======> ", response);
+		if (response.status === "success") {
+			dispatch(setStatus("saved"));
+			dispatch(setStateCourseStatus(response.course_status));
+		} else {
+			console.log(response);
+			dispatch(setStatus("failed"));
+		}
+	} catch (e) {
+		dispatch(setStatus("failed"));
+	}
+};
 export const fetchCourse = (id) => async (dispatch) => {
 	try {
 		dispatch(setStatus("fetching"));
@@ -160,6 +176,9 @@ const editingCourse = createSlice({
 		setCourseType: (state, action) => {
 			state.course.type = action.payload;
 		},
+		setStateCourseStatus: (state, action) => {
+			state.course.status = action.payload;
+		},
 		clearEditingCourse: (state) => {
 			clearCourse(state);
 		},
@@ -266,6 +285,7 @@ const editingCourse = createSlice({
 export const {
 	setCourseTitle,
 	setCourseType,
+	setStateCourseStatus,
 	clearEditingCourse,
 	setStateCourse,
 	setStateSections,

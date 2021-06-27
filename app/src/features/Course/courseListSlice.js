@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import api from "commons/api/course/resource";
+import instructorApi from "commons/api/instructor";
 
 export const fetchCourses = (params) => async (dispatch) => {
 	dispatch(setStatus("loading"));
@@ -17,9 +18,16 @@ export const fetchCourses = (params) => async (dispatch) => {
 		dispatch(setStatus("fail"));
 	}
 };
+export const fetchInstructors = () => async (dispatch) => {
+	const response = await instructorApi.fetch();
+	if (response.status === "success") {
+		dispatch(setInstructors(response.data));
+	}
+};
 
 const initialState = {
 	status: "waiting",
+	instructors: [],
 	data: {
 		total: null,
 		per_page: null,
@@ -39,6 +47,9 @@ const courseList = createSlice({
 	name: "courseList",
 	initialState,
 	reducers: {
+		setInstructors: (state, action) => {
+			state.instructors = action.payload;
+		},
 		setCourses: (state, action) => {
 			state.data = action.payload;
 		},
@@ -55,6 +66,7 @@ const courseList = createSlice({
 });
 
 export const {
+	setInstructors,
 	setCourses,
 	setStatus,
 	setNextCourses,

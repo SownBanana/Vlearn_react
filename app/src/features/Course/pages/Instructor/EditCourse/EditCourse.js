@@ -6,6 +6,7 @@ import {
 	setCourse as setCourseAction,
 	setStateCourse,
 	clearEditingCourse,
+	setCourseStatus
 } from "features/Course/editingCourseSlice";
 import {
 	Box,
@@ -26,15 +27,13 @@ export default function EditCourse() {
 		dispatch(setCourseAction());
 	};
 	let { id } = useParams();
-	// const handleStatusChange = (e) => {
-	// 	console.log("on change", e);
-	// 	setCourse({ ...course, status: e.target.value });
-	// };
+
 	const handleStatusSwitch = () => {
-		if (course.status === CourseStatus.PUBLISH) {
-			setCourse({ ...course, status: CourseStatus.DRAFT });
+		console.log('switch');
+		if (course.status !== CourseStatus.DRAFT) {
+			dispatch(setCourseStatus(course.id, CourseStatus.DRAFT));
 		} else {
-			setCourse({ ...course, status: CourseStatus.PUBLISH });
+			dispatch(setCourseStatus(course.id, CourseStatus.REVIEWING));
 		}
 	};
 	useEffect(() => {
@@ -102,7 +101,7 @@ export default function EditCourse() {
 
 				<Switch
 					checked={
-						course.status ? course.status === CourseStatus.PUBLISH : false
+						course.status ? course.status !== CourseStatus.DRAFT : false
 					}
 					onChange={handleStatusSwitch}
 					name="checkedB"
@@ -116,9 +115,13 @@ export default function EditCourse() {
 					<Typography variant="subtitle2" color="primary">
 						Công khai
 					</Typography>
+				) : course.status === CourseStatus.REVIEWING ? (
+					<Typography variant="subtitle2" color="primary">
+						Đang duyệt
+					</Typography>
 				) : (
 					<Typography variant="subtitle2" color="secondary">
-						Bản nháp
+						Từ chối
 					</Typography>
 				)}
 			</BreadCrumbs>

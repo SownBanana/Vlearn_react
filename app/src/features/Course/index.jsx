@@ -13,11 +13,16 @@ import {
 } from "commons/routes/CustomRoute";
 import LearnCourse from "features/Course/pages/Student/LearnCourse/LearnCourse";
 import ManageCourse from "features/Course/pages/Admin/ManageCourse";
+import PreviewCourse from "features/Course/pages/Admin/PreviewCourse";
 
 export default function Course() {
     return (
         <Switch>
             <AdminRoute path="/courses/a/manage" component={ManageCourse} />
+            <AdminRoute
+                path="/courses/a/preview/:id"
+                component={PreviewCourse}
+            />
             <PrivateRoute path="/courses/learn/:id" component={LearnCourse} />
             <InstructorRoute
                 path="/courses/i/:username/add"
