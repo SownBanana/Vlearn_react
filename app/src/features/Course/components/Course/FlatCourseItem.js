@@ -20,6 +20,8 @@ import { CourseStatus, CourseType } from "features/Course/constance";
 import { useSelector } from "react-redux";
 import { COURSE_THUMBNAIL } from "commons/enums/ImageDefault";
 import { LocalLibrary, Person } from "@material-ui/icons";
+import EditorChoiceIcon from "commons/components/EditorChoiceIcon";
+
 export default function FlatCourseItem({ course }) {
 	const classes = useStyle();
 	const history = useHistory();
@@ -54,16 +56,28 @@ export default function FlatCourseItem({ course }) {
 						: course.status === CourseStatus.REVIEWING ?
 							<PostAddOutlinedIcon className={classes.reviewingColor} /> : null
 					}
-
+					{/* <Box display="flex" justifyContent="center"> */}
 					{isMobile ? (
 						<Typography className={classes.title} variant="subtitle2">
 							{course.title}
+							{
+								course.is_editor_choice ?
+									<EditorChoiceIcon />
+									: <></>
+							}
 						</Typography>
 					) : (
 						<Typography className={classes.title} variant="h6">
 							{course.title}
+							{
+								course.is_editor_choice ?
+									<EditorChoiceIcon />
+									: <></>
+							}
 						</Typography>
 					)}
+
+					{/* </Box> */}
 				</CardContent>
 			</CardActionArea>
 			<CardActions style={{ padding: "5px 10px 5px 20px" }}>

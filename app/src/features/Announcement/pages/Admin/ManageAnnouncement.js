@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import {
-    Avatar,
     Box,
     IconButton,
     makeStyles,
@@ -11,7 +10,6 @@ import {
     TextField,
     TableFooter,
     TablePagination,
-    Switch,
     TableSortLabel,
     Button,
     Dialog,
@@ -33,14 +31,13 @@ import FirstPageIcon from '@material-ui/icons/FirstPage';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
-import { fetch, verify, createAdmin } from '../userSlice';
+import { fetch, store } from '../../announcementSlice';
 import { UserRole } from 'features/Authenticate/constance';
 import { Autocomplete } from '@material-ui/lab';
+import CKEditor from "commons/components/CKEditor/CKEditor";
 
 const EnhancedTableToolbar = ({
     classes,
-    status,
-    setStatus,
     roles,
     setRoles,
     handleSearch,
@@ -48,24 +45,22 @@ const EnhancedTableToolbar = ({
 }) => {
     const dispatch = useDispatch()
     const [open, setOpen] = useState(false)
-    const [name, setName] = useState('')
-    const [username, setUsername] = useState('')
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
+    const [title, setTitle] = useState('')
+    const [target, setTarget] = useState([])
+    const [content, setContent] = useState('')
+
+    const targetOptions = [
+        UserRole.ADMIN,
+        UserRole.INSTRUCTOR,
+        UserRole.STUDENT,
+        UserRole.ALL,
+    ]
+
     const roleOptions = [
         UserRole.ADMIN,
         UserRole.INSTRUCTOR,
         UserRole.STUDENT,
-    ]
-    const statusOptions = [
-        {
-            title: 'Đã kích hoạt',
-            code: 'active'
-        },
-        {
-            title: 'Chưa kích hoạt',
-            code: 'inactive'
-        },
+        'all',
     ]
 
     const handleClose = () => {
@@ -86,86 +81,113 @@ const EnhancedTableToolbar = ({
                     size="small"
                     onClick={handleOpen}
                 >
-                    Thêm Quản trị viên
+                    Thêm Thông báo
                 </Button>
                 <Dialog
                     open={open}
                     onClose={handleClose}
+                    fullWidth
+                    maxWidth="md"
                     aria-labelledby="form-dialog-title"
                 >
                     <DialogTitle id="form-dialog-title">
-                        Thêm Quản trị viên
+                        Thêm Thông báo
                     </DialogTitle>
                     <DialogContent>
                         <TextField
                             autoFocus
                             margin="dense"
-                            id="name"
-                            label="Tên quản trị viên"
+                            id="title"
+                            label="Tiêu đề"
                             type="text"
                             fullWidth
-                            value={name}
+                            value={title}
                             onChange={(e) => {
-                                setName(e.target.value);
+                                setTitle(e.target.value);
                             }}
                         />
-                        <TextField
-                            autoFocus
-                            margin="dense"
-                            id="username"
-                            label="Username"
-                            type="text"
-                            fullWidth
-                            value={username}
-                            onChange={(e) => {
-                                setUsername(e.target.value);
+                        <Autocomplete
+                            multiple
+                            size="small"
+                            value={target}
+                            onChange={(event, newTargets) => {
+                                if (newTargets.includes(null))
+                                    setTarget([null])
+                                else setTarget(newTargets);
                             }}
-                        />
-                        <TextField
-                            autoFocus
-                            margin="dense"
-                            id="email"
-                            label="Email"
-                            type="email"
-                            fullWidth
-                            value={email}
-                            onChange={(e) => {
-                                setEmail(e.target.value);
+                            options={targetOptions}
+                            getOptionLabel={(option) => {
+                                switch (option) {
+                                    case UserRole.ALL: return 'Tất cả'
+                                    case UserRole.ADMIN: return 'Quản trị viên'
+                                    case UserRole.INSTRUCTOR: return 'Giảng viên'
+                                    case UserRole.STUDENT: return 'Học sinh'
+                                    default: return ''
+                                }
                             }}
+                            renderTags={(tagValue, getTagProps) =>
+                                tagValue.map((option, index) => (
+                                    option === UserRole.STUDENT
+                                        ? <Chip label="Học sinh" variant="outlined"
+                                            classes={{ root: classes.successChip }}
+                                            className={classes.actionChip}
+                                            size="small"
+                                            {...getTagProps({ index })}
+                                        />
+                                        : option === UserRole.INSTRUCTOR
+                                            ? <Chip label="Giảng viên" variant="outlined"
+                                                color="primary"
+                                                className={classes.actionChip}
+                                                size="small"
+                                                {...getTagProps({ index })}
+                                            />
+                                            : option === UserRole.ALL
+                                                ? <Chip label="Tất cả" variant="outlined"
+                                                    className={classes.actionChip}
+                                                    size="small"
+                                                    {...getTagProps({ index })}
+                                                />
+                                                : <Chip label="Quản trị viên" variant="outlined" color="secondary"
+                                                    className={classes.actionChip}
+                                                    size="small"
+                                                    {...getTagProps({ index })}
+                                                />
+                                ))
+                            }
+                            style={{ width: 410 }}
+                            renderInput={(params) => (
+                                <TextField {...params} size="small"
+                                    label="Thông báo đến" placeholder="" variant="outlined" />
+                            )}
                         />
-                        <TextField
-                            autoFocus
-                            margin="dense"
-                            id="password"
-                            label="Password"
-                            type="password"
-                            fullWidth
-                            value={password}
-                            onChange={(e) => {
-                                setPassword(e.target.value);
-                            }}
-                        />
+                        <div className={classes.editor}>
+                            <CKEditor
+                                isNoSide={true}
+                                content={content}
+                                handler={setContent}
+                            />
+                        </div>
                     </DialogContent>
                     <DialogActions>
                         <Button
                             onClick={handleClose}
-                            color="primary"
+                            color="secondary"
+                            variant="contained"
                         >
                             Thoát
                         </Button>
                         <Button
                             onClick={async () => {
                                 await dispatch(
-                                    createAdmin({
-                                        name, username, email, password
-                                    })
+                                    store({ title, target, content })
                                 );
                                 handleClose();
                                 fetch();
                             }}
                             color="primary"
+                            variant="contained"
                         >
-                            Tạo tài khoản
+                            Tạo thông báo
                         </Button>
                     </DialogActions>
                 </Dialog>
@@ -179,6 +201,7 @@ const EnhancedTableToolbar = ({
                     options={roleOptions}
                     getOptionLabel={(option) => {
                         switch (option) {
+                            case 'all': return 'Tất cả'
                             case UserRole.ADMIN: return 'Quản trị viên'
                             case UserRole.INSTRUCTOR: return 'Giảng viên'
                             case UserRole.STUDENT: return 'Học sinh'
@@ -201,33 +224,23 @@ const EnhancedTableToolbar = ({
                                         size="small"
                                         {...getTagProps({ index })}
                                     />
-                                    : <Chip label="Quản trị viên" variant="outlined" color="secondary"
-                                        className={classes.actionChip}
-                                        size="small"
-                                        {...getTagProps({ index })}
-                                    />
+                                    : option === 'all'
+                                        ? <Chip label="Tất cả" variant="outlined"
+                                            className={classes.actionChip}
+                                            size="small"
+                                            {...getTagProps({ index })}
+                                        />
+                                        : <Chip label="Quản trị viên" variant="outlined" color="secondary"
+                                            className={classes.actionChip}
+                                            size="small"
+                                            {...getTagProps({ index })}
+                                        />
                         ))
                     }
                     style={{ width: 410 }}
                     renderInput={(params) => (
                         <TextField {...params} size="small"
-                            label="Vai trò" placeholder="" variant="outlined" />
-                    )}
-                />
-                <Autocomplete
-                    size="small"
-                    value={status}
-                    onChange={(event, newStatus) => {
-                        console.log(newStatus);
-                        if (newStatus) setStatus(newStatus.code);
-                        else setStatus('');
-                    }}
-                    options={statusOptions}
-                    getOptionLabel={(option) => option.title}
-                    style={{ width: 200 }}
-                    renderInput={(params) => (
-                        <TextField {...params} size="small"
-                            label="Trạng thái" placeholder="" variant="outlined" />
+                            label="Thông báo đến" placeholder="" variant="outlined" />
                     )}
                 />
             </Box>
@@ -308,12 +321,8 @@ function EnhancedTableHead({
         <TableHead>
             <TableRow>
                 <TableCell style={{ fontWeight: 'bold' }}>ID</TableCell>
-                <TableCell style={{ fontWeight: 'bold' }} align="center">Avatar</TableCell>
-                <TableCell style={{ fontWeight: 'bold' }} align="left">Tên tài khoản</TableCell>
-                <TableCell style={{ fontWeight: 'bold' }} align="center">Tên người dùng</TableCell>
-                <TableCell style={{ fontWeight: 'bold' }} align="left">Email</TableCell>
-                <TableCell style={{ fontWeight: 'bold' }} align="center">Vai trò</TableCell>
-                <TableCell style={{ fontWeight: 'bold' }} align="center">Kích hoạt</TableCell>
+                <TableCell style={{ fontWeight: 'bold' }} align="left">Tiêu đề</TableCell>
+                <TableCell style={{ fontWeight: 'bold' }} align="center">Target</TableCell>
                 <TableCell style={{ fontWeight: 'bold' }} align="left">
                     <TableSortLabel
                         active
@@ -331,13 +340,12 @@ function EnhancedTableHead({
     );
 }
 
-export default function ManageUser() {
+export default function ManageAnnouncement() {
     const classes = useStyles();
     const dispatch = useDispatch();
-    const users = useSelector((state) => state.user.users);
-    const totalUsers = useSelector((state) => state.user.totalUsers);
+    const announcements = useSelector((state) => state.announcement.announcements);
+    const totalAnnouncements = useSelector((state) => state.announcement.totalAnnouncements);
     const [roles, setRoles] = useState([])
-    const [status, setStatus] = useState()
     const [order, setOrder] = useState('desc')
     const [nav, setNav] = useState({
         page: 1,
@@ -348,8 +356,8 @@ export default function ManageUser() {
     const perPageOptions = [
         3, 5, 10, 25, 50, 100
     ]
-    const openUserProfile = id => {
-        history.push(`/info/${id}`)
+    const openAnnouncement = id => {
+        history.push(`/announcements/${id}`)
     }
 
     var queryTimeOut = 0;
@@ -393,20 +401,14 @@ export default function ManageUser() {
     const fetchUser = () => {
         dispatch(fetch({
             ...nav,
-            roles,
-            status,
+            targets: roles,
             order,
         }));
     }
 
     useEffect(() => {
         fetchUser();
-    }, [dispatch, nav, status, roles, order]);
-
-    const handleStatusSwitch = async (id, status) => {
-        await dispatch(verify({ id, status }))
-        fetchUser()
-    }
+    }, [dispatch, nav, roles, order]);
 
     return (
         <Box
@@ -418,8 +420,6 @@ export default function ManageUser() {
             <Paper>
                 <EnhancedTableToolbar
                     classes={classes}
-                    status={status}
-                    setStatus={setStatus}
                     roles={roles}
                     setRoles={setRoles}
                     handleSearch={handleSearch}
@@ -433,59 +433,53 @@ export default function ManageUser() {
                             setOrder={setOrder}
                         />
                         <TableBody>
-                            {users && users.map((user) => (
-                                <TableRow key={user.id}>
+                            {announcements && announcements.map((announcement) => (
+                                <TableRow key={announcement.id}>
                                     <TableCell component="th" scope="row">
-                                        {user.id}
-                                    </TableCell>
-                                    <TableCell
-                                        align="center"
-                                        onClick={() => openUserProfile(user.id)}
-                                    >
-                                        <Avatar style={{ margin: "auto" }} className="" alt={user.username} src={user.avatar_url} />
+                                        {announcement.id}
                                     </TableCell>
                                     <TableCell
                                         className={classes.userCell}
                                         align="left"
-                                        onClick={() => openUserProfile(user.id)}
+                                        onClick={() => openAnnouncement(announcement.id)}
                                     >
-                                        <Typography style={{ verticalAlign: "middle", marginLeft: 5 }} variant="body2" color="initial">{user.name}</Typography>
+                                        <Typography style={{ verticalAlign: "middle" }} variant="body2" color="initial">{announcement.title}</Typography>
                                     </TableCell>
-                                    <TableCell align="center">{user.username}</TableCell>
-                                    <TableCell align="left">{user.email}</TableCell>
                                     <TableCell align="center">
                                         {
-                                            user.role === UserRole.STUDENT
-                                                ? <Chip label="Học sinh" variant="outlined"
-                                                    classes={{ root: classes.successChip }}
-                                                    className={classes.actionChip}
-                                                    size="small"
-                                                    onClick={() => handleFilterRole(UserRole.STUDENT)}
-                                                />
-                                                : user.role === UserRole.INSTRUCTOR
-                                                    ? <Chip label="Giảng viên" variant="outlined"
-                                                        color="primary"
-                                                        className={classes.actionChip}
-                                                        size="small"
-                                                        onClick={() => handleFilterRole(UserRole.INSTRUCTOR)}
-                                                    />
-                                                    : <Chip label="Quản trị viên" variant="outlined" color="secondary"
-                                                        className={classes.actionChip}
-                                                        size="small"
-                                                        onClick={() => handleFilterRole(UserRole.ADMIN)}
-                                                    />
+                                            announcement.target?.includes(UserRole.STUDENT)
+                                            && <Chip label="Học sinh" variant="outlined"
+                                                classes={{ root: classes.successChip }}
+                                                className={classes.actionChip}
+                                                size="small"
+                                                onClick={() => handleFilterRole(UserRole.STUDENT)}
+                                            />
+                                        }
+                                        {
+                                            announcement.target?.includes(UserRole.INSTRUCTOR) &&
+                                            <Chip label="Giảng viên" variant="outlined"
+                                                color="primary"
+                                                className={classes.actionChip}
+                                                size="small"
+                                                onClick={() => handleFilterRole(UserRole.INSTRUCTOR)}
+                                            />
+                                        }
+                                        {announcement.target?.includes(UserRole.ADMIN) &&
+                                            < Chip label="Quản trị viên" variant="outlined" color="secondary"
+                                                className={classes.actionChip}
+                                                size="small"
+                                                onClick={() => handleFilterRole(UserRole.ADMIN)}
+                                            />
+                                        }
+                                        {!announcement.target &&
+                                            < Chip label="Tất cả" variant="outlined"
+                                                className={classes.actionChip}
+                                                size="small"
+                                                onClick={() => handleFilterRole(UserRole.ADMIN)}
+                                            />
                                         }
                                     </TableCell>
-                                    <TableCell align="center">
-                                        <Switch
-                                            checked={user.email_verified_at !== null}
-                                            onChange={() => handleStatusSwitch(user.id, !user.email_verified_at)}
-                                            name="checkedB"
-                                            color="primary"
-                                        />
-
-                                    </TableCell>
-                                    <TableCell align="left">{fromTimeString(user.created_at)}</TableCell>
+                                    <TableCell align="left">{fromTimeString(announcement.created_at)}</TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>
@@ -493,16 +487,16 @@ export default function ManageUser() {
                             <TableRow>
                                 <TablePagination
                                     rowsPerPageOptions={perPageOptions}
-                                    count={totalUsers}
+                                    count={totalAnnouncements}
                                     rowsPerPage={nav.perPage}
                                     page={nav.page - 1}
                                     SelectProps={{
-                                        inputProps: { 'aria-label': 'Người dùng mỗi trang:' },
+                                        inputProps: { 'aria-label': 'Thông báo mỗi trang:' },
                                         native: true,
                                     }}
-                                    labelRowsPerPage={'Số người dùng mỗi trang:'}
+                                    labelRowsPerPage={'Số thông báo mỗi trang:'}
                                     labelDisplayedRows={
-                                        ({ from, to, count }) => `${from}-${to} trên ${count !== -1 ? `của ${count} người dùng` : `hơn ${to} người dùng`}`
+                                        ({ from, to, count }) => `${from}-${to} trên ${count !== -1 ? `của ${count} thông báo` : `hơn ${to} thông báo`}`
                                     }
                                     onChangePage={setPage}
                                     onChangeRowsPerPage={setRowPerPage}
@@ -544,6 +538,7 @@ const useStyles = makeStyles(theme => ({
     actionChip: {
         cursor: 'pointer',
         transition: '0.2s',
+        marginRight: 3,
         '&:hover': {
             backgroundColor: 'aliceblue',
             transform: 'scale(1.1)'

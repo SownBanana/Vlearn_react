@@ -5,6 +5,8 @@ export const NotificationType = {
     RATE_COURSE: "App\\Notifications\\RateCourse",
     BUY_COURSE: "App\\Notifications\\BuyCourse",
     COURSE_STATUS: "App\\Notifications\\ChangeCourseStatus",
+    EDITOR_CHOICE: "App\\Notifications\\EditorChoiceCourse",
+    ANNOUNCEMENT: "App\\Notifications\\NewAnnouncement",
 }
 
 export const fetchNotifications = () => async (dispatch, getState) => {

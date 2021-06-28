@@ -74,6 +74,12 @@ const courseResource = {
 			headers: headersWithToken()
 		})
 		return response.data;
+	},
+	setEditorChoice: async (params) => {
+		const response = await api.post('api/course-editor-choice', params, {
+			headers: headersWithToken()
+		})
+		return response.data;
 	}
 };
 

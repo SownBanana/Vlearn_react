@@ -19,6 +19,7 @@ import {
     DialogTitle,
     DialogContent,
     DialogActions,
+    Switch,
 } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import Table from '@material-ui/core/Table';
@@ -283,7 +284,7 @@ const EnhancedTableToolbar = ({
                         classes={{ root: classes.successBtn }}
                         onClick={() => updateStatus(CourseStatus.PUBLISH)}
                     >
-                        Công khai
+                        Xuất bản
                     </Button>
                 </div>
                 :
@@ -317,7 +318,7 @@ function EnhancedTableHead({
 
     return (
         <TableHead>
-            <TableRow>
+            <TableRow >
                 <TableCell padding="checkbox">
                     <Checkbox
                         indeterminate={numSelected > 0 && numSelected < rowCount}
@@ -326,12 +327,12 @@ function EnhancedTableHead({
                         inputProps={{ 'aria-label': 'select all desserts' }}
                     />
                 </TableCell>
-                <TableCell align="center">Tình trạng</TableCell>
-                <TableCell>Tên khóa học</TableCell>
-                <TableCell align="center">Loại khóa học</TableCell>
-                <TableCell align="left">Giảng viên</TableCell>
-
-                <TableCell align="left">
+                <TableCell style={{ fontWeight: 'bold' }} align="center">Tình trạng</TableCell>
+                <TableCell style={{ fontWeight: 'bold' }}>Tên khóa học</TableCell>
+                <TableCell style={{ fontWeight: 'bold' }} align="center">Loại khóa học</TableCell>
+                <TableCell style={{ fontWeight: 'bold' }} align="left">Giảng viên</TableCell>
+                <TableCell style={{ fontWeight: 'bold' }} align="left">Editor's choice</TableCell>
+                <TableCell style={{ fontWeight: 'bold' }} align="left">
                     <TableSortLabel
                         active={orderBy === 'updated_at'}
                         direction={orderBy === 'updated_at' ? order : 'asc'}
@@ -345,7 +346,7 @@ function EnhancedTableHead({
                         ) : null}
                     </TableSortLabel>
                 </TableCell>
-                <TableCell align="left">
+                <TableCell style={{ fontWeight: 'bold' }} align="left">
                     <TableSortLabel
                         active={orderBy === 'created_at'}
                         direction={orderBy === 'created_at' ? order : 'asc'}
@@ -529,6 +530,13 @@ export default function ManageCourse() {
         })
         fetch()
     }
+    const updateEditorChoice = async (id, choice) => {
+        await api.setEditorChoice({
+            id,
+            choice
+        })
+        fetch()
+    }
 
     const openInstructorProfile = id => {
         history.push(`/info/${id}`)
@@ -707,6 +715,18 @@ export default function ManageCourse() {
                                         >
                                             <Avatar className="avatar--small" alt={course.instructor.username} src={course.instructor.avatar_url} />
                                             <Typography style={{ verticalAlign: "middle", marginLeft: 5 }} variant="body2" color="initial">{course.instructor.name}</Typography>
+                                        </TableCell>
+                                        <TableCell align="center">
+                                            <Switch
+                                                checked={course.is_editor_choice}
+                                                onClick={(e) => {
+                                                    e.stopPropagation()
+                                                    updateEditorChoice(course.id, !course.is_editor_choice)
+                                                }}
+                                                name="checkedB"
+                                                color="primary"
+                                            />
+
                                         </TableCell>
                                         <TableCell align="left">{fromTimeString(course.updated_at)}</TableCell>
                                         <TableCell align="left">{fromTimeString(course.created_at)}</TableCell>

@@ -18,6 +18,7 @@ import lessonChat from "./features/Course/pages/Student/LearnCourse/lessonChatSl
 import dashInstructor from "./features/Dashboard/pages/Instructor/instructorDashSlice";
 import dashStudent from "./features/Dashboard/pages/Student/studentDashSlice";
 import search from "./features/Home/pages/Search/searchSlice";
+import announcement from "./features/Announcement/announcementSlice";
 
 export default combineReducers({
 	auth,
@@ -38,5 +39,6 @@ export default combineReducers({
 	lessonChat,
 	dashInstructor,
 	dashStudent,
-	search
+	search,
+	announcement
 });

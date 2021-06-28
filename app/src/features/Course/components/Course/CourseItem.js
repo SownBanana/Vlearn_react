@@ -12,6 +12,8 @@ import { Rating } from "@material-ui/lab";
 import { Person } from "@material-ui/icons";
 import { COURSE_THUMBNAIL } from "commons/enums/ImageDefault";
 import { CourseType } from "features/Course/constance";
+import EditorChoiceIcon from "commons/components/EditorChoiceIcon";
+
 export default function CourseItem({ course }) {
 	const classes = useStyle();
 	const history = useHistory();
@@ -72,9 +74,16 @@ export default function CourseItem({ course }) {
 							justifyContent: "center",
 							alignItems: "center",
 						}}>
-						<Typography variant="body1" className={classes.title}>
-							{course.title}
-						</Typography>
+						<Box display="flex" justifyContent="center">
+							<Typography variant="body1" className={classes.title}>
+								{course.title}
+							</Typography>
+							{
+								course.is_editor_choice ?
+									<EditorChoiceIcon />
+									: <></>
+							}
+						</Box>
 						<CKViewer className={classes.introduce} content={course.introduce} />
 					</Box>
 					{/* <Typography

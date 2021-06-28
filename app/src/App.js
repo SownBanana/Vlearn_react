@@ -33,6 +33,7 @@ const Chat = React.lazy(() => import("./features/Chat/"));
 const Info = React.lazy(() => import("./features/Info/"));
 const Dashboard = React.lazy(() => import("./features/Dashboard/"));
 const User = React.lazy(() => import("./features/User/"));
+const Announcement = React.lazy(() => import("./features/Announcement/"));
 
 function App() {
 	globalStyle();
@@ -108,6 +109,7 @@ function App() {
 							<Route path="/info" component={Info} />
 							<Route path="/dashboard" component={Dashboard} />
 							<Route path="/users" component={User} />
+							<Route path="/announcements" component={Announcement} />
 							<Route path="/" component={Home} />
 						</Switch>
 					</Suspense>

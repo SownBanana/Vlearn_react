@@ -7,6 +7,7 @@ import {
     Dashboard,
     Group,
     Loyalty,
+    NotificationsActive
 } from "@material-ui/icons";
 
 import { makeStyles, Paper, Tab, Tabs } from "@material-ui/core";
@@ -59,6 +60,12 @@ export default function AdminDrawer() {
                         key: "topics",
                         icon: <Loyalty />,
                         link: `/topics/manage`,
+                    },
+                    {
+                        name: "Thông báo",
+                        key: "announcements",
+                        icon: <NotificationsActive />,
+                        link: "/announcements/manage",
                     },
                     {
                         name: "Tin nhắn",

@@ -6,6 +6,7 @@ import {
     Person as PersonIcon,
     Group,
     Loyalty,
+    NotificationsActive
 } from "@material-ui/icons";
 
 import ListItemLink from "commons/components/ListItemLink";
@@ -44,6 +45,12 @@ export default function AdminDrawer({ handle }) {
                     key: "topics",
                     icon: <Loyalty />,
                     link: `/topics/manage`,
+                },
+                {
+                    name: "Thông báo",
+                    key: "announcements",
+                    icon: <NotificationsActive />,
+                    link: "/announcements/manage",
                 },
                 {
                     name: "Tin nhắn",

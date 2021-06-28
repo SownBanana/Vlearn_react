@@ -5,9 +5,15 @@ import { Avatar, Badge, Box, Divider, ListItem, MenuItem, Typography } from '@ma
 import { getTimePastText } from 'commons/functions/timePast';
 import { Skeleton } from '@material-ui/lab';
 import { useHistory } from 'react-router';
+import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
+import NotificationsNoneIcon from '@material-ui/icons/NotificationsNone';
+
 import CourseStatusNotification from './components/CourseStatusNotification';
 import BuyCourseNotification from './components/BuyCourseNotification';
 import RateCourseNotification from './components/RateCourseNotification';
+import EditorChoiceNotification from './components/EditorChoiceNotification';
+import NewAnnouncementNotification from './components/NewAnnouncementNotification';
+
 export default function NotificationPane() {
     const dispatch = useDispatch();
     const id = useSelector(state => state.auth.user.id);
@@ -71,20 +77,44 @@ export default function NotificationPane() {
                                 }}
                                 button
                             >
-                                <Box mr={1} >
-                                    <Badge
-                                        color="primary"
-                                        overlap="circle"
-                                        variant="dot"
-                                        invisible={data.read_at}
-                                        anchorOrigin={{
-                                            vertical: 'top',
-                                            horizontal: 'left',
-                                        }}
-                                    >
-                                        < Avatar src={notification.user?.avatar_url} size="small" />
-                                    </Badge>
-                                </Box>
+                                {
+                                    notification.user ?
+                                        <Box mr={1} >
+                                            <Badge
+                                                color="primary"
+                                                overlap="circle"
+                                                variant="dot"
+                                                invisible={data.read_at}
+                                                anchorOrigin={{
+                                                    vertical: 'top',
+                                                    horizontal: 'left',
+                                                }}
+                                            >
+                                                < Avatar src={notification.user.avatar_url} size="small" />
+                                            </Badge>
+                                        </Box>
+                                        :
+                                        <Box mr={1} width={40} textAlign="center">
+                                            <Badge
+                                                color="primary"
+                                                overlap="circle"
+                                                variant="dot"
+                                                invisible={data.read_at}
+                                                anchorOrigin={{
+                                                    vertical: 'top',
+                                                    horizontal: 'left',
+                                                }}
+                                            >
+                                                {
+                                                    data.read_at ?
+                                                        <NotificationsNoneIcon color="action" /> :
+                                                        <Box color="warning.main">
+                                                            <NotificationsActiveIcon color="inherit" />
+                                                        </Box>
+                                                }
+                                            </Badge>
+                                        </Box>
+                                }
                                 {
                                     type === NotificationType.RATE_COURSE ?
                                         <RateCourseNotification
@@ -100,7 +130,18 @@ export default function NotificationPane() {
                                                 <CourseStatusNotification
                                                     notification={notification}
                                                     history={history}
-                                                /> : ''
+                                                />
+                                                : type === NotificationType.EDITOR_CHOICE ?
+                                                    <EditorChoiceNotification
+                                                        notification={notification}
+                                                        history={history}
+                                                    />
+                                                    : type === NotificationType.ANNOUNCEMENT ?
+                                                        <NewAnnouncementNotification
+                                                            notification={notification}
+                                                            history={history}
+                                                        />
+                                                        : ''
                                 }
                             </Box>
                         </ListItem>
