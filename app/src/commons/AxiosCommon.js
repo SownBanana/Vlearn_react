@@ -54,7 +54,6 @@ export const initAxiosInterceptors = (store) => {
 						return instance(error.config);
 					})
 					.catch((error) => {
-						debugger
 						store.dispatch(authFail());
 						return Promise.reject(error);
 					});

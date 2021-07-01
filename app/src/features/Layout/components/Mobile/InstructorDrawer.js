@@ -36,11 +36,11 @@ export default function InstructorDrawer() {
 				aria-label="icon tabs example"
 			>
 				{[
-					{
-						key: "dashboard",
-						icon: <HomeIcon />,
-						link: "/",
-					},
+					// {
+					// 	key: "dashboard",
+					// 	icon: <HomeIcon />,
+					// 	link: "/",
+					// },
 					{
 						name: "Dashboard",
 						key: "dashboard",

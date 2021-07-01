@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { Box, Grid, useMediaQuery } from "@material-ui/core";
+import { Box, Grid, useMediaQuery, Typography } from "@material-ui/core";
 import BreadCrumbs from "commons/components/BreadCrumbs";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCourses } from "features/Course/courseListSlice";
 import CourseItem from "features/Course/components/Course/CourseItem";
 import { Pagination, Skeleton } from "@material-ui/lab";
-import { CourseStatus } from "features/Course/constance";
-import SearchPane from "../../Instructor/CourseList/SearchPane";
+import SearchPane from "features/Course/pages/Student/CourseList/SearchPane";
+import { Statuses } from "commons/enums/status";
 export default function CourseList() {
     console.log("course list");
     const courseList = useSelector((state) => state.courseList.data);
+    const loadStatus = useSelector((state) => state.courseList.status);
     const courses = courseList.data;
     const dispatch = useDispatch();
     const history = useHistory();
@@ -20,9 +21,9 @@ export default function CourseList() {
         perPage: 12,
         search: "",
     });
-    const [filter, setFilter] = useState({
-        status: CourseStatus.ALL,
-        time: "desc",
+    const [sort, setSort] = useState({
+        orderBy: 'updated_at',
+        order: "desc",
     });
     const routeChange = () => {
         let path = `/courses/add`;
@@ -46,10 +47,10 @@ export default function CourseList() {
         dispatch(
             fetchCourses({
                 ...nav,
-                ...filter,
+                ...sort,
             })
         );
-    }, [dispatch, nav, filter]);
+    }, [dispatch, nav, sort]);
     // useEffect(() => {
     //     isMobile ? setNav({ ...nav, perPage: 5 }) : setNav({ ...nav, perPage: 12 });
     // }, [isMobile]);
@@ -61,8 +62,8 @@ export default function CourseList() {
             </BreadCrumbs>
             <SearchPane
                 handleSearch={handleSearch}
-                handleFilter={setFilter}
-                filter={filter}
+                handleSort={setSort}
+                sort={sort}
             />
             <Box px={isMobile ? 2 : 5}>
                 <Grid
@@ -85,26 +86,30 @@ export default function CourseList() {
                         alignItems="center"
                         alignContent="center"
                     >
-                        {courses ?
-                            courses.map((course) => {
-                                return (
-                                    <Grid item md={3} sm={4} xs={12} key={course.id} >
-                                        <Box>
-                                            <CourseItem course={course} />
-                                        </Box>
-                                    </Grid>
-                                );
-                            }) : (
-                                Array(8).fill(
-                                    <Grid item md={3} sm={4} xs={12}>
-                                        <Box>
-                                            <Skeleton variant="rect" width="100%" height={200} />
-                                            <Skeleton />
-                                            <Skeleton width="60%" />
-                                        </Box>
-                                    </Grid>
-                                )
-                            )
+                        {
+                            loadStatus === Statuses.WAITING || loadStatus === Statuses.LOADING ?
+                                (
+                                    Array(4).fill(
+                                        <Grid item md={3} sm={4} xs={12}>
+                                            <Box>
+                                                <Skeleton variant="rect" width="100%" height={200} />
+                                                <Skeleton />
+                                                <Skeleton width="60%" />
+                                            </Box>
+                                        </Grid>
+                                    )
+                                ) :
+                                courses && courses.length ?
+                                    courses.map((course) => {
+                                        return (
+                                            <Grid item md={3} sm={4} xs={12} key={course.id} >
+                                                <Box>
+                                                    <CourseItem course={course} />
+                                                </Box>
+                                            </Grid>
+                                        );
+                                    }) :
+                                    <Typography style={{ margin: "auto" }} variant="subtitle2" color="textSecondary">Không có dữ liệu</Typography>
                         }
                     </Grid>
                 </Grid>

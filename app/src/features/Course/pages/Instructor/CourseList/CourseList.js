@@ -1,19 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField } from "@material-ui/core";
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField, Typography } from "@material-ui/core";
 import BreadCrumbs from "commons/components/BreadCrumbs";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCourses } from "features/Course/courseListSlice";
 import CourseItemFlat from "features/Course/components/Course/FlatCourseItem";
-import { Pagination } from "@material-ui/lab";
+import { Pagination, Skeleton } from "@material-ui/lab";
 import SearchPane from "./SearchPane";
 import { CourseStatus, CourseType } from "features/Course/constance";
 import useCheckMobile from "commons/hooks/useCheckMobile";
 import { clearEditingCourse, setCourseTitle, setCourseType } from "features/Course/editingCourseSlice";
+import { Statuses } from "commons/enums/status";
+
 export default function CourseList() {
     console.log("course list");
     const id = useSelector((state) => state.auth.user.id);
     const courseList = useSelector((state) => state.courseList.data);
+    const loadStatus = useSelector((state) => state.courseList.status);
     const username = useSelector(state => state.auth.user.username);
     const courses = courseList.data;
     const dispatch = useDispatch();
@@ -158,14 +161,27 @@ export default function CourseList() {
                         alignItems="center"
                         alignContent="center"
                     >
-                        {courses &&
-                            courses.map((course) => {
-                                return (
-                                    <Grid item md={6} xs={12} key={course.id}>
-                                        <CourseItemFlat course={course} />
-                                    </Grid>
-                                );
-                            })}
+                        {
+                            loadStatus === Statuses.WAITING || loadStatus === Statuses.LOADING ?
+                                (
+                                    Array(2).fill(
+                                        <Grid item md={6} xs={12}>
+                                            <Box>
+                                                <Skeleton variant="rect" width="100%" height={64} />
+                                            </Box>
+                                        </Grid>
+                                    )
+                                ) :
+                                courses && courses.length ?
+                                    courses.map((course) => {
+                                        return (
+                                            <Grid item md={6} xs={12} key={course.id}>
+                                                <CourseItemFlat course={course} />
+                                            </Grid>
+                                        );
+                                    }) :
+                                    <Typography style={{ margin: "auto" }} variant="subtitle2" color="textSecondary">Không có dữ liệu</Typography>
+                        }
                     </Grid>
                 </Grid>
             </Box>

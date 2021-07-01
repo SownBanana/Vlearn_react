@@ -14,16 +14,24 @@ const useStyles = makeStyles((theme) => ({
 			paddingTop: theme.spacing(6),
 		},
 	},
+	boundaryGuess: {
+		paddingTop: theme.spacing(5),
+		[theme.breakpoints.up("sm")]: {
+			paddingTop: theme.spacing(6),
+		},
+	},
 }));
 
 const Route = function ({ component: Component, maxWidth = false, ...rest }) {
 	const classes = useStyles();
+	const role = useSelector((state) => state.auth.user.role);
+
 	return (
 		<DefaultRoute
 			{...rest}
 			exact
 			render={(props) => (
-				<Container maxWidth={maxWidth} className={classes.boundary}>
+				<Container maxWidth={maxWidth} className={role === null ? classes.boundaryGuess : classes.boundary}>
 					{React.createElement(Component, props)}
 				</Container>
 			)}
@@ -150,5 +158,38 @@ const AdminRoute = function ({
 		/>
 	);
 };
+const RedirectRoute = function ({
+	component: Component,
+	maxWidth = false,
+	redirectRoles = [],
+	redirectTo = '',
+	...rest
+}) {
+	const classes = useStyles();
 
-export { Route, PrivateRoute, StudentRoute, InstructorRoute, AdminRoute };
+	const isAuthed = useSelector((state) => state.auth.access_token);
+	const role = useSelector((state) => state.auth.user.role);
+	return (
+		<DefaultRoute
+			{...rest}
+			exact
+			render={(props) => {
+				return !redirectRoles.includes(role) ? (
+					<Container maxWidth={maxWidth} className={role === null ? classes.boundaryGuess : classes.boundary}>
+						{React.createElement(Component, props)}
+					</Container>
+				) : (
+					<Redirect
+						to={{
+							pathname: redirectTo,
+							state: { from: props.location },
+						}}
+					/>
+				)
+			}
+			}
+		/>
+	);
+};
+
+export { Route, PrivateRoute, StudentRoute, InstructorRoute, AdminRoute, RedirectRoute };

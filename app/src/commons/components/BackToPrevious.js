@@ -4,5 +4,5 @@ import { Redirect } from "react-router";
 
 export default function BackToPrevious() {
 	const previousURL = useSelector((state) => state.common.previousURL);
-	return <Redirect to={previousURL ? previousURL : "/"} />;
+	return <Redirect to={previousURL ? previousURL : "/dashboard"} />;
 }

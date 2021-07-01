@@ -19,12 +19,12 @@ export default function InstructorDrawer({ handle }) {
 	return (
 		<List onClick={handle} className={classes.root}>
 			{[
-				{
-					name: "Trang chủ",
-					key: "home",
-					icon: <HomeIcon />,
-					link: "/",
-				},
+				// {
+				// 	name: "Trang chủ",
+				// 	key: "home",
+				// 	icon: <HomeIcon />,
+				// 	link: "/",
+				// },
 				{
 					name: "Dashboard",
 					key: "dashboard",

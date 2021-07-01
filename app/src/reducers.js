@@ -19,6 +19,7 @@ import dashInstructor from "./features/Dashboard/pages/Instructor/instructorDash
 import dashStudent from "./features/Dashboard/pages/Student/studentDashSlice";
 import search from "./features/Home/pages/Search/searchSlice";
 import announcement from "./features/Announcement/announcementSlice";
+import home from "./features/Home/homeSlice";
 
 export default combineReducers({
 	auth,
@@ -40,5 +41,6 @@ export default combineReducers({
 	dashInstructor,
 	dashStudent,
 	search,
-	announcement
+	announcement,
+	home
 });
