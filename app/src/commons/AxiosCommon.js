@@ -3,7 +3,7 @@ import { authFail } from "features/Authenticate/authSlices";
 
 export const headersWithToken = (access_token = null) => {
 	if (access_token === null && localStorage) {
-		const access_token = JSON.parse(localStorage.getItem("auth")).access_token;
+		const access_token = JSON.parse(localStorage.getItem("auth"))?.access_token;
 		return {
 			Authorization: `Bearer ${access_token}`,
 		};
@@ -16,7 +16,7 @@ export const headersWithToken = (access_token = null) => {
 };
 export const headersWithSocketId = () => {
 	if (localStorage) {
-		const access_token = JSON.parse(localStorage.getItem("auth")).access_token;
+		const access_token = JSON.parse(localStorage.getItem("auth"))?.access_token;
 		return {
 			Authorization: `Bearer ${access_token}`,
 		};

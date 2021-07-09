@@ -9,21 +9,22 @@ import {
     Tooltip,
     ZoomAndPan
 } from '@devexpress/dx-react-chart-material-ui';
-import { Animation, ArgumentScale, EventTracker, HoverState } from '@devexpress/dx-react-chart';
-import { scaleTime } from 'd3-scale';
+import { Animation, ArgumentScale, EventTracker, ValueScale } from '@devexpress/dx-react-chart';
+import { scaleTime, scaleLog } from 'd3-scale';
 
 export default function AreaChart({
     width,
     height = 500,
     data,
-    valueField,
-    argumentField,
+    valueField = "data",
+    argumentField = "time",
     title,
     titleSize = 20,
     color
 }) {
     const titleStyle = { margin: 'auto', fontSize: titleSize };
     const TitleText = props => <Title.Text {...props} style={titleStyle} />;
+    const scale = () => scaleLog().base(1);
 
     return (
         <Paper>
@@ -34,6 +35,7 @@ export default function AreaChart({
             >
                 <ArgumentScale factory={scaleTime} />
                 <ArgumentAxis />
+                <ValueScale />
                 <ValueAxis />
                 <AreaSeries
                     valueField={valueField}

@@ -15,7 +15,22 @@ const schedule = {
             headers: headersWithToken()
         });
         return response.data;
-    }
+    },
+
+    fetchBoughtCoursesTimeSeries: async () => {
+        const response = await api.get(`api/bought-data`, {
+            headers: headersWithToken()
+        });
+        return response.data;
+    },
+
+    fetchRateTimeSeries: async () => {
+        const response = await api.get(`api/rate-data`, {
+            headers: headersWithToken()
+        });
+        return response.data;
+    },
+
 };
 
 export default schedule;

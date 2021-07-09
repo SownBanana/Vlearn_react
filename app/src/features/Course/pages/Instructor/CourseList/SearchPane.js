@@ -36,6 +36,8 @@ export default function SearchPane({ handleSearch, filter, handleFilter }) {
 							<MenuItem value={CourseStatus.ALL}>Tất cả</MenuItem>
 							<MenuItem value={CourseStatus.DRAFT}>Bản nháp</MenuItem>
 							<MenuItem value={CourseStatus.PUBLISH}>Công khai</MenuItem>
+							<MenuItem value={CourseStatus.REJECTED}>Bị từ chối</MenuItem>
+							<MenuItem value={CourseStatus.REVIEWING}>Đang duyệt</MenuItem>
 						</Select>
 					</FormControl>
 					<FormControl

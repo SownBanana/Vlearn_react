@@ -10,10 +10,16 @@ import {
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import CKViewer from "commons/components/CKEditor/CKViewer";
 import useCheckMobile from "commons/hooks/useCheckMobile";
+import { useHistory } from "react-router-dom";
+import clsx from 'clsx';
 
 function SectionList({ sections, instructor }) {
     const classes = useStyles();
     const isMobile = useCheckMobile();
+    const history = useHistory()
+    const openProfile = () => {
+        history.push(`/info/${instructor.username}`)
+    }
     return (
         <Grid
             container spacing={3}>
@@ -60,7 +66,11 @@ function SectionList({ sections, instructor }) {
             </Grid>
             <Grid item md={6} xs={12} >
                 <Box p={0} mt={isMobile ? 0 : -6}>
-                    <Avatar className="avatar--large avatar--center" src={instructor.avatar_url} />
+                    <Avatar
+                        onClick={openProfile}
+                        src={instructor.avatar_url}
+                        className={clsx(classes.avatar, "avatar--large avatar--center")}
+                    />
                     <Typography variant="h6" color="initial">
                         {instructor.name}
                     </Typography>
@@ -114,7 +124,15 @@ const useStyles = makeStyles((theme) => ({
     column2: {
         flexBasis: "66.66%",
     },
-
+    avatar: {
+        cursor: "pointer",
+        transition: "0.4s",
+        "&:hover": {
+            opacity: '0.8',
+            borderRadius: "30%",
+            transition: "0.25s",
+        },
+    },
 
 }));
 

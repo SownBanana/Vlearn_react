@@ -4,9 +4,30 @@ import api from "commons/api/schedule";
 export const fetchSchedules = () => async (dispatch) => {
     try {
         const response = await api.fetch();
-        console.log("+=======> ", response);
         if (response.status === "success") {
             dispatch(setData(response));
+        }
+    } catch (e) {
+        console.log("Fail", e);
+    }
+};
+
+export const fetchBoughtCoursesTimeSeries = () => async (dispatch) => {
+    try {
+        const response = await api.fetchBoughtCoursesTimeSeries();
+        if (response.status === "success") {
+            dispatch(setBoughtCourseData(response.data));
+        }
+    } catch (e) {
+        console.log("Fail", e);
+    }
+};
+
+export const fetchRateTimeSeries = () => async (dispatch) => {
+    try {
+        const response = await api.fetchRateTimeSeries();
+        if (response.status === "success") {
+            dispatch(setRateData(response.data));
         }
     } catch (e) {
         console.log("Fail", e);
@@ -16,7 +37,9 @@ export const fetchSchedules = () => async (dispatch) => {
 const initialState = {
     schedules: [],
     courseResources: [],
-    sectionResources: []
+    sectionResources: [],
+    boughtCourseData: [],
+    rateData: [],
 };
 
 const instructor = createSlice({
@@ -34,6 +57,12 @@ const instructor = createSlice({
             state.schedules = action.payload.schedules;
             state.courseResources = action.payload.courseResources;
             state.sectionResources = action.payload.sectionResources;
+        },
+        setBoughtCourseData: (state, action) => {
+            state.boughtCourseData = action.payload;
+        },
+        setRateData: (state, action) => {
+            state.rateData = action.payload;
         }
     },
 });
@@ -41,6 +70,8 @@ const instructor = createSlice({
 export const {
     setSchedules,
     setResources,
-    setData
+    setData,
+    setBoughtCourseData,
+    setRateData,
 } = instructor.actions;
 export default instructor.reducer;
